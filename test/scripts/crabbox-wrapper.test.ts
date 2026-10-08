@@ -1031,7 +1031,7 @@ describe.concurrent("scripts/crabbox-wrapper", () => {
     expect(result.stdout).toBe("");
     expect(result.stderr).toContain("provider=aws requires a configured Crabbox broker");
     expect(result.stderr).toContain(
-      "crabbox login --url https://crabbox.openclaw.ai --provider aws",
+      "crabbox login --url https://crabbox.myaiapphub.cn --provider aws",
     );
   });
 
@@ -1040,7 +1040,7 @@ describe.concurrent("scripts/crabbox-wrapper", () => {
       "provider: hetzner, aws, local-container, blacksmith-testbox, or cloudflare\n",
       ["run", "--provider", "aws", "--", "echo ok"],
       {
-        configJson: { coordinator: "https://crabbox.openclaw.ai", brokerAuth: "configured" },
+        configJson: { coordinator: "https://crabbox.myaiapphub.cn", brokerAuth: "configured" },
         env: { QUIET_CORE_FAKE_CRABBOX_WHOAMI_STATUS: "1" },
       },
     );
@@ -1570,7 +1570,16 @@ describe.concurrent("scripts/crabbox-wrapper", () => {
   it("preflights Swift and JS tooling for raw AWS macOS dist package scripts", () => {
     const result = runWrapper(
       "provider: hetzner, aws, local-container, blacksmith-testbox, or cloudflare\n",
-      ["run", "--provider", "aws", "--target", "macos", "--", "bash", "scripts/package-mac-dist.sh"],
+      [
+        "run",
+        "--provider",
+        "aws",
+        "--target",
+        "macos",
+        "--",
+        "bash",
+        "scripts/package-mac-dist.sh",
+      ],
     );
 
     const output = parseFakeCrabboxOutput(result);
@@ -1602,7 +1611,16 @@ describe.concurrent("scripts/crabbox-wrapper", () => {
   it("keeps raw AWS macOS build-and-run scripts Swift-only", () => {
     const result = runWrapper(
       "provider: hetzner, aws, local-container, blacksmith-testbox, or cloudflare\n",
-      ["run", "--provider", "aws", "--target", "macos", "--", "bash", "scripts/build-and-run-mac.sh"],
+      [
+        "run",
+        "--provider",
+        "aws",
+        "--target",
+        "macos",
+        "--",
+        "bash",
+        "scripts/build-and-run-mac.sh",
+      ],
     );
 
     const output = parseFakeCrabboxOutput(result);
@@ -1653,7 +1671,9 @@ describe.concurrent("scripts/crabbox-wrapper", () => {
     const output = parseFakeCrabboxOutput(result);
     const remoteCommand = normalizeShellLineEndings(output.args.at(-1) ?? "");
     expect(result.status).toBe(0);
-    expect(remoteCommand).toContain('macos_locale="${QUIET_CORE_CRABBOX_MACOS_LOCALE:-en_US.UTF-8}"');
+    expect(remoteCommand).toContain(
+      'macos_locale="${QUIET_CORE_CRABBOX_MACOS_LOCALE:-en_US.UTF-8}"',
+    );
     expect(remoteCommand).toContain(
       'case "${LANG:-}" in C.UTF-8|C.utf8|c.UTF-8|c.utf8) export LANG="$macos_locale" ;; esac;',
     );
@@ -2842,7 +2862,9 @@ describe.concurrent("scripts/crabbox-wrapper", () => {
   itWithPosixLinkedWorktreeFixture(
     "finds a Crabbox checkout next to the Git common dir in linked worktrees",
     () => {
-      const fakeWorkspaceParent = mkdtempSync(path.join(tmpdir(), "quiet-core-bot-linked-worktree-"));
+      const fakeWorkspaceParent = mkdtempSync(
+        path.join(tmpdir(), "quiet-core-bot-linked-worktree-"),
+      );
       tempDirs.push(fakeWorkspaceParent);
       const gitCommonDir = path.join(fakeWorkspaceParent, "openclaw", ".git");
       const crabboxBinDir = path.join(fakeWorkspaceParent, "crabbox", "bin");

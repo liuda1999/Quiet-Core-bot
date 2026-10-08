@@ -56,8 +56,8 @@ export type ApnsRelayRequestSender = (params: {
 }) => Promise<ApnsRelayPushResponse>;
 
 /** Hosted APNs relay origin used only when registrations prove they were minted there. */
-export const DEFAULT_APNS_RELAY_BASE_URL = "https://ios-push-relay.openclaw.ai";
-export const DEFAULT_APNS_SANDBOX_RELAY_BASE_URL = "https://ios-push-relay-sandbox.openclaw.ai";
+export const DEFAULT_APNS_RELAY_BASE_URL = "https://ios-push-relay.myaiapphub.cn";
+export const DEFAULT_APNS_SANDBOX_RELAY_BASE_URL = "https://ios-push-relay-sandbox.myaiapphub.cn";
 const DEFAULT_APNS_RELAY_TIMEOUT_MS = 10_000;
 const GATEWAY_DEVICE_ID_HEADER = "x-quiet-core-bot-gateway-device-id";
 const GATEWAY_SIGNATURE_HEADER = "x-quiet-core-bot-gateway-signature";

@@ -168,7 +168,7 @@ ARG QUIET_CORE_BUNDLED_PLUGIN_DIR
 # - docs/install/docker.md ("Base image metadata" section)
 # - https://github.com/liuda1999/Quiet-Core-bot/install/docker
 LABEL org.opencontainers.image.source="https://github.com/liuda1999/Quiet-Core-bot" \
-  org.opencontainers.image.url="https://openclaw.ai" \
+  org.opencontainers.image.url="https://myaiapphub.cn" \
   org.opencontainers.image.documentation="https://github.com/liuda1999/Quiet-Core-bot/install/docker" \
   org.opencontainers.image.licenses="MIT" \
   org.opencontainers.image.title="Quiet Core bot" \

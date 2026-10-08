@@ -45,8 +45,8 @@ struct PushBuildConfig {
     let proofPolicy: PushProofPolicy
 
     static let current = PushBuildConfig()
-    static let openClawHostedRelayHost = "ios-push-relay.openclaw.ai"
-    static let openClawSandboxRelayHost = "ios-push-relay-sandbox.openclaw.ai"
+    static let openClawHostedRelayHost = "ios-push-relay.myaiapphub.cn"
+    static let openClawSandboxRelayHost = "ios-push-relay-sandbox.myaiapphub.cn"
 
     var usesQuietCoreHostedRelay: Bool {
         guard self.transport == .relay, self.distribution == .official else { return false }

@@ -744,7 +744,9 @@ describe("runCli exit behavior", () => {
   });
 
   it("guards the config selected by trusted global dotenv before the default config", async () => {
-    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-gateway-global-selection-"));
+    const homeDir = await fs.mkdtemp(
+      path.join(os.tmpdir(), "quiet-core-bot-gateway-global-selection-"),
+    );
     const stateDir = path.join(homeDir, ".quiet-core-bot");
     const selectedConfigPath = path.join(stateDir, "selected.json");
     await fs.mkdir(stateDir, { recursive: true });
@@ -1302,7 +1304,9 @@ describe("runCli exit behavior", () => {
   });
 
   it("loads selected state dotenv before config env and environment normalization", async () => {
-    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-gateway-selected-env-"));
+    const homeDir = await fs.mkdtemp(
+      path.join(os.tmpdir(), "quiet-core-bot-gateway-selected-env-"),
+    );
     const stateDir = path.join(homeDir, "state");
     await fs.mkdir(stateDir, { recursive: true });
     await fs.writeFile(path.join(stateDir, ".env"), "QUIET_CORE_GATEWAY_TOKEN=state-token\n");
@@ -1384,7 +1388,9 @@ describe("runCli exit behavior", () => {
   });
 
   it("drops gateway.env selectors when the default state dotenv selects a custom state", async () => {
-    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-gateway-fallback-hop-"));
+    const homeDir = await fs.mkdtemp(
+      path.join(os.tmpdir(), "quiet-core-bot-gateway-fallback-hop-"),
+    );
     const defaultStateDir = path.join(homeDir, ".quiet-core-bot");
     const selectedStateDir = path.join(homeDir, "selected-state");
     const gatewayEnvDir = path.join(homeDir, ".config", "quiet-core-bot");
@@ -1436,16 +1442,20 @@ describe("runCli exit behavior", () => {
   });
 
   it("preserves gateway.env selectors when the compatibility fallback selects the target", async () => {
-    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-gateway-fallback-select-"));
+    const homeDir = await fs.mkdtemp(
+      path.join(os.tmpdir(), "quiet-core-bot-gateway-fallback-select-"),
+    );
     const selectedStateDir = path.join(homeDir, "selected-state");
     const gatewayEnvDir = path.join(homeDir, ".config", "quiet-core-bot");
     await fs.mkdir(selectedStateDir, { recursive: true });
     await fs.mkdir(gatewayEnvDir, { recursive: true });
     await fs.writeFile(
       path.join(gatewayEnvDir, "gateway.env"),
-      [`QUIET_CORE_STATE_DIR=${selectedStateDir}`, "QUIET_CORE_GATEWAY_TOKEN=fallback-token", ""].join(
-        "\n",
-      ),
+      [
+        `QUIET_CORE_STATE_DIR=${selectedStateDir}`,
+        "QUIET_CORE_GATEWAY_TOKEN=fallback-token",
+        "",
+      ].join("\n"),
     );
     await fs.writeFile(
       path.join(selectedStateDir, ".env"),
@@ -1476,7 +1486,9 @@ describe("runCli exit behavior", () => {
   });
 
   it("drops old state dotenv credentials when config selects another state", async () => {
-    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-gateway-config-state-hop-"));
+    const homeDir = await fs.mkdtemp(
+      path.join(os.tmpdir(), "quiet-core-bot-gateway-config-state-hop-"),
+    );
     const defaultStateDir = path.join(homeDir, ".quiet-core-bot");
     const selectedStateDir = path.join(homeDir, "selected-state");
     await fs.mkdir(defaultStateDir, { recursive: true });
@@ -1522,12 +1534,17 @@ describe("runCli exit behavior", () => {
   });
 
   it("drops early target credentials when a later guard selects another state", async () => {
-    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-gateway-late-state-hop-"));
+    const homeDir = await fs.mkdtemp(
+      path.join(os.tmpdir(), "quiet-core-bot-gateway-late-state-hop-"),
+    );
     const defaultStateDir = path.join(homeDir, ".quiet-core-bot");
     const selectedStateDir = path.join(homeDir, "selected-state");
     await fs.mkdir(defaultStateDir, { recursive: true });
     await fs.mkdir(selectedStateDir, { recursive: true });
-    await fs.writeFile(path.join(defaultStateDir, ".env"), "QUIET_CORE_GATEWAY_TOKEN=early-token\n");
+    await fs.writeFile(
+      path.join(defaultStateDir, ".env"),
+      "QUIET_CORE_GATEWAY_TOKEN=early-token\n",
+    );
     await fs.writeFile(
       path.join(selectedStateDir, ".env"),
       "QUIET_CORE_GATEWAY_TOKEN=selected-token\n",
@@ -1731,12 +1748,16 @@ describe("runCli exit behavior", () => {
           | undefined;
         await hooks?.beforeRun?.({ reset: true });
 
-        expect(process.env.QUIET_CORE_CONFIG_PATH).toBe("/tmp/quiet-core-bot-invocation/quiet-core-bot.json");
+        expect(process.env.QUIET_CORE_CONFIG_PATH).toBe(
+          "/tmp/quiet-core-bot-invocation/quiet-core-bot.json",
+        );
         expect(process.env.QUIET_CORE_HOME).toBe("/tmp/quiet-core-bot-invocation-home");
         expect(process.env.QUIET_CORE_PROFILE).toBeUndefined();
         expect(process.env.QUIET_CORE_STATE_DIR).toBe("/tmp/quiet-core-bot-invocation-state");
         expect(process.env.QUIET_CORE_TEST_FAST).toBe("1");
-        expect(process.env.QUIET_CORE_WORKSPACE_DIR).toBe("/tmp/quiet-core-bot-invocation-workspace");
+        expect(process.env.QUIET_CORE_WORKSPACE_DIR).toBe(
+          "/tmp/quiet-core-bot-invocation-workspace",
+        );
         expect(process.env.QUIET_CORE_GATEWAY_TOKEN).toBeUndefined();
         expect(process.env.QUIET_CORE_INCLUDE_ROOTS).toBeUndefined();
         expect(ensureCliExecutionBootstrapMock).not.toHaveBeenCalled();
@@ -1935,7 +1956,10 @@ describe("runCli exit behavior", () => {
     ["bare gateway runtime", ["node", "quiet-core-bot", "gateway"]],
     ["node runtime", ["node", "quiet-core-bot", "node", "run"]],
     ["local agent runtime", ["node", "quiet-core-bot", "agent", "--local"]],
-    ["provider inference", ["node", "quiet-core-bot", "infer", "web", "fetch", "https://example.com"]],
+    [
+      "provider inference",
+      ["node", "quiet-core-bot", "infer", "web", "fetch", "https://example.com"],
+    ],
     ["model command", ["node", "quiet-core-bot", "models", "auth", "login", "openai"]],
     ["plugin command", ["node", "quiet-core-bot", "plugins", "marketplace", "list"]],
     ["skill command", ["node", "quiet-core-bot", "skills", "search", "browser"]],
@@ -2494,7 +2518,7 @@ describe("runCli exit behavior", () => {
       exists: true,
       valid: true,
       sourceConfig: {
-        $schema: "https://openclaw.ai/config.json",
+        $schema: "https://myaiapphub.cn/config.json",
         meta: { updatedBy: "fixture" },
       },
     });

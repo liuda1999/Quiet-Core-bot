@@ -693,7 +693,7 @@ function enforceBrokeredAws(commandArgs, providerName) {
   console.error(
     [
       "[crabbox] provider=aws requires a configured Crabbox broker for QuietCore proof.",
-      "[crabbox] run `crabbox login --url https://crabbox.openclaw.ai --provider aws`, then retry.",
+      "[crabbox] run `crabbox login --url https://crabbox.myaiapphub.cn --provider aws`, then retry.",
       "[crabbox] for intentional direct AWS provider debugging, set QUIET_CORE_CRABBOX_ALLOW_DIRECT_AWS=1.",
     ].join("\n"),
   );
@@ -1056,8 +1056,8 @@ function commandNeedsAwsMacosPackageManager(commandArgs, options = {}) {
     return true;
   }
   if (commandArgs.length === 1) {
-    return shellCommandWordCandidates(commandArgs[0]).some(
-      (words) => commandWordsNeedAwsMacosPackageManager(words, options),
+    return shellCommandWordCandidates(commandArgs[0]).some((words) =>
+      commandWordsNeedAwsMacosPackageManager(words, options),
     );
   }
   return commandWordsNeedAwsMacosPackageManager(normalizedCommandWords(commandArgs), options);
@@ -2280,11 +2280,7 @@ function scopedAwsMacosEnvCommand(commandArgs) {
     commandWordsNeedAwsMacosPackageManager(targetWords);
   const needsRuntime = jsRuntimeEntrypoints.has(targetEntrypoint);
   const needsBun = awsMacosBunEntrypoints.has(targetEntrypoint);
-  if (
-    !needsRuntime &&
-    !needsPackageManager &&
-    !needsBun
-  ) {
+  if (!needsRuntime && !needsPackageManager && !needsBun) {
     return null;
   }
 
@@ -2531,12 +2527,10 @@ function injectRemoteAwsMacosJsBootstrap(commandArgs, providerName) {
       ? scopedAwsMacosShellEnvCommand(runArgs[0])
       : null;
   const scopedEnvCommand = directScopedEnvCommand ?? shellScopedEnvCommand;
-  const packageManagerFallbackNeeded =
-    scopedEnvCommand
-      ? commandNeedsAwsMacosPackageManager(runArgs)
-      : commandNeedsAwsMacosPackageManager(runArgs, { canShimIgnoreEnvironment: false });
-  const packageManagerNeeded =
-    scopedEnvCommand?.packageManager || packageManagerFallbackNeeded;
+  const packageManagerFallbackNeeded = scopedEnvCommand
+    ? commandNeedsAwsMacosPackageManager(runArgs)
+    : commandNeedsAwsMacosPackageManager(runArgs, { canShimIgnoreEnvironment: false });
+  const packageManagerNeeded = scopedEnvCommand?.packageManager || packageManagerFallbackNeeded;
   const bunNeeded = scopedEnvCommand?.bun || commandNeedsAwsMacosBun(runArgs);
   const runtimeEntrypoint =
     scopedEnvCommand?.runtimeEntrypoint || commandRuntimeEntrypoint(runArgs);

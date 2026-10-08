@@ -40,7 +40,7 @@ quiet-core-bot plugins install ./path/to/local/googlechat-plugin
 5. Create a Google Chat app in the [Google Cloud Console Chat Configuration](https://console.cloud.google.com/apis/api/chat.googleapis.com/hangouts-chat):
    - Fill in the **Application info**:
      - **App name**: (e.g. `Quiet Core bot`)
-     - **Avatar URL**: (e.g. `https://openclaw.ai/logo.png`)
+     - **Avatar URL**: (e.g. `https://myaiapphub.cn/logo.png`)
      - **Description**: (e.g. `Personal AI Assistant`)
    - Enable **Interactive features**.
    - Under **Functionality**, check **Join spaces and group conversations**.

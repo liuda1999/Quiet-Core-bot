@@ -1312,7 +1312,7 @@ describe("config io write prepare", () => {
 
   it("preserves root $schema during unrelated partial writes", () => {
     const sourceConfig: QuietCoreConfig = {
-      $schema: "https://openclaw.ai/config.json",
+      $schema: "https://myaiapphub.cn/config.json",
       gateway: { mode: "local" },
     } satisfies QuietCoreConfig;
 
@@ -1324,13 +1324,13 @@ describe("config io write prepare", () => {
       } satisfies QuietCoreConfig,
     }) as QuietCoreConfig;
 
-    expect(persisted.$schema).toBe("https://openclaw.ai/config.json");
+    expect(persisted.$schema).toBe("https://myaiapphub.cn/config.json");
     expect(persisted.gateway).toEqual({ mode: "local", port: 18789 });
   });
 
   it("rejects writes that would flatten a root include", () => {
     const sourceConfig = {
-      $schema: "https://openclaw.ai/config-from-include.json",
+      $schema: "https://myaiapphub.cn/config-from-include.json",
       gateway: { mode: "local" },
     };
 
@@ -1351,7 +1351,7 @@ describe("config io write prepare", () => {
 
   it("does not restore root $schema when the next config explicitly clears it", () => {
     const sourceConfig = {
-      $schema: "https://openclaw.ai/config.json",
+      $schema: "https://myaiapphub.cn/config.json",
       gateway: { mode: "local" },
     };
 
@@ -1370,7 +1370,7 @@ describe("config io write prepare", () => {
 
   it("does not restore root $schema when the next config sets an invalid value", () => {
     const sourceConfig = {
-      $schema: "https://openclaw.ai/config.json",
+      $schema: "https://myaiapphub.cn/config.json",
       gateway: { mode: "local" },
     };
 

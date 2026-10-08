@@ -197,7 +197,7 @@ Quiet Core bot 的 CLI/Gateway 在主流桌面操作系统上运行，并通过�
 - **Issue 反馈**：<https://github.com/liuda1999/Quiet-Core-bot/issues>
 - **贡献指南**：见 `CONTRIBUTING.md`
 - **项目愿景**：见 `VISION.md`
-- **安全策略**：见 `SECURITY.md`，安全报告邮箱 `security@openclaw.ai`
+- **安全策略**：见 `SECURITY.md`，安全报告邮箱 `security@myaiapphub.cn`
 
 ---
 
@@ -2945,7 +2945,7 @@ TUI（`quiet-core-bot tui`）支持 Gateway 模式（连接远端 `--url ws://<h
 | iOS     | `apps/ios/`（SwiftUI，`pnpm ios:open` / `pnpm ios:release:upload`，Xcode 16+ + xcodegen）  | Onboarding、Chat、Voice、Canvas、Settings、Share Extension                                                                                                                                                                                                                                            | Super Alpha（App Store 发布走 Fastlane，bundle ID `ai.quiet-core-botfoundation.app`） |
 | Android | `apps/android/`（Kotlin + Jetpack Compose，`pnpm android:run`，Gradle）                    | RootScreen、ConnectTab、ChatSheet、VoiceTab、VoiceScreen、CanvasScreen、SessionsScreen、SettingsSheet、ChannelsSettingsScreen、ProvidersModelsScreen、SkillsSettingsScreen、NodesDevicesSettingsScreen、DreamingSettingsScreen、HealthLogsSettingsScreen、OnboardingFlow、CommandPalette、ShellScreen | 稳定（Play / ThirdParty 双 flavor，包名 `ai.quiet-core-bot.app`）                     |
 
-> **iOS 能力说明**：iOS App 以 `role: node` 连接 Gateway，通过 `node.invoke` 暴露设备能力（camera/canvas/screen/location/contacts/calendar/photos/motion/notifications）。前台优先，后台 `canvas.*`/`camera.*`/`screen.*`/`talk.*` 受限。推送通过 APNs（本地直连）或托管 Relay（App Store 构建，`https://ios-push-relay.openclaw.ai`）。Computer Use 不走 iOS，iOS 仅作节点能力提供方。
+> **iOS 能力说明**：iOS App 以 `role: node` 连接 Gateway，通过 `node.invoke` 暴露设备能力（camera/canvas/screen/location/contacts/calendar/photos/motion/notifications）。前台优先，后台 `canvas.*`/`camera.*`/`screen.*`/`talk.*` 受限。推送通过 APNs（本地直连）或托管 Relay（App Store 构建，`https://ios-push-relay.myaiapphub.cn`）。Computer Use 不走 iOS，iOS 仅作节点能力提供方。
 >
 > **Android 结构说明**：`apps/android/app/src/main/java/ai/quietcore/app/` 下按 `chat/`、`gateway/`、`node/`、`protocol/`、`tools/`、`ui/`、`voice/` 分包。UI 层 `ui/chat/`（ChatComposer/ChatMarkdown/ChatMessageListCard/ChatTimeline）、`ui/design/`（ClawComponents/ClawNavigation/ClawTheme/ClawSurfaces）、`ui/` 根屏幕（RootScreen/ConnectTab/ChatSheet/VoiceTab/CanvasScreen/SessionsScreen/SettingsSheet 等）。节点能力处理器在 `node/`（CalendarHandler/CameraHandler/ContactsHandler/LocationHandler/NotificationsHandler/PhotosHandler 等）。双 flavor：`play`（Play Store，含 CallLogHandler/SmsHandler）与 `thirdParty`（第三方构建，不含敏感功能）。
 
@@ -3937,7 +3937,7 @@ TUI 通过配置项与斜杠命令定制显示：
 - **审批通知桥**:`ExecApprovalNotificationBridge`(执行审批通过推送通知)
 - **后台存活**:`BackgroundAliveBeacon`(后台保活信标)
 - **通知权限引导**:`NotificationPermissionGuidancePrompt`、`presentNotificationPermissionGuidanceForExecApprovalIfNeeded`
-- **Relay URL**:`https://ios-push-relay.openclaw.ai`(App Store 构建)
+- **Relay URL**:`https://ios-push-relay.myaiapphub.cn`(App Store 构建)
 
 ##### 7. iOS Live Activity 与 Apple Watch
 

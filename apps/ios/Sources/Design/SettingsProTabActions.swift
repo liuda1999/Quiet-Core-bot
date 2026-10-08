@@ -832,7 +832,7 @@ extension SettingsProTab {
         if PushBuildConfig.current.usesQuietCoreHostedRelay {
             let host = PushBuildConfig.current.relayBaseURL.flatMap {
                 URLComponents(url: $0, resolvingAgainstBaseURL: false)?.host
-            } ?? "ios-push-relay.openclaw.ai"
+            } ?? "ios-push-relay.myaiapphub.cn"
             return """
             This build uses QuietCore's hosted push relay at \(host) for notification \
             delivery data.

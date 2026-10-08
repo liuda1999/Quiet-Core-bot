@@ -191,7 +191,7 @@ describe("scripts/ios-run.sh", () => {
     const log = readFileSync(fixture.logFile, "utf8");
     expect(log).toContain("QUIET_CORE_PUSH_MODE=simulatorSandbox");
     expect(log).toContain(
-      "QUIET_CORE_PUSH_RELAY_BASE_URL=https://ios-push-relay-sandbox.openclaw.ai",
+      "QUIET_CORE_PUSH_RELAY_BASE_URL=https://ios-push-relay-sandbox.myaiapphub.cn",
     );
     expect(log).toContain("simctl launch iPhone 17 ai.quiet-core-botfoundation.app");
     expect(log).toContain("simctl-launch-proof set");

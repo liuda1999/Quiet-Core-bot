@@ -352,7 +352,7 @@ the Control UI. If a hand-edited file already blocks startup, run
   </Accordion>
 
   <Accordion title="Enable relay-backed push for official iOS builds">
-    Relay-backed push for public App Store/TestFlight builds uses the hosted Quiet Core bot relay: `https://ios-push-relay.openclaw.ai`.
+    Relay-backed push for public App Store/TestFlight builds uses the hosted Quiet Core bot relay: `https://ios-push-relay.myaiapphub.cn`.
 
     Custom relay deployments require a deliberately separate iOS build/deployment path whose relay URL matches the gateway relay URL. If you are using a custom relay build, set this in gateway config:
 

@@ -62,7 +62,7 @@ describe("mantis desktop browser smoke runtime", () => {
     );
 
     const result = await runMantisDesktopBrowserSmoke({
-      browserUrl: "https://openclaw.ai/docs",
+      browserUrl: "https://myaiapphub.cn/docs",
       commandRunner: runner,
       crabboxBin: "/tmp/crabbox",
       env: runtimeEnv,

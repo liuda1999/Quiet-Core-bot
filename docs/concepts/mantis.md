@@ -343,7 +343,7 @@ Actions artifact URL, run URL, and request source. It uploads declared artifacts
 to the configured Mantis R2/S3 bucket, builds a summary-first PR comment with
 inline images/previews and linked videos, then updates the existing marker
 comment or creates one. The workflows publish to `quiet-core-bot-crabbox-artifacts`
-with public URLs under `https://artifacts.openclaw.ai`. They provide bucket,
+with public URLs under `https://artifacts.myaiapphub.cn`. They provide bucket,
 region, and public URL values directly. The reusable publisher requires:
 
 - `MANTIS_ARTIFACT_R2_ACCESS_KEY_ID`

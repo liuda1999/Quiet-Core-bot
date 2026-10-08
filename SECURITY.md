@@ -19,13 +19,13 @@ Report vulnerabilities directly to the repository where the issue lives:
 - **ClawHub** — [quiet-core-bot/clawhub](https://github.com/openclaw/clawhub)
 - **Trust and threat model** — [quiet-core-bot/trust](https://github.com/openclaw/trust)
 
-For issues that don't fit a specific repo, or if you're unsure, email **[security@openclaw.ai](mailto:security@openclaw.ai)** and we'll route it.
+For issues that don't fit a specific repo, or if you're unsure, email **[security@myaiapphub.cn](mailto:security@myaiapphub.cn)** and we'll route it.
 
 For Quiet Core bot core issues, submit through a private [GitHub Security Advisory](https://github.com/liuda1999/Quiet-Core-bot/security/advisories/new). Do not open a public issue or PR that discloses an unpatched vulnerability, exploit path, secret, or security-sensitive proof of concept.
 
 Maintainers may close, hide, delete, or otherwise take down public issues and PRs that disclose vulnerabilities or active security issues. We will redirect those reports through the private disclosure process so the issue can be triaged and fixed without giving attackers a public playbook.
 
-For full reporting instructions see our [Trust page](https://trust.openclaw.ai).
+For full reporting instructions see our [Trust page](https://trust.myaiapphub.cn).
 For maintainer response workflow, see the [incident response plan](docs/security/incident-response.md).
 
 Quiet Core bot does not currently run a paid bug bounty program. Please still disclose responsibly so we can fix real issues quickly. The best way to help the project right now is to send high-signal reports and, when practical, focused PRs.

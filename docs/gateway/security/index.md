@@ -1339,6 +1339,6 @@ pre-commit run --all-files detect-private-key
 
 Found a vulnerability in Quiet Core bot? Please report responsibly:
 
-1. Email: [security@openclaw.ai](mailto:security@openclaw.ai)
+1. Email: [security@myaiapphub.cn](mailto:security@myaiapphub.cn)
 2. Don't post publicly until fixed
 3. We'll credit you (unless you prefer anonymity)

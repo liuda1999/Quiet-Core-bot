@@ -75,7 +75,7 @@ quiet-core-bot gateway call node.list --params "{}"
 Official distributed iOS builds use the external push relay instead of publishing the raw APNs
 token to the gateway.
 
-Official/TestFlight builds from the public App Store release lane use the hosted relay at `https://ios-push-relay.openclaw.ai`.
+Official/TestFlight builds from the public App Store release lane use the hosted relay at `https://ios-push-relay.myaiapphub.cn`.
 
 Custom relay deployments require a deliberately separate iOS build/deployment path whose relay URL matches the gateway relay URL. The public App Store release lane does not accept custom relay URL overrides. If you are using a custom relay build, set the matching gateway relay URL:
 
