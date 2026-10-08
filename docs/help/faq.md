@@ -2106,7 +2106,7 @@ lives on the [Models FAQ](/help/faq-models).
 
 ---
 
-Still stuck? Ask in [Discord](https://discord.com/invite/clawd) or open a [GitHub discussion](https://github.com/liuda1999/Quiet-Core-bot/discussions).
+Still stuck? Ask in [Discord](https://discord.com/invite/clawd) or open a [GitHub issue](https://github.com/liuda1999/Quiet-Core-bot/issues).
 
 ## Related
 

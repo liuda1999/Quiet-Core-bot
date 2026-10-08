@@ -137,7 +137,7 @@ QUIET_CORE_NAMESPACE=my-namespace ./scripts/k8s/deploy.sh
 Edit the `image` field in `scripts/k8s/manifests/deployment.yaml`:
 
 ```yaml
-image: ghcr.io/liuda1999/quiet-core-bot:latest # primary; official Docker Hub mirror: liuda1999/quiet-core-bot:latest
+image: liuda1999/quiet-core-bot:latest
 ```
 
 ### Expose beyond port-forward

@@ -30,7 +30,7 @@ Create an EasyRunner app with a Compose file shaped like this:
 ```yaml
 services:
   quiet-core-bot:
-    image: ghcr.io/liuda1999/quiet-core-bot:latest
+    image: liuda1999/quiet-core-bot:latest
     restart: unless-stopped
     environment:
       QUIET_CORE_GATEWAY_TOKEN: ${QUIET_CORE_GATEWAY_TOKEN}

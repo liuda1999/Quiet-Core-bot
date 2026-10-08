@@ -36,26 +36,16 @@ Docker is **optional**. Use it only if you want a containerized gateway or to va
     This builds the gateway image locally. To use a pre-built image instead:
 
     ```bash
-    export QUIET_CORE_IMAGE="ghcr.io/liuda1999/quiet-core-bot:latest"
-    ./scripts/docker/setup.sh
-    ```
-
-    Pre-built images are published first to the
-    [GitHub Container Registry](https://github.com/liuda1999/Quiet-Core-bot/pkgs/container/quiet-core-bot).
-    GHCR is the primary registry for release automation, pinned deployments,
-    and provenance checks. The same release workflow also publishes an official
-    Docker Hub mirror at `liuda1999/quiet-core-bot` for hosts that prefer Docker Hub:
-
-    ```bash
     export QUIET_CORE_IMAGE="liuda1999/quiet-core-bot:latest"
     ./scripts/docker/setup.sh
     ```
 
-    Use `ghcr.io/liuda1999/quiet-core-bot` or `liuda1999/quiet-core-bot`. Avoid community
-    Docker Hub mirrors because Quiet Core bot does not control their release timing,
-    rebuilds, or retention policy. Common official tags: `main`, `latest`,
-    `<version>` (e.g. `0.1.3`), and beta versions such as
-    `0.1.3-beta.1`. Beta tags do not move `latest` or `main`.
+    Pre-built images are published to the official
+    [Docker Hub registry](https://hub.docker.com/r/liuda1999/quiet-core-bot)
+    (`liuda1999/quiet-core-bot`). Avoid community Docker Hub mirrors because
+    Quiet Core bot does not control their release timing, rebuilds, or retention
+    policy. Common official tags: `main`, `latest`, `<version>` (e.g. `0.1.3`),
+    and beta versions such as `0.1.3-beta.1`. Beta tags do not move `latest` or `main`.
 
   </Step>
 
@@ -64,7 +54,7 @@ Docker is **optional**. Use it only if you want a containerized gateway or to va
 
     ```bash
     docker load -i quiet-core-bot-image.tar
-    export QUIET_CORE_IMAGE="ghcr.io/liuda1999/quiet-core-bot:latest"
+    export QUIET_CORE_IMAGE="liuda1999/quiet-core-bot:latest"
     ./scripts/docker/setup.sh --offline
     ```
 
