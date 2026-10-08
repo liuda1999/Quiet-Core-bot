@@ -4,6 +4,7 @@
 > 深度审计补充：本文档经 6 类审计（功能/内部节点/配置/数据/执行流程/UI）补充，增补内容已作为"补遗"小节分散并入对应正文章节。
 > 结构复核修订 2026-09-19：对照源码逐目录核验后更新——3.1 顶层概览补入 `.agents/`、`deploy/`、`packages/`；3.2 src/ 目录树补全至实际 67 个子目录；3.3 extensions/ 由 10 个更正为 139 个（按 manifest 分六类）；3.4 ui/ 补入 config/docs/test-helpers/types 与规模数据；3.5 apps/ 补入 `shared/`、`macos-mlx-tts/`；3.6 docs/ 补全至 30 个子目录；3.7 scripts/ 补全 18 个子目录；3.8 skills/ 由 12 个更正为 52 个；3.10/3.11 同步更新；补遗 4.5 新增 14 个原未记录模块并修正文件计数；补遗 7.7 更正 C.1 误报（realtime-talk.ts 等文件实际存在）并更新各规模计数。
 > 二次开发能力增补 2026-09-21：新增 exec 审批 CLI（`quiet-core-bot approvals pending|approve|deny`）与 CLI 轮次挂起正反馈、托管出网代理不可达的可操作文案、独立发行版更新守卫（`QUIET_CORE_INDEPENDENT_BUILD`）、provider 归属头改为 opt-in（`QUIET_CORE_PROVIDER_ATTRIBUTION`）、`tools.loopDetection` 默认开启、`config set|unset` 放行 size-drop 守卫。相应修订 §2.6、§3.2、§3.11、§4.4、§5.4.2、§5.9.2、§6.5、§8.8、§8.9、§8.11。
+> 裁剪版复核 2026-10-09：对照本仓库实际源码树重新核验 §3 结构与计数，修正此前沿用上游数据造成的偏差——3.1 顶层概览计数更新（src/ 68 个子目录、extensions/ 58 个、skills/ 28 个、docs/ 29 个子目录约 680 个 .md、scripts/ 19 个子目录约 812 个文件、根目录 tsconfig 7 个）并移除不存在的 `.vscode/`；3.3 插件清单重写为本仓库实有的 58 个（Channel 11 / LLM Provider 7 / 能力工具 21 / 平台诊断 15 / 内部库包 4）；3.4 ui/ 文件计数与样式清单更新；3.7 scripts/ 子目录补入 `handover/`；3.8 skills/ 更正为实有 28 个；3.10 移除 `.vscode/`；3.11 关键目录表同步；§5.5.3 头像处理模块由 `identity-avatar.ts` 更正为 `assistant-identity.ts`。
 
 ## 目录
 
@@ -433,14 +434,14 @@ Docker 镜像默认以非 root 用户 `node` 运行，内置 `/healthz`（livene
 
 ```
 quiet-core-bot-0.1.3/
-├── src/                          # 核心 TypeScript 源码（CLI 运行时、网关、Agent、渠道、插件系统等，67 个子目录）
-├── extensions/                   # 内置插件目录（139 个：channel / provider / tool / 能力 / 诊断等，见 3.3）
+├── src/                          # 核心 TypeScript 源码（CLI 运行时、网关、Agent、渠道、插件系统等，68 个子目录）
+├── extensions/                   # 内置插件目录（58 个：channel / provider / 能力工具 / 平台诊断等，见 3.3）
 ├── packages/                     # workspace 共享库包（21 个：gateway-protocol / plugin-sdk / acp-core / llm-core 等）
 ├── ui/                           # Web 控制面板前端（Lit + Vite，含 WebChat 与 Control UI）
 ├── apps/                         # 原生应用（macOS / iOS / Android / macOS-mlx-tts / shared / Swabble）
-├── docs/                         # 项目文档（按主题分目录：cli / channels / providers / tools 等，681 个 .md）
-├── scripts/                      # 构建、CI、部署、PR 流程、QA 脚本（835 个文件、18 个子目录，见 3.7）
-├── skills/                       # 内置技能包（52 个，每个含 SKILL.md 声明文件，见 3.8）
+├── docs/                         # 项目文档（按主题分目录：cli / channels / providers / tools 等，680 个 .md）
+├── scripts/                      # 构建、CI、部署、PR 流程、QA 脚本（812 个文件、19 个子目录，见 3.7）
+├── skills/                       # 内置技能包（28 个，每个含 SKILL.md 声明文件，见 3.8）
 ├── config/                       # 工程级配置（knip / swiftformat / swiftlint / shellcheck）
 ├── deploy/                       # 部署配置（fly.private.toml 私有化 Fly.io 部署模板）
 ├── patches/                      # 依赖补丁目录（当前为空占位）
@@ -450,12 +451,11 @@ quiet-core-bot-0.1.3/
 ├── test/                         # 测试基础设施（vitest 分片配置、global-setup、mocks、helpers、e2e、proof）
 ├── .agents/                      # 维护者笔记与 agent 技能（maintainer-notes、claw-score、autoreview 等 SKILL）
 ├── .github/                      # GitHub 仓库配置（actions / workflows / codeql / codex / instructions / ISSUE_TEMPLATE）
-├── .vscode/                      # VSCode 编辑器配置（launch、tasks）
 ├── quiet-core-bot.mjs                  # CLI 入口可执行脚本（#!/usr/bin/env node）
 ├── package.json                  # 根包定义（pnpm workspace 根）
 ├── pnpm-workspace.yaml           # pnpm workspace 声明
 ├── pnpm-lock.yaml / npm-shrinkwrap.json  # 锁文件（pnpm 开发锁 + npm 发布 shrinkwrap）
-├── tsconfig.json / tsconfig.core.json / tsconfig.*.json  # TypeScript 编译配置（根 / core / extensions / projects 分离，共 9 个）
+├── tsconfig.json / tsconfig.core.json / tsconfig.*.json  # TypeScript 编译配置（根 / core / extensions / projects 分离，根目录共 7 个）
 ├── tsdown.config.ts              # tsdown 打包配置
 ├── vitest.config.ts              # Vitest 测试配置（转发到 test/vitest/vitest.config.ts）
 ├── Dockerfile                    # 容器镜像构建文件
@@ -559,48 +559,35 @@ src/
 
 ### 3.3 extensions/ — 内置插件目录
 
-内置插件共 **139 个**，按 `quiet-core-bot.plugin.json` 清单的声明方式（`channels` 字段 / `providers`+`modelCatalog` 字段 / `contracts` 契约）分为六类：**Channel 类**（消息渠道接入方，25 个）、**LLM Provider 类**（模型推理提供方，52 个）、**能力 Provider 类**（语音/搜索/生成/嵌入等非 LLM 能力，26 个）、**Tool 类**（Agent 工具插件，15 个）、**平台/诊断/集成类**（17 个）与**内部库包**（无清单，4 个）。每个插件以 `api.ts` 为公共导出 barrel，遵循 `quiet-core-bot/plugin-sdk/*` 契约。
+内置插件共 **58 个**，按 `quiet-core-bot.plugin.json` 清单的声明方式（`channels` 字段 / `providers`+`modelCatalog` 字段 / `contracts` 契约）分为五类：**Channel 类**（消息渠道接入方，11 个）、**LLM Provider 类**（模型推理提供方，7 个）、**能力/工具 Provider 类**（manifest 声明 `contracts`：语音/搜索/媒体生成/嵌入/Agent 工具等，21 个）、**平台/诊断/集成类**（15 个）与**内部库包**（无清单，4 个）。每个插件以 `api.ts` 为公共导出 barrel，遵循 `quiet-core-bot/plugin-sdk/*` 契约。
 
 ```
 extensions/
 │
-├── ── Channel 类插件（25 个，manifest 含 channels 字段）──────────
-│   ├── clickclack/ discord/ feishu/ googlechat/ imessage/ irc/ line/
-│   ├── matrix/ mattermost/ msteams/ nextcloud-talk/ nostr/ qa-channel/
-│   ├── qqbot/ raft/ signal/ slack/ sms/ synology-chat/ telegram/
-│   └── tlon/ twitch/ whatsapp/ zalo/ zalouser/
+├── ── Channel 类插件（11 个，manifest 含 channels 字段）──────────
+│   ├── clickclack/ irc/ matrix/ mattermost/ nextcloud-talk/
+│   └── nostr/ qa-channel/ raft/ signal/ synology-chat/ tlon/
 │
-├── ── LLM Provider 类插件（52 个，manifest 含 providers/modelCatalog）──
-│   ├── amazon-bedrock/ amazon-bedrock-mantle/ anthropic/ anthropic-vertex/
-│   ├── arcee/ byteplus/ cerebras/ chutes/ cloudflare-ai-gateway/
-│   ├── codex/ cohere/ comfy/ copilot-proxy/ deepinfra/ deepseek/
-│   ├── fal/ fireworks/ github-copilot/ gmi/ google/ groq/ huggingface/
-│   ├── kilocode/ kimi-coding/ litellm/ lmstudio/ microsoft-foundry/
-│   ├── minimax/ mistral/ moonshot/ novita/ nvidia/ ollama/ openai/
-│   ├── opencode/ opencode-go/ openrouter/ qianfan/ qwen/ sglang/
-│   ├── stepfun/ synthetic/ tencent/ together/ venice/ vercel-ai-gateway/
-│   └── vllm/ volcengine/ vydra/ xai/ xiaomi/ zai/
+├── ── LLM Provider 类插件（7 个，manifest 含 providers/modelCatalog）──
+│   └── comfy/ copilot-proxy/ litellm/ lmstudio/ ollama/ sglang/ vllm/
 │
-├── ── 能力 Provider 类插件（26 个，manifest 声明 contracts）────────
-│   ├── 语音/STT/TTS：azure-speech/ elevenlabs/ gradium/ inworld/ microsoft/ tts-local-cli/
-│   ├── 转写：deepgram/ senseaudio/
-│   ├── 嵌入：llama-cpp/ voyage/
-│   ├── Web 搜索：brave/ duckduckgo/ exa/ parallel/ perplexity/ searxng/
-│   ├── 媒体生成：alibaba/ pixverse/ runway/
+├── ── 能力/工具 Provider 类插件（21 个，manifest 声明 contracts）────
+│   ├── Web 搜索：searxng/
+│   ├── 嵌入：llama-cpp/
+│   ├── Web 抓取：firecrawl/
+│   ├── TTS：tts-local-cli/
+│   ├── Agent 工具/运行时：browser/ canvas/ diffs/ document-extract/
+│   │   file-transfer/ llm-task/ lobster/ memory-core/ memory-lancedb/
+│   │   memory-wiki/ tokenjuice/ web-readability/ workboard/
 │   ├── 迁移：migrate-claude/ migrate-hermes/
-│   └── 其他：admin-http-rpc/ document-extract/ qa-lab/ tokenjuice/ web-readability/
+│   └── 其他：admin-http-rpc/ qa-lab/
 │
-├── ── Tool 类插件（15 个，contracts 声明 tools）────────────────
-│   ├── browser/ canvas/ codex-supervisor/ diffs/ file-transfer/
-│   ├── firecrawl/ google-meet/ llm-task/ lobster/ memory-core/
-│   └── memory-lancedb/ memory-wiki/ tavily/ voice-call/ workboard/
-│
-├── ── 平台/诊断/集成类（17 个）────────────────────────────
+├── ── 平台/诊断/集成类（15 个）────────────────────────────
 │   ├── acpx/（ACP 扩展）  active-memory/  bonjour/（mDNS 发现）
-│   ├── copilot/  device-pair/  diagnostics-otel/（OpenTelemetry）
+│   ├── device-pair/  diagnostics-otel/（OpenTelemetry）
 │   ├── diagnostics-prometheus/  diffs-language-pack/  oc-path/
-│   ├── open-prose/  openshell/  phone-control/  policy/
-│   └── qa-matrix/  talk-voice/  thread-ownership/  webhooks/（Gmail 等）
+│   ├── open-prose/  phone-control/  policy/  qa-matrix/
+│   └── talk-voice/  thread-ownership/  webhooks/（Gmail 等）
 │
 ├── ── 内部库包（4 个，无 quiet-core-bot.plugin.json，workspace 库）──────
 │   ├── image-generation-core/  media-understanding-core/
@@ -619,15 +606,15 @@ ui/
 ├── public/                       # 静态资源（favicon.ico / favicon.svg / sw.js Service Worker）
 ├── src/
 │   ├── i18n/                     # 国际化（index.ts 多语言入口）
-│   ├── styles/                   # 样式表（base.css / chat.css / layout.css / layout.mobile.css / components.css / workboard.css / usage.css / skill-workshop.css / config.css / config-quick.css / cron-quick-create.css / dreams.css / activity.css，共 13 个）
+│   ├── styles/                   # 样式表（activity.css / base.css / chat.css / components.css / config.css / config-quick.css / cron-quick-create.css / dreams.css / layout.css / layout.mobile.css / usage.css，共 11 个）
 │   ├── test-helpers/             # UI 测试辅助
 │   ├── types/                    # 共享类型
 │   └── ui/                       # UI 组件（Lit 自定义元素，142 个文件）
-│       ├── chat/                 # 聊天子模块（77 个文件：流式渲染、工具卡片、输入历史、实时语音等）
+│       ├── chat/                 # 聊天子模块（78 个文件：流式渲染、工具卡片、输入历史、实时语音等）
 │       ├── components/           # 通用组件（dashboard-header / modal-dialog / file-preview-modal / resizable-divider）
-│       ├── controllers/          # 状态控制器（45 个，封装 Gateway RPC 调用与本地状态）
+│       ├── controllers/          # 状态控制器（43 个，封装 Gateway RPC 调用与本地状态）
 │       ├── e2e/                  # UI E2E 测试
-│       ├── views/                # 视图层（100 个文件，按 Tab 分发的渲染模块）
+│       ├── views/                # 视图层（101 个文件，按 Tab 分发的渲染模块）
 │       ├── app.ts                # 根组件（Control UI 主应用）
 │       ├── app-*.ts              # 行为拆分模块（lifecycle/gateway/settings/scroll/chat/channels/render/native-bridge/polling/tool-stream/events 等）
 │       ├── navigation.ts         # 路由与 Tab 分组（TAB_PATHS / TAB_GROUPS / SETTINGS_TABS）
@@ -714,7 +701,7 @@ docs/
 └── brave-search.md / perplexity.md  # 搜索引擎集成文档
 ```
 
-> docs/ 全目录共约 681 个 `.md` 文件。
+> docs/ 全目录共约 680 个 `.md` 文件。
 
 ### 3.7 scripts/ — 构建 / CI / 工具脚本
 
@@ -727,6 +714,7 @@ scripts/
 ├── e2e/                           # E2E Docker lane 脚本
 ├── fixtures/                      # 测试夹具
 ├── github/                        # GitHub 集成脚本
+├── handover/                      # 交接/运维脚本（start / stop / status / deploy / logs / restart）
 ├── k8s/                           # Kubernetes 部署脚本（deploy.sh + manifests/）
 ├── lib/                           # 脚本共享库
 ├── mantis/                       # Mantis 工具
@@ -760,7 +748,7 @@ scripts/
 └── AGENTS.md / CLAUDE.md         # 脚本编写指引
 ```
 
-> scripts/ 全目录共约 835 个文件；上表为代表性条目，完整清单以仓库为准。
+> scripts/ 全目录共约 812 个文件；上表为代表性条目，完整清单以仓库为准。
 
 ### 3.8 skills/ — 内置技能包
 
@@ -768,22 +756,22 @@ scripts/
 
 ```
 skills/
-├── 1password/ apple-notes/ apple-reminders/ bear-notes/    # 笔记与密码类
-├── blogwatcher/ camsnap/ clawhub/ coding-agent/            # 工具与代理类
-├── diagram-maker/ eightctl/ gemini/ gh-issues/ gifgrep/    # 图像/GitHub 类
-├── github/ gog/ goplaces/ healthcheck/ himalaya/          # GitHub/GOG/邮件类
-├── imsg/ mcporter/ meme-maker/ model-usage/ nano-pdf/     # 消息/媒体/用量类
-├── node-connect/ node-inspect-debugger/ notion/ obsidian/ # 节点/笔记类
-├── openai-whisper/ openai-whisper-api/ openhue/ oracle/    # 语音/家居/预测类
-├── ordercli/ peekaboo/ python-debugpy/ sag/ session-logs/ # 订单/调试/日志类
-├── sherpa-onnx-tts/ skill-creator/ songsee/ sonoscli/       # TTS/技能创建/音乐类
-├── spike/ spotify-player/ summarize/ taskflow/             # 音乐/摘要/任务类
-├── taskflow-inbox-triage/ things-mac/ tmux/ trello/        # 收件箱/Things/tmux/看板类
-├── video-frames/ weather/ xurl/                            # 视频/天气/URL 类
+├── 笔记/知识库：bear-notes/ blogwatcher/ obsidian/
+├── 媒体/图像：camsnap/ diagram-maker/ meme-maker/ songsee/ video-frames/
+├── 语音/TTS：openai-whisper/ sherpa-onnx-tts/
+├── 诊断/调试：healthcheck/ node-inspect-debugger/ python-debugpy/ session-logs/
+├── 家居/设备：openhue/ sonoscli/
+├── 节点/tmux：node-connect/ tmux/
+├── 任务/流程：taskflow/ taskflow-inbox-triage/
+├── 代理/工具：blucli/ mcporter/ peekaboo/ spike/
+├── 用量/模型：model-usage/
+├── 邮件：himalaya/
+├── 技能创建：skill-creator/
+├── 其他：weather/
 └── pyproject.toml                # Python 项目配置（技能 Python 依赖）
 ```
 
-> 共 **52 个**内置技能包，每个含 `SKILL.md` 声明文件。
+> 共 **28 个**内置技能包，每个含 `SKILL.md` 声明文件。
 
 ### 3.9 config/ — 工程级配置
 
@@ -832,9 +820,6 @@ test/                             # 测试基础设施（非源码，根级 test
 ├── CODEOWNERS                    # 代码归属人配置
 ├── labeler.yml                   # PR 自动标签规则
 └── zizmor.yml                    # Zizmor GitHub Actions 安全扫描配置
-.vscode/
-├── launch.json                   # 调试启动配置
-└── tasks.json                    # 任务配置
 deploy/
 └── fly.private.toml              # 私有化 Fly.io 部署配置（无公网 IP 加固模板）
 packages/                         # workspace 共享库包（21 个）
@@ -848,42 +833,42 @@ packages/                         # workspace 共享库包（21 个）
 
 ### 3.11 关键目录说明
 
-| 目录           | 路径                               | 职责                                                                                                                                | 关键文件                                                                          |
-| -------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| 核心源码       | `src/`                             | CLI 运行时、Gateway 网关、Agent 运行时、渠道抽象、插件系统、配置管理、Cron 调度等全部核心逻辑                                       | `entry.ts`、`index.ts`、`gateway/server.ts`、`agents/config.ts`、`cli/program.ts` |
-| ACP 协议       | `src/acp/`                         | Agent Client Protocol 的客户端与服务端实现，含命令翻译与策略                                                                        | `client.ts`、`server.ts`、`translator.ts`                                         |
-| Agent 运行时   | `src/agents/`                      | Agent 生命周期管理、并行通道（lanes）、沙箱隔离、超时控制、用量统计、`/btw` 侧问                                                    | `config.ts`、`context.ts`、`lanes.ts`、`sandbox.ts`、`btw.ts`                     |
-| 渠道抽象       | `src/channels/`                    | 内置渠道 ID 与别名管理、bundled channel catalog 读取                                                                                | `ids.ts`                                                                          |
-| CLI 命令       | `src/cli/`                         | 全部 CLI 子命令实现（acp / config / cron / daemon / dns / hooks / mcp / tui 等）                                                    | `program.ts`、`route.ts`、`run-main.ts`                                           |
-| 配置系统       | `src/config/`                      | 配置 schema 定义、读写 IO、路径解析、迁移、版本管理                                                                                 | `schema.ts`、`config.ts`、`io.ts`、`paths.ts`                                     |
-| Cron 调度      | `src/cron/`                        | 定时任务调度引擎：解析、标准化、投递、错峰、持久化存储                                                                              | `schedule.ts`、`service.ts`、`delivery.ts`、`store.ts`                            |
-| 守护进程       | `src/daemon/`                      | macOS launchd / Linux systemd 服务管理与守护进程                                                                                    | `launchd.ts`、`systemd.ts`、`service.ts`                                          |
-| Gateway 网关   | `src/gateway/`                     | WebSocket RPC 网关服务：认证、启动、调用、事件、探活                                                                                | `server.ts`、`auth.ts`、`call.ts`、`events.ts`                                    |
-| Hook 系统      | `src/hooks/`                       | 钩子配置、加载、安装、策略、Gmail 集成                                                                                              | `loader.ts`、`hooks.ts`、`policy.ts`                                              |
-| 基础设施       | `src/infra/`                       | 通用工具：重试、退避、环境变量、HTTP fetch、WebSocket、WSL、SSRF 防护、端口管理                                                     | `env.ts`、`fetch.ts`、`retry.ts`、`ws.ts`、`net/ssrf.ts`                          |
-| LLM 集成       | `src/llm/`                         | LLM OAuth 授权、流式响应、类型定义                                                                                                  | `oauth.ts`、`stream.ts`、`types.ts`                                               |
-| 日志系统       | `src/logging/`                     | 结构化日志：级别、配置、脱敏、状态管理                                                                                              | `logger.ts`、`redact.ts`、`levels.ts`                                             |
-| 插件 SDK       | `src/plugin-sdk/`                  | 插件公共契约（供 extensions 导入的 SDK 子路径）                                                                                     | `core.ts`、`llm.ts`、`acpx.ts`、`zod.ts`                                          |
-| 插件运行时     | `src/plugins/`                     | 插件加载、启用、槽位、状态、更新、工具注册                                                                                          | `loader.ts`、`enable.ts`、`slots.ts`、`tools.ts`                                  |
-| 密钥管理       | `src/secrets/`                     | 密钥应用、审计、规划                                                                                                                | `apply.ts`、`audit.ts`、`plan.ts`                                                 |
-| TTS 引擎       | `src/tts/`                         | 文本转语音核心：指令解析、配置、核心引擎                                                                                            | `tts-core.ts`、`tts-config.ts`、`directives.ts`                                   |
-| TUI 终端 UI    | `src/tui/`                         | 终端交互界面：启动、提交、命令、类型                                                                                                | `tui.ts`、`tui-launch.ts`、`commands.ts`                                          |
-| 设置向导       | `src/wizard/`                      | 首次设置向导：提示、会话、初始化                                                                                                    | `setup.ts`、`prompts.ts`、`session.ts`                                            |
-| Provider 插件  | `extensions/`（LLM 类，52 个）     | LLM 推理 provider 插件（含 anthropic / openai / google / qwen / groq / xai / deepseek / ollama / vllm 等；xAI 额外含 STT/TTS/搜索） | `api.ts`、`xai/stt.ts`、`xai/tts.ts`                                              |
-| Channel 插件   | `extensions/`（Channel 类，25 个） | 消息渠道接入插件（telegram / discord / slack / whatsapp / feishu / signal / matrix / msteams / imessage 等）                        | `api.ts`                                                                          |
-| 能力/工具插件  | `extensions/`（其余 62 个）        | 语音/搜索/媒体生成/嵌入 provider（26）+ Agent 工具（15）+ 平台诊断集成（17）+ 内部库包（4）                                         | `api.ts`、`quiet-core-bot.plugin.json`                                            |
-| Web 控制面板   | `ui/`                              | Lit + Vite 前端，含 WebChat 与 Control UI                                                                                           | `src/ui/app.ts`、`src/ui/app-chat.ts`、`src/ui/gateway.ts`、`vite.config.ts`      |
-| macOS 应用     | `apps/macos/`                      | macOS 原生应用（开发、签名、打包）                                                                                                  | `Package.swift`、`README.md`                                                      |
-| iOS 应用       | `apps/ios/`                        | iOS 原生应用（Super Alpha，XcodeGen 项目）                                                                                          | `project.yml`、`README.md`、`version.json`                                        |
-| Android 应用   | `apps/android/`                    | Android 原生应用（Gradle 构建）                                                                                                     | `gradlew`、`style.md`                                                             |
-| 共享 Swift 库  | `apps/shared/`                     | macOS/iOS 共享组件（QuietCoreKit）                                                                                                  | `QuietCoreKit/`                                                                   |
-| 项目文档       | `docs/`                            | 按主题分类的完整文档（CLI / 渠道 / Provider / 工具 / 安装 / 概念，681 个 .md）                                                      | `docs.json`、`cli/index.md`、`channels/index.md`                                  |
-| 构建/CI 脚本   | `scripts/`                         | 构建、安装、PR 流程、K8s 部署、QA 测试脚本（835 个文件）                                                                            | `build-all.mjs`、`install.sh`、`k8s/deploy.sh`、`qa-e2e.ts`                       |
-| 内置技能       | `skills/`                          | 52 个内置技能包，每个含 SKILL.md 声明                                                                                               | `github/SKILL.md`、`tmux/SKILL.md`、`skill-creator/SKILL.md`                      |
-| 工程配置       | `config/`                          | Knip / SwiftFormat / SwiftLint / ShellCheck 配置                                                                                    | `knip.config.ts`、`swiftlint.yml`                                                 |
-| 测试基础设施   | `test/`                            | Vitest 全局 setup、mock、helpers、75+ 分片配置                                                                                      | `global-setup.ts`、`mocks/baileys.ts`、`vitest/vitest.config.ts`                  |
-| workspace 库包 | `packages/`                        | 21 个共享库包（gateway-protocol / plugin-sdk / media-core 等）                                                                      | `gateway-protocol/package.json`                                                   |
-| GitHub 配置    | `.github/`                         | 代码归属、PR 标签、工作流、安全扫描                                                                                                 | `CODEOWNERS`、`labeler.yml`、`zizmor.yml`                                         |
+| 目录           | 路径                               | 职责                                                                                                                                    | 关键文件                                                                          |
+| -------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| 核心源码       | `src/`                             | CLI 运行时、Gateway 网关、Agent 运行时、渠道抽象、插件系统、配置管理、Cron 调度等全部核心逻辑                                           | `entry.ts`、`index.ts`、`gateway/server.ts`、`agents/config.ts`、`cli/program.ts` |
+| ACP 协议       | `src/acp/`                         | Agent Client Protocol 的客户端与服务端实现，含命令翻译与策略                                                                            | `client.ts`、`server.ts`、`translator.ts`                                         |
+| Agent 运行时   | `src/agents/`                      | Agent 生命周期管理、并行通道（lanes）、沙箱隔离、超时控制、用量统计、`/btw` 侧问                                                        | `config.ts`、`context.ts`、`lanes.ts`、`sandbox.ts`、`btw.ts`                     |
+| 渠道抽象       | `src/channels/`                    | 内置渠道 ID 与别名管理、bundled channel catalog 读取                                                                                    | `ids.ts`                                                                          |
+| CLI 命令       | `src/cli/`                         | 全部 CLI 子命令实现（acp / config / cron / daemon / dns / hooks / mcp / tui 等）                                                        | `program.ts`、`route.ts`、`run-main.ts`                                           |
+| 配置系统       | `src/config/`                      | 配置 schema 定义、读写 IO、路径解析、迁移、版本管理                                                                                     | `schema.ts`、`config.ts`、`io.ts`、`paths.ts`                                     |
+| Cron 调度      | `src/cron/`                        | 定时任务调度引擎：解析、标准化、投递、错峰、持久化存储                                                                                  | `schedule.ts`、`service.ts`、`delivery.ts`、`store.ts`                            |
+| 守护进程       | `src/daemon/`                      | macOS launchd / Linux systemd 服务管理与守护进程                                                                                        | `launchd.ts`、`systemd.ts`、`service.ts`                                          |
+| Gateway 网关   | `src/gateway/`                     | WebSocket RPC 网关服务：认证、启动、调用、事件、探活                                                                                    | `server.ts`、`auth.ts`、`call.ts`、`events.ts`                                    |
+| Hook 系统      | `src/hooks/`                       | 钩子配置、加载、安装、策略、Gmail 集成                                                                                                  | `loader.ts`、`hooks.ts`、`policy.ts`                                              |
+| 基础设施       | `src/infra/`                       | 通用工具：重试、退避、环境变量、HTTP fetch、WebSocket、WSL、SSRF 防护、端口管理                                                         | `env.ts`、`fetch.ts`、`retry.ts`、`ws.ts`、`net/ssrf.ts`                          |
+| LLM 集成       | `src/llm/`                         | LLM OAuth 授权、流式响应、类型定义                                                                                                      | `oauth.ts`、`stream.ts`、`types.ts`                                               |
+| 日志系统       | `src/logging/`                     | 结构化日志：级别、配置、脱敏、状态管理                                                                                                  | `logger.ts`、`redact.ts`、`levels.ts`                                             |
+| 插件 SDK       | `src/plugin-sdk/`                  | 插件公共契约（供 extensions 导入的 SDK 子路径）                                                                                         | `core.ts`、`llm.ts`、`acpx.ts`、`zod.ts`                                          |
+| 插件运行时     | `src/plugins/`                     | 插件加载、启用、槽位、状态、更新、工具注册                                                                                              | `loader.ts`、`enable.ts`、`slots.ts`、`tools.ts`                                  |
+| 密钥管理       | `src/secrets/`                     | 密钥应用、审计、规划                                                                                                                    | `apply.ts`、`audit.ts`、`plan.ts`                                                 |
+| TTS 引擎       | `src/tts/`                         | 文本转语音核心：指令解析、配置、核心引擎                                                                                                | `tts-core.ts`、`tts-config.ts`、`directives.ts`                                   |
+| TUI 终端 UI    | `src/tui/`                         | 终端交互界面：启动、提交、命令、类型                                                                                                    | `tui.ts`、`tui-launch.ts`、`commands.ts`                                          |
+| 设置向导       | `src/wizard/`                      | 首次设置向导：提示、会话、初始化                                                                                                        | `setup.ts`、`prompts.ts`、`session.ts`                                            |
+| Provider 插件  | `extensions/`（LLM 类，7 个）      | LLM 推理 provider 插件（comfy / copilot-proxy / litellm / lmstudio / ollama / sglang / vllm）                                           | `api.ts`                                                                          |
+| Channel 插件   | `extensions/`（Channel 类，11 个） | 消息渠道接入插件（clickclack / irc / matrix / mattermost / nextcloud-talk / nostr / qa-channel / raft / signal / synology-chat / tlon） | `api.ts`                                                                          |
+| 能力/工具插件  | `extensions/`（其余 40 个）        | 能力/工具 Provider（21）+ 平台/诊断/集成（15）+ 内部库包（4）                                                                           | `api.ts`、`quiet-core-bot.plugin.json`                                            |
+| Web 控制面板   | `ui/`                              | Lit + Vite 前端，含 WebChat 与 Control UI                                                                                               | `src/ui/app.ts`、`src/ui/app-chat.ts`、`src/ui/gateway.ts`、`vite.config.ts`      |
+| macOS 应用     | `apps/macos/`                      | macOS 原生应用（开发、签名、打包）                                                                                                      | `Package.swift`、`README.md`                                                      |
+| iOS 应用       | `apps/ios/`                        | iOS 原生应用（Super Alpha，XcodeGen 项目）                                                                                              | `project.yml`、`README.md`、`version.json`                                        |
+| Android 应用   | `apps/android/`                    | Android 原生应用（Gradle 构建）                                                                                                         | `gradlew`、`style.md`                                                             |
+| 共享 Swift 库  | `apps/shared/`                     | macOS/iOS 共享组件（QuietCoreKit）                                                                                                      | `QuietCoreKit/`                                                                   |
+| 项目文档       | `docs/`                            | 按主题分类的完整文档（CLI / 渠道 / Provider / 工具 / 安装 / 概念，680 个 .md）                                                          | `docs.json`、`cli/index.md`、`channels/index.md`                                  |
+| 构建/CI 脚本   | `scripts/`                         | 构建、安装、PR 流程、K8s 部署、QA 测试脚本（812 个文件）                                                                                | `build-all.mjs`、`install.sh`、`k8s/deploy.sh`、`qa-e2e.ts`                       |
+| 内置技能       | `skills/`                          | 28 个内置技能包，每个含 SKILL.md 声明                                                                                                   | `bear-notes/SKILL.md`、`tmux/SKILL.md`、`skill-creator/SKILL.md`                  |
+| 工程配置       | `config/`                          | Knip / SwiftFormat / SwiftLint / ShellCheck 配置                                                                                        | `knip.config.ts`、`swiftlint.yml`                                                 |
+| 测试基础设施   | `test/`                            | Vitest 全局 setup、mock、helpers、75+ 分片配置                                                                                          | `global-setup.ts`、`mocks/baileys.ts`、`vitest/vitest.config.ts`                  |
+| workspace 库包 | `packages/`                        | 21 个共享库包（gateway-protocol / plugin-sdk / media-core 等）                                                                          | `gateway-protocol/package.json`                                                   |
+| GitHub 配置    | `.github/`                         | 代码归属、PR 标签、工作流、安全扫描                                                                                                     | `CODEOWNERS`、`labeler.yml`、`zizmor.yml`                                         |
 
 ## 4. 技术架构
 
@@ -1815,7 +1800,7 @@ sequenceDiagram
 | ---------------------------- | --------------------------------- | ------------------------------------------- |
 | `/api/chat/media/outgoing/*` | `managed-image-attachments.ts`    | 出站媒体附件管理                            |
 | Control UI 静态资源          | `control-ui.ts`                   | Control UI HTML/JS/CSS（`dist/control-ui`） |
-| `/identity/avatar/*`         | `identity-avatar.ts`              | 助手身份头像                                |
+| `/identity/avatar/*`         | `assistant-identity.ts`           | 助手身份头像                                |
 | Session kill                 | `session-kill-http.ts`            | 会话终止                                    |
 | Tools invoke                 | `tools-invoke-http.ts`            | 工具直接调用（含 cron 回归）                |
 | Session history              | `sessions-history-http.ts`        | 会话历史查询                                |
