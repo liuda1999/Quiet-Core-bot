@@ -7,7 +7,7 @@ require "supply/client"
 default_platform(:android)
 
 ANDROID_FASTLANE_ROOT = File.expand_path(__dir__, Dir.pwd)
-DEFAULT_PLAY_PACKAGE_NAME = "ai.openclaw.app"
+DEFAULT_PLAY_PACKAGE_NAME = "ai.quietcore.app"
 DEFAULT_PLAY_TRACK = "internal"
 DEFAULT_PLAY_RELEASE_STATUS = "completed"
 ANDROID_RELEASE_SIGNING_GRADLE_PROPERTIES = [

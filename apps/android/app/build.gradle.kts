@@ -80,7 +80,7 @@ android {
   }
 
   defaultConfig {
-    applicationId = "ai.openclaw.app"
+    applicationId = "ai.quietcore.app"
     minSdk = 31
     targetSdk = 36
     versionCode = quietCoreAndroidVersionCode
