@@ -38,7 +38,8 @@ type SandboxExplainOptions = {
   json: boolean;
 };
 
-const SANDBOX_DOCS_URL = "https://github.com/liuda1999/Quiet-Core-bot/sandbox";
+const SANDBOX_DOCS_URL =
+  "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/gateway/sandboxing.md";
 
 function normalizeExplainSessionKey(params: {
   cfg: QuietCoreConfig;
@@ -357,7 +358,7 @@ export async function sandboxExplainCommand(
   }
   lines.push("");
   lines.push(
-    `${key("Docs:")} ${formatDocsLink("/sandbox", "github.com/liuda1999/Quiet-Core-bot/sandbox")}`,
+    `${key("Docs:")} ${formatDocsLink("/gateway/sandboxing", "docs/gateway/sandboxing.md")}`,
   );
 
   runtime.log(`${lines.join("\n")}\n`);

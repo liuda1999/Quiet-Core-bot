@@ -465,8 +465,7 @@ export function registerHooksCli(program: Command): void {
     .description("Manage internal agent hooks")
     .addHelpText(
       "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/hooks", "github.com/liuda1999/Quiet-Core-bot/cli/hooks")}\n`,
+      () => `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/hooks", "docs/cli/hooks.md")}\n`,
     );
 
   hooks

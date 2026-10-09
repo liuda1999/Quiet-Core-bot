@@ -71,8 +71,7 @@ export function registerSandboxCli(program: Command) {
     )
     .addHelpText(
       "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/sandbox", "github.com/liuda1999/Quiet-Core-bot/cli/sandbox")}\n`,
+      () => `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/sandbox", "docs/cli/sandbox.md")}\n`,
     )
     .action(() => {
       sandbox.help({ error: true });

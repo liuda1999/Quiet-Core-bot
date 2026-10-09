@@ -29,8 +29,8 @@ export const TAILSCALE_MISSING_BIN_NOTE_LINES = [
 
 export const TAILSCALE_DOCS_LINES = [
   "Docs:",
-  "https://github.com/liuda1999/Quiet-Core-bot/gateway/tailscale",
-  "https://github.com/liuda1999/Quiet-Core-bot/web",
+  "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/gateway/tailscale.md",
+  "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/web/index.md",
 ] as const;
 
 function normalizeTailnetHostForUrl(rawHost: string): string | null {

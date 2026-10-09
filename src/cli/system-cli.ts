@@ -53,8 +53,7 @@ export function registerSystemCli(program: Command) {
     .description("System tools (events, heartbeat, presence)")
     .addHelpText(
       "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/system", "github.com/liuda1999/Quiet-Core-bot/cli/system")}\n`,
+      () => `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/system", "docs/cli/system.md")}\n`,
     );
 
   addGatewayClientOptions(

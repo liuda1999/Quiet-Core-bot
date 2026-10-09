@@ -67,7 +67,7 @@ describe("config validation SecretRef policy guards", () => {
       const issue = requireIssue(result.issues, "hooks.token");
       expect(issue.message).toContain("SecretRef objects are not supported at hooks.token");
       expect(issue.message).toContain(
-        "https://github.com/liuda1999/Quiet-Core-bot/reference/secretref-credential-surface",
+        "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/reference/secretref-credential-surface.md",
       );
       expect(
         result.issues.some(

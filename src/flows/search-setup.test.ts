@@ -18,7 +18,7 @@ const mockGrokProvider = vi.hoisted(() => ({
   pluginId: "xai",
   label: "Grok",
   hint: "Search with xAI",
-  docsUrl: "https://github.com/liuda1999/Quiet-Core-bot/tools/web",
+  docsUrl: "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/tools/web.md",
   requiresCredential: true,
   credentialLabel: "xAI API key",
   placeholder: "xai-...",
@@ -311,7 +311,7 @@ describe("runSearchSetupFlow", () => {
         "Secret references enabled — Quiet Core bot will store a reference instead of the API key.",
         "Env var: XAI_API_KEY.",
         "Set XAI_API_KEY in the Gateway environment.",
-        "Docs: https://github.com/liuda1999/Quiet-Core-bot/tools/web",
+        "Docs: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/tools/web.md",
       ].join("\n"),
       "Web search",
     );

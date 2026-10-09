@@ -291,7 +291,8 @@ describe("packNpmSpecToArchive", () => {
     const cwd = await createFixtureDir();
     mockPackCommandResult({
       stdout: "",
-      stderr: "npm error code E404\nnpm error 404  '@quiet-core/whatsapp@*' is not in this registry.",
+      stderr:
+        "npm error code E404\nnpm error 404  '@quiet-core/whatsapp@*' is not in this registry.",
       code: 1,
     });
 
@@ -299,7 +300,7 @@ describe("packNpmSpecToArchive", () => {
     expectPackError(result, [
       "Package not found on npm",
       "@quiet-core/whatsapp",
-      "github.com/liuda1999/Quiet-Core-bot/tools/plugin",
+      "github.com/liuda1999/Quiet-Core-bot/blob/main/docs/tools/plugin.md",
     ]);
   });
 

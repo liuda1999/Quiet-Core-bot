@@ -116,7 +116,7 @@ export async function registerChannelsCli(
           ["quiet-core-bot channels login --channel whatsapp", "Link a WhatsApp Web account."],
         ])}\n\n${theme.muted("Docs:")} ${formatDocsLink(
           "/cli/channels",
-          "github.com/liuda1999/Quiet-Core-bot/cli/channels",
+          "docs/cli/channels.md",
         )}\n`,
     );
 

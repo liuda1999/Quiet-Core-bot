@@ -7,11 +7,6 @@ import type { ExecApprovalRequest } from "../../infra/exec-approvals.js";
 import type { ReplyPayload } from "../types.js";
 import { parseExportCommandOutputPath } from "./commands-export-common.js";
 import {
-  buildCurrentQuietCoreCliArgv,
-  buildCurrentQuietCoreCliCommand,
-  buildCurrentQuietCoreCliExecEnv,
-} from "./commands-quiet-core-bot-cli.js";
-import {
   deliverPrivateCommandReply,
   readCommandDeliveryTarget,
   readCommandMessageThreadId,
@@ -19,9 +14,15 @@ import {
   resolvePrivateCommandRouteTargets,
   type PrivateCommandRouteTarget,
 } from "./commands-private-route.js";
+import {
+  buildCurrentQuietCoreCliArgv,
+  buildCurrentQuietCoreCliCommand,
+  buildCurrentQuietCoreCliExecEnv,
+} from "./commands-quiet-core-bot-cli.js";
 import type { HandleCommandsParams } from "./commands-types.js";
 
-const EXPORT_TRAJECTORY_DOCS_URL = "https://github.com/liuda1999/Quiet-Core-bot/tools/trajectory";
+const EXPORT_TRAJECTORY_DOCS_URL =
+  "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/tools/trajectory.md";
 const EXPORT_TRAJECTORY_EXEC_SCOPE_KEY = "chat:export-trajectory";
 const MAX_TRAJECTORY_EXPORT_ENCODED_REQUEST_CHARS = 8192;
 const EXPORT_TRAJECTORY_PRIVATE_ROUTE_UNAVAILABLE =

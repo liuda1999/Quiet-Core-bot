@@ -93,8 +93,7 @@ export function registerPairingCli(program: Command) {
     .description("Secure DM pairing (approve inbound requests)")
     .addHelpText(
       "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/pairing", "github.com/liuda1999/Quiet-Core-bot/cli/pairing")}\n`,
+      () => `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/pairing", "docs/cli/pairing.md")}\n`,
     );
 
   pairing

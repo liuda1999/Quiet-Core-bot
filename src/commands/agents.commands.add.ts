@@ -466,7 +466,7 @@ export async function agentsAddCommand(
         await prompter.note(
           [
             "Routing unchanged. Add bindings when you're ready.",
-            "Docs: https://github.com/liuda1999/Quiet-Core-bot/concepts/multi-agent",
+            "Docs: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/concepts/multi-agent.md",
           ].join("\n"),
           "Routing",
         );

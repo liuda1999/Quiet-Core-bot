@@ -150,8 +150,11 @@ export function registerMemoryCli(program: Command) {
             "quiet-core-bot memory rem-backfill --path ./memory --stage-short-term",
             "Also seed durable grounded candidates into the live short-term promotion store.",
           ],
-          ["quiet-core-bot memory status --json", "Output machine-readable JSON (good for scripts)."],
-        ])}\n\n${theme.muted("Docs:")} ${formatDocsLink("/cli/memory", "github.com/liuda1999/Quiet-Core-bot/cli/memory")}\n`,
+          [
+            "quiet-core-bot memory status --json",
+            "Output machine-readable JSON (good for scripts).",
+          ],
+        ])}\n\n${theme.muted("Docs:")} ${formatDocsLink("/cli/memory", "docs/cli/memory.md")}\n`,
     );
 
   memory

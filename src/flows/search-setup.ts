@@ -30,7 +30,9 @@ import { sortFlowContributionsByLabel } from "./types.js";
 type SearchProvider = NonNullable<
   NonNullable<NonNullable<NonNullable<QuietCoreConfig["tools"]>["web"]>["search"]>["provider"]
 >;
-type SearchConfig = NonNullable<NonNullable<NonNullable<QuietCoreConfig["tools"]>["web"]>["search"]>;
+type SearchConfig = NonNullable<
+  NonNullable<NonNullable<QuietCoreConfig["tools"]>["web"]>["search"]
+>;
 type MutableSearchConfig = SearchConfig & Record<string, unknown>;
 
 type SearchProviderSetupOption = FlowOption & {
@@ -46,7 +48,8 @@ type SearchProviderSetupContribution = FlowContribution & {
 };
 
 const SEARCH_INSTALL_CATALOG_ENTRY = Symbol("search-install-catalog-entry");
-const WEB_SEARCH_DOCS_URL = "https://github.com/liuda1999/Quiet-Core-bot/tools/web";
+const WEB_SEARCH_DOCS_URL =
+  "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/tools/web.md";
 
 type SearchProviderEntryWithInstall = PluginWebSearchProviderEntry & {
   [SEARCH_INSTALL_CATALOG_ENTRY]?: WebSearchInstallCatalogEntry;
@@ -293,7 +296,10 @@ export function applySearchProviderSelection(
   return applySearchProviderSelectionConfig(nextBase, providerEntry);
 }
 
-function preserveDisabledState(original: QuietCoreConfig, result: QuietCoreConfig): QuietCoreConfig {
+function preserveDisabledState(
+  original: QuietCoreConfig,
+  result: QuietCoreConfig,
+): QuietCoreConfig {
   if (original.tools?.web?.search?.enabled !== false) {
     return result;
   }
@@ -545,7 +551,7 @@ export async function runSearchSetupFlow(
       [
         `${entry.label} works without an API key.`,
         "Quiet Core bot will enable the plugin and use it as your web_search provider.",
-        `Docs: ${entry.docsUrl ?? "https://github.com/liuda1999/Quiet-Core-bot/tools/web"}`,
+        `Docs: ${entry.docsUrl ?? "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/tools/web.md"}`,
       ].join("\n"),
       "Web search",
     );
@@ -621,7 +627,7 @@ export async function runSearchSetupFlow(
         "Secret references enabled — Quiet Core bot will store a reference instead of the API key.",
         `Env var: ${ref.id}${envAvailable ? " (detected)" : ""}.`,
         ...(envAvailable ? [] : [`Set ${ref.id} in the Gateway environment.`]),
-        "Docs: https://github.com/liuda1999/Quiet-Core-bot/tools/web",
+        "Docs: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/tools/web.md",
       ].join("\n"),
       "Web search",
     );
@@ -684,7 +690,7 @@ export async function runSearchSetupFlow(
     [
       `No ${credentialLabel} stored — web_search won't work until a key is available.`,
       `Get your key at: ${entry.signupUrl}`,
-      "Docs: https://github.com/liuda1999/Quiet-Core-bot/tools/web",
+      "Docs: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/tools/web.md",
     ].join("\n"),
     "Web search",
   );

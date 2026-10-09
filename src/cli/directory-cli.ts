@@ -85,7 +85,7 @@ export function registerDirectoryCli(program: Command) {
           ],
         ])}\n\n${theme.muted("Docs:")} ${formatDocsLink(
           "/cli/directory",
-          "github.com/liuda1999/Quiet-Core-bot/cli/directory",
+          "docs/cli/directory.md",
         )}\n`,
     )
     .action(() => {

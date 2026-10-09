@@ -469,7 +469,7 @@ export function formatLaunchAgentGuiSessionError(params: {
     "This usually means you are running from SSH/headless context or as the wrong user (including sudo).",
     `Fix: sign in to the macOS desktop as the target user and rerun \`${params.actionHint}\`.`,
     "For headless VM setups, enable auto-login for the target user so macOS creates the GUI session after boot.",
-    "Headless deployments should use a dedicated logged-in user session or a custom LaunchDaemon (not shipped): https://github.com/liuda1999/Quiet-Core-bot/gateway",
+    "Headless deployments should use a dedicated logged-in user session or a custom LaunchDaemon (not shipped): https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/gateway/index.md",
   ].join("\n");
 }
 

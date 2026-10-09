@@ -157,8 +157,8 @@ async function runGatewayHealthCheck(params: {
     note(
       [
         "Docs:",
-        "https://github.com/liuda1999/Quiet-Core-bot/gateway/health",
-        "https://github.com/liuda1999/Quiet-Core-bot/gateway/troubleshooting",
+        "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/gateway/health.md",
+        "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/gateway/troubleshooting.md",
       ].join("\n"),
       "Health check help",
     );
@@ -226,7 +226,7 @@ async function promptWebToolsConfig(
     [
       "Web search lets your agent look things up online using the `web_search` tool.",
       "Choose a managed provider now, and Codex-capable models can also use native Codex web search.",
-      "Docs: https://github.com/liuda1999/Quiet-Core-bot/tools/web",
+      "Docs: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/tools/web.md",
     ].join("\n"),
     "Web search",
   );
@@ -253,7 +253,7 @@ async function promptWebToolsConfig(
         [
           "No web search providers are currently available under this plugin policy.",
           "Enable plugins or remove deny rules, then rerun configure.",
-          "Docs: https://github.com/liuda1999/Quiet-Core-bot/tools/web",
+          "Docs: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/tools/web.md",
         ].join("\n"),
         "Web search",
       );
@@ -339,7 +339,7 @@ export async function runConfigureWizard(
           [
             ...snapshot.issues.map((iss) => `- ${iss.path}: ${iss.message}`),
             "",
-            "Docs: https://github.com/liuda1999/Quiet-Core-bot/gateway/configuration",
+            "Docs: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/gateway/configuration.md",
           ].join("\n"),
           "Config issues",
         );
@@ -739,7 +739,7 @@ export async function runConfigureWizard(
           [
             "Remote Gateway:",
             remoteUrl,
-            "Docs: https://github.com/liuda1999/Quiet-Core-bot/gateway/remote",
+            "Docs: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/gateway/remote.md",
           ].join("\n"),
           "Gateway",
         );
@@ -804,7 +804,7 @@ export async function runConfigureWizard(
         `Web UI: ${links.httpUrl}`,
         `Gateway WS: ${links.wsUrl}`,
         gatewayStatusLine,
-        "Docs: https://github.com/liuda1999/Quiet-Core-bot/web/control-ui",
+        "Docs: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/web/control-ui.md",
       ].join("\n"),
       "Control UI",
     );

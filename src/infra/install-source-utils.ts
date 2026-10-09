@@ -110,7 +110,7 @@ export async function resolveNpmSpecMetadata(params: { spec: string; timeoutMs?:
     if (/E404|is not in this registry/i.test(raw)) {
       return {
         ok: false,
-        error: `Package not found on npm: ${params.spec}. See https://github.com/liuda1999/Quiet-Core-bot/tools/plugin for installable plugins.`,
+        error: `Package not found on npm: ${params.spec}. See https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/tools/plugin.md for installable plugins.`,
       };
     }
     return { ok: false, error: `npm view failed: ${raw}` };
@@ -314,7 +314,7 @@ export async function packNpmSpecToArchive(params: {
     if (/E404|is not in this registry/i.test(raw)) {
       return {
         ok: false,
-        error: `Package not found on npm: ${params.spec}. See https://github.com/liuda1999/Quiet-Core-bot/tools/plugin for installable plugins.`,
+        error: `Package not found on npm: ${params.spec}. See https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/tools/plugin.md for installable plugins.`,
       };
     }
     return { ok: false, error: `npm pack failed: ${raw}` };

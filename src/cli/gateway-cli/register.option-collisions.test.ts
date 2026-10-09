@@ -94,7 +94,7 @@ vi.mock("../../../packages/terminal-core/src/health-style.js", () => ({
 }));
 
 vi.mock("../../../packages/terminal-core/src/links.js", () => ({
-  formatDocsLink: () => "github.com/liuda1999/Quiet-Core-bot/cli/gateway",
+  formatDocsLink: () => "docs/cli/gateway.md",
 }));
 
 vi.mock("../../../packages/terminal-core/src/theme.js", () => ({

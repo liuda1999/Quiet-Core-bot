@@ -5,7 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { resolveQuietCorePackageRoot } from "../infra/quiet-core-bot-root.js";
 
-export const QUIET_CORE_DOCS_URL = "https://github.com/liuda1999/Quiet-Core-bot";
+export const QUIET_CORE_DOCS_URL = "https://github.com/liuda1999/Quiet-Core-bot/tree/main/docs";
 export const QUIET_CORE_SOURCE_URL = "https://github.com/liuda1999/Quiet-Core-bot";
 
 type ResolveQuietCoreReferencePathParams = {

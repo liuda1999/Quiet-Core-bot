@@ -9,7 +9,7 @@ describe("formatCliParseErrorOutput", () => {
     });
 
     expect(output).toBe(
-      'Quiet Core bot does not know the command "wat".\nTry: quiet-core-bot --help\nPlugin command? quiet-core-bot plugins list\nDocs: https://github.com/liuda1999/Quiet-Core-bot/cli\n',
+      'Quiet Core bot does not know the command "wat".\nTry: quiet-core-bot --help\nPlugin command? quiet-core-bot plugins list\nDocs: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/cli/index.md\n',
     );
   });
 
@@ -19,7 +19,7 @@ describe("formatCliParseErrorOutput", () => {
     });
 
     expect(output).toBe(
-      'Quiet Core bot does not know the command "upate".\nDid you mean this?\n  quiet-core-bot update\nTry: quiet-core-bot --help\nPlugin command? quiet-core-bot plugins list\nDocs: https://github.com/liuda1999/Quiet-Core-bot/cli\n',
+      'Quiet Core bot does not know the command "upate".\nDid you mean this?\n  quiet-core-bot update\nTry: quiet-core-bot --help\nPlugin command? quiet-core-bot plugins list\nDocs: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/cli/index.md\n',
     );
   });
 

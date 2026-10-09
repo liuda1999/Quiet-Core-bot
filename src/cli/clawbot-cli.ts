@@ -10,8 +10,7 @@ export function registerClawbotCli(program: Command) {
     .description("Legacy clawbot command aliases")
     .addHelpText(
       "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/clawbot", "github.com/liuda1999/Quiet-Core-bot/cli/clawbot")}\n`,
+      () => `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/clawbot", "docs/cli/clawbot.md")}\n`,
     );
   registerQrCli(clawbot);
 }

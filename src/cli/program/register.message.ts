@@ -48,7 +48,7 @@ ${formatHelpExamples([
   ],
 ])}
 
-${theme.muted("Docs:")} ${formatDocsLink("/cli/message", "github.com/liuda1999/Quiet-Core-bot/cli/message")}`,
+${theme.muted("Docs:")} ${formatDocsLink("/cli/message", "docs/cli/message.md")}`,
     )
     .action(() => {
       message.help({ error: true });

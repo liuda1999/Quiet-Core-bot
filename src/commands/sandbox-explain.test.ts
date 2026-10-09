@@ -39,7 +39,10 @@ describe("sandbox explain command", () => {
 
     const out = logs.join("");
     const parsed = JSON.parse(out);
-    expect(parsed).toHaveProperty("docsUrl", "https://github.com/liuda1999/Quiet-Core-bot/sandbox");
+    expect(parsed).toHaveProperty(
+      "docsUrl",
+      "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/gateway/sandboxing.md",
+    );
     expect(parsed).toHaveProperty("sandbox.mode", "all");
     expect(parsed).toHaveProperty("sandbox.tools.sources.allow.source");
     expect(parsed.fixIt).toEqual([

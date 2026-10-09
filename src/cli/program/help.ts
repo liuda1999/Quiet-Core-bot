@@ -158,7 +158,7 @@ export function configureProgramHelp(
     if (command !== program) {
       return "";
     }
-    const docs = formatDocsLink("/cli", "github.com/liuda1999/Quiet-Core-bot/cli");
+    const docs = formatDocsLink("/cli/index", "docs/cli/index.md");
     return `\n${theme.heading("Examples:")}\n${fmtExamples}\n\n${theme.muted("Docs:")} ${docs}\n`;
   });
 }

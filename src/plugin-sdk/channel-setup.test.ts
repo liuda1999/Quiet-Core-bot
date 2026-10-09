@@ -20,11 +20,11 @@ describe("createOptionalChannelSetupSurface", () => {
         input: {},
       }),
     ).toBe(
-      "Example setup requires @quiet-core/example to be installed. Docs: https://github.com/liuda1999/Quiet-Core-bot/channels/example",
+      "Example setup requires @quiet-core/example to be installed. Docs: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/channels/example.md",
     );
     expect(setup.setupWizard.channel).toBe("example");
     expect(setup.setupWizard.status.unconfiguredHint).toBe(
-      "Example setup requires @quiet-core/example to be installed. Docs: https://github.com/liuda1999/Quiet-Core-bot/channels/example",
+      "Example setup requires @quiet-core/example to be installed. Docs: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/channels/example.md",
     );
     await expect(
       runSetupWizardFinalize({

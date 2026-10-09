@@ -331,7 +331,7 @@ describe("resolveChannelSetupSelectionContributions", () => {
         "Approve with: quiet-core-bot pairing approve <channel> <code>",
         'Open/public DMs require dmPolicy="open" plus allowFrom=["*"].',
         'For multi-user DMs, isolate sessions with: quiet-core-bot config set session.dmScope "per-channel-peer" (or "per-account-channel-peer" for multi-account channels).',
-        "Docs: https://github.com/liuda1999/Quiet-Core-bot/channels/pairing",
+        "Docs: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/channels/pairing.md",
         "",
         "bad\\nid: Blurb\\nline",
       ].join("\n"),
@@ -408,7 +408,7 @@ describe("resolveChannelSetupSelectionContributions", () => {
       throw new Error("Expected docs link formatter");
     }
     expect(docsLink("/channels/zalo", "Docs")).toBe(
-      "https://github.com/liuda1999/Quiet-Core-bot/channels/zalo",
+      "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/channels/zalo.md",
     );
     expect(lines).toEqual(["Zalo\\nBot — Setup\\nhelp"]);
   });

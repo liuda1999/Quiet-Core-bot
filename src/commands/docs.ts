@@ -1,20 +1,20 @@
 // Implements docs link/search output for `quiet-core-bot docs`.
-import { formatDocsLink } from "../../packages/terminal-core/src/links.js";
+import fs from "node:fs";
+import path from "node:path";
+import { formatDocsLink, resolveDocsUrl } from "../../packages/terminal-core/src/links.js";
 import { isRich, theme } from "../../packages/terminal-core/src/theme.js";
+import { resolveQuietCoreReferencePaths } from "../agents/docs-path.js";
 import { formatCliCommand } from "../cli/command-format.js";
 import type { RuntimeEnv } from "../runtime.js";
 
-const SEARCH_API = "https://github.com/liuda1999/Quiet-Core-bot/api/search";
-const SEARCH_TIMEOUT_MS = 30_000;
+const SEARCH_RESULT_LIMIT = 10;
+const SNIPPET_LENGTH = 160;
+const MARKDOWN_EXTENSION = /\.mdx?$/u;
 
 type DocResult = {
   title: string;
   link: string;
   snippet?: string;
-};
-
-type DocsSearchResponse = {
-  results?: unknown;
 };
 
 function escapeMarkdown(text: string): string {
@@ -62,61 +62,128 @@ async function renderMarkdown(markdown: string, runtime: RuntimeEnv) {
   runtime.log(markdown.trimEnd());
 }
 
-async function fetchDocsSearch(query: string): Promise<DocResult[]> {
-  const url = new URL(SEARCH_API);
-  url.searchParams.set("q", query);
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), SEARCH_TIMEOUT_MS);
+/** Recursively collect Markdown file paths (relative to the docs root). */
+function collectMarkdownFiles(docsDir: string, relativeDir = ""): string[] {
+  const results: string[] = [];
+  let entries: fs.Dirent[];
   try {
-    const response = await fetch(url, {
-      headers: { Accept: "application/json" },
-      signal: controller.signal,
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-    const payload = (await response.json()) as DocsSearchResponse;
-    return parseDocsSearchResults(payload.results);
-  } finally {
-    clearTimeout(timeout);
+    entries = fs.readdirSync(path.join(docsDir, relativeDir), { withFileTypes: true });
+  } catch {
+    return results;
   }
-}
-
-function parseDocsSearchResults(raw: unknown): DocResult[] {
-  if (!Array.isArray(raw)) {
-    return [];
-  }
-  const results: DocResult[] = [];
-  for (const item of raw) {
-    if (!item || typeof item !== "object") {
+  for (const entry of entries) {
+    if (entry.name.startsWith(".")) {
       continue;
     }
-    const entry = item as Record<string, unknown>;
-    if (typeof entry.title !== "string" || typeof entry.link !== "string") {
+    const relativePath = relativeDir ? path.join(relativeDir, entry.name) : entry.name;
+    if (entry.isDirectory()) {
+      results.push(...collectMarkdownFiles(docsDir, relativePath));
       continue;
     }
-    results.push({
-      title: entry.title,
-      link: entry.link,
-      snippet:
-        typeof entry.snippet === "string" && entry.snippet.trim() ? entry.snippet : undefined,
-    });
+    if (entry.isFile() && MARKDOWN_EXTENSION.test(entry.name)) {
+      results.push(relativePath);
+    }
   }
   return results;
 }
 
-/** Search hosted docs, or print the docs homepage when no query is provided. */
+function extractTitle(content: string, route: string): string {
+  const match = content.match(/^#\s+(.+)$/mu);
+  return match ? match[1].trim() : route;
+}
+
+function extractSnippet(content: string, terms: string[]): string | undefined {
+  for (const line of content.split(/\r?\n/u)) {
+    const normalized = line
+      .replace(/[#*_`>]/gu, " ")
+      .replace(/\s+/gu, " ")
+      .trim();
+    if (normalized.length < 4) {
+      continue;
+    }
+    const lower = normalized.toLowerCase();
+    if (terms.some((term) => lower.includes(term))) {
+      return normalized.length > SNIPPET_LENGTH
+        ? `${normalized.slice(0, SNIPPET_LENGTH)}…`
+        : normalized;
+    }
+  }
+  return undefined;
+}
+
+/** Search the local `docs/` Markdown sources bundled with the checkout. */
+export function searchDocsDirectory(docsDir: string, query: string): DocResult[] {
+  const terms = query.toLowerCase().split(/\s+/u).filter(Boolean);
+  if (terms.length === 0) {
+    return [];
+  }
+  const scored: Array<{ score: number; item: DocResult }> = [];
+  for (const relativePath of collectMarkdownFiles(docsDir)) {
+    let content: string;
+    try {
+      content = fs.readFileSync(path.join(docsDir, relativePath), "utf8");
+    } catch {
+      continue;
+    }
+    const route = `/${relativePath.split(path.sep).join("/").replace(MARKDOWN_EXTENSION, "")}`;
+    const lowerRoute = route.toLowerCase();
+    const lowerContent = content.toLowerCase();
+    let score = 0;
+    for (const term of terms) {
+      if (lowerRoute.endsWith(`/${term}`) || lowerRoute.endsWith(`/${term}.md`)) {
+        score += 6;
+      } else if (lowerRoute.includes(term)) {
+        score += 4;
+      }
+      if (lowerContent.includes(term)) {
+        score += 1;
+      }
+    }
+    if (score <= 0) {
+      continue;
+    }
+    scored.push({
+      score,
+      item: {
+        title: extractTitle(content, route),
+        link: resolveDocsUrl(route),
+        snippet: extractSnippet(content, terms),
+      },
+    });
+  }
+  scored.sort((a, b) => b.score - a.score);
+  return scored.slice(0, SEARCH_RESULT_LIMIT).map((entry) => entry.item);
+}
+
+async function resolveLocalDocsPath(): Promise<string | null> {
+  const { docsPath } = await resolveQuietCoreReferencePaths({
+    cwd: process.cwd(),
+    argv1: process.argv[1],
+    moduleUrl: import.meta.url,
+  });
+  return docsPath;
+}
+
+async function searchDocs(query: string): Promise<DocResult[]> {
+  const docsDir = await resolveLocalDocsPath();
+  if (!docsDir) {
+    throw new Error("local docs directory not found; run from a source checkout with `docs/`");
+  }
+  return searchDocsDirectory(docsDir, query);
+}
+
+/** Search the local docs sources, or print the docs homepage when no query is provided. */
 export async function docsSearchCommand(queryParts: string[], runtime: RuntimeEnv) {
   const query = queryParts.join(" ").trim();
   if (!query) {
-    const docs = formatDocsLink("/", "github.com/liuda1999/Quiet-Core-bot");
+    const docs = formatDocsLink("/", "docs");
     if (isRich()) {
       runtime.log(`${theme.muted("Docs:")} ${docs}`);
       runtime.log(
         `${theme.muted("Search:")} ${formatCliCommand('quiet-core-bot docs "your query"')}`,
       );
     } else {
-      runtime.log("Docs: https://github.com/liuda1999/Quiet-Core-bot/");
+      runtime.log(`Docs: ${resolveDocsUrl("/")}`);
       runtime.log(`Search: ${formatCliCommand('quiet-core-bot docs "your query"')}`);
     }
     return;
@@ -124,7 +191,7 @@ export async function docsSearchCommand(queryParts: string[], runtime: RuntimeEn
 
   let results: DocResult[];
   try {
-    results = await fetchDocsSearch(query);
+    results = await searchDocs(query);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     runtime.error(`Docs search failed: ${message}`);

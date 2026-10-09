@@ -50,8 +50,10 @@ export function createQaLabWebSearchProvider(): WebSearchProviderPlugin {
     requiresCredential: false,
     envVars: [],
     placeholder: "(no key needed)",
-    signupUrl: "https://github.com/liuda1999/Quiet-Core-bot/concepts/qa-e2e-automation",
-    docsUrl: "https://github.com/liuda1999/Quiet-Core-bot/concepts/qa-e2e-automation",
+    signupUrl:
+      "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/concepts/qa-e2e-automation.md",
+    docsUrl:
+      "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/concepts/qa-e2e-automation.md",
     credentialPath: "",
     inactiveSecretPaths: [],
     getCredentialValue: () => undefined,

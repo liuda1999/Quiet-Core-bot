@@ -941,7 +941,7 @@ function maybeLogOpenAICodexNativeSearchTip(runtime: RuntimeEnv, providerId: str
     return;
   }
   runtime.log(
-    "Tip: Codex-capable models can use native Codex web search. Enable it with quiet-core-bot configure --section web (recommended mode: cached). Docs: https://github.com/liuda1999/Quiet-Core-bot/tools/web",
+    "Tip: Codex-capable models can use native Codex web search. Enable it with quiet-core-bot configure --section web (recommended mode: cached). Docs: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/tools/web.md",
   );
 }
 

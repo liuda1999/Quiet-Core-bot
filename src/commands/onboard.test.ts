@@ -89,7 +89,7 @@ describe("setupWizardCommand", () => {
           "Windows detected - Quiet Core bot runs great on WSL2!",
           "Native Windows might be trickier.",
           "Quick setup: wsl --install (one command, one reboot)",
-          "Guide: https://github.com/liuda1999/Quiet-Core-bot/windows",
+          "Guide: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/platforms/windows.md",
         ].join("\n"),
       );
     } finally {

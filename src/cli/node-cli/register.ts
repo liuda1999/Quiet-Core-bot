@@ -42,7 +42,7 @@ export function registerNodeCli(program: Command) {
           ["quiet-core-bot node install", "Install the node host service."],
           ["quiet-core-bot node start", "Start the installed node host service."],
           ["quiet-core-bot node restart", "Restart the installed node host service."],
-        ])}\n\n${theme.muted("Docs:")} ${formatDocsLink("/cli/node", "github.com/liuda1999/Quiet-Core-bot/cli/node")}\n`,
+        ])}\n\n${theme.muted("Docs:")} ${formatDocsLink("/cli/node", "docs/cli/node.md")}\n`,
     );
 
   node

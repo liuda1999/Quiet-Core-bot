@@ -257,10 +257,7 @@ export function registerBrowserCli(program: Command, argv: string[] = process.ar
         `\n${theme.heading("Examples:")}\n${formatHelpExamples(
           [...browserCoreExamples, ...browserActionExamples].map((cmd) => [cmd, ""]),
           true,
-        )}\n\n${theme.muted("Docs:")} ${formatDocsLink(
-          "/cli/browser",
-          "github.com/liuda1999/Quiet-Core-bot/cli/browser",
-        )}\n`,
+        )}\n\n${theme.muted("Docs:")} ${formatDocsLink("/cli/browser", "docs/cli/browser.md")}\n`,
     )
     .action(() => {
       browser.outputHelp();

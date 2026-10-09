@@ -80,7 +80,7 @@ export async function setupWizardCommand(
     runtime.error(
       [
         "Non-interactive setup requires explicit risk acknowledgement.",
-        "Read: https://github.com/liuda1999/Quiet-Core-bot/security",
+        "Read: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/gateway/security/index.md",
         `Re-run with: ${formatCliCommand("quiet-core-bot onboard --non-interactive --accept-risk ...")}`,
       ].join("\n"),
     );
@@ -105,7 +105,7 @@ export async function setupWizardCommand(
         "Windows detected - Quiet Core bot runs great on WSL2!",
         "Native Windows might be trickier.",
         "Quick setup: wsl --install (one command, one reboot)",
-        "Guide: https://github.com/liuda1999/Quiet-Core-bot/windows",
+        "Guide: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/platforms/windows.md",
       ].join("\n"),
     );
   }

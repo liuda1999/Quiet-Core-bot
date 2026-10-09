@@ -399,7 +399,7 @@ export function buildStatusModelSelectionLines(params: {
       `  Session selected: ${selected}`,
       `  Reason: ${sess.modelSelectionReason ?? "session override"}`,
       "  Clear with: /model default",
-      "  Docs: https://github.com/liuda1999/Quiet-Core-bot/concepts/models#selection-source-and-fallback-behavior",
+      "  Docs: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/concepts/models.md#selection-source-and-fallback-behavior",
     );
   }
   if (mismatches.length > limit) {
@@ -417,8 +417,8 @@ export function buildStatusFooterLines(params: {
   gatewayReachable: boolean;
 }) {
   return [
-    "FAQ: https://github.com/liuda1999/Quiet-Core-bot/faq",
-    "Troubleshooting: https://github.com/liuda1999/Quiet-Core-bot/troubleshooting",
+    "FAQ: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/help/faq.md",
+    "Troubleshooting: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/help/troubleshooting.md",
     ...(params.updateHint ? ["", params.warn(params.updateHint)] : []),
     "Next steps:",
     `  Need to share?      ${params.formatCliCommand("quiet-core-bot status --all")}`,

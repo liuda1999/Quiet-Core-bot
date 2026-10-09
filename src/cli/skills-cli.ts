@@ -285,8 +285,7 @@ export function registerSkillsCli(program: Command) {
     .option("--agent <id>", "Target agent workspace (defaults to cwd-inferred, then default agent)")
     .addHelpText(
       "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/skills", "github.com/liuda1999/Quiet-Core-bot/cli/skills")}\n`,
+      () => `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/skills", "docs/cli/skills.md")}\n`,
     );
 
   skills

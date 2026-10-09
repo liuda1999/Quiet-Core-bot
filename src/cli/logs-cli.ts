@@ -494,8 +494,7 @@ export function registerLogsCli(program: Command) {
     .option("--utc", "Display timestamps in UTC", false)
     .addHelpText(
       "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/logs", "github.com/liuda1999/Quiet-Core-bot/cli/logs")}\n`,
+      () => `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/logs", "docs/cli/logs.md")}\n`,
     );
 
   addGatewayClientOptions(logs);

@@ -11,11 +11,11 @@ const shouldWarnExtensionApiImport =
 
 if (shouldWarnExtensionApiImport) {
   process.emitWarning(
-    "quiet-core-bot/extension-api is deprecated. Migrate to api.runtime.agent.* or focused quiet-core-bot/plugin-sdk/<subpath> imports. See https://github.com/liuda1999/Quiet-Core-bot/plugins/sdk-migration",
+    "quiet-core-bot/extension-api is deprecated. Migrate to api.runtime.agent.* or focused quiet-core-bot/plugin-sdk/<subpath> imports. See https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/plugins/sdk-migration.md",
     {
       code: "QUIET_CORE_EXTENSION_API_DEPRECATED",
       detail:
-        "This compatibility bridge is temporary. Bundled plugins should use the injected plugin runtime instead of importing host-side agent helpers directly. Migration guide: https://github.com/liuda1999/Quiet-Core-bot/plugins/sdk-migration",
+        "This compatibility bridge is temporary. Bundled plugins should use the injected plugin runtime instead of importing host-side agent helpers directly. Migration guide: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/plugins/sdk-migration.md",
     },
   );
 }

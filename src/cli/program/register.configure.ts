@@ -13,7 +13,7 @@ export function registerConfigureCommand(program: Command): void {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/configure", "github.com/liuda1999/Quiet-Core-bot/cli/configure")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/configure", "docs/cli/configure.md")}\n`,
     )
     .option(
       "--section <section>",

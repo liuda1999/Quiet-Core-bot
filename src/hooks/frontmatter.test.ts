@@ -14,7 +14,9 @@ function requireString(value: string | undefined, label: string): string {
   return value;
 }
 
-function requireQuietCoreMetadata(metadata: QuietCoreHookMetadata | undefined): QuietCoreHookMetadata {
+function requireQuietCoreMetadata(
+  metadata: QuietCoreHookMetadata | undefined,
+): QuietCoreHookMetadata {
   if (!metadata) {
     throw new Error("expected quiet-core-bot metadata");
   }
@@ -247,7 +249,7 @@ describe("resolveQuietCoreMetadata", () => {
     const content = `---
 name: session-memory
 description: "Save session context to memory when /new or /reset command is issued"
-homepage: https://github.com/liuda1999/Quiet-Core-bot/automation/hooks#session-memory
+homepage: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/automation/hooks.md#session-memory
 metadata:
   {
     "quiet-core-bot":

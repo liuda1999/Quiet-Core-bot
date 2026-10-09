@@ -678,13 +678,13 @@ export function createProviderRuntimeTestMock(options: ProviderRuntimeTestMockOp
           return (
             "Ollama requires authentication to be registered as a provider. " +
             'Set OLLAMA_API_KEY="ollama-local" (any value works) or run "quiet-core-bot configure". ' +
-            "See: https://github.com/liuda1999/Quiet-Core-bot/providers/ollama"
+            "See: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/providers/ollama.md"
           );
         case "vllm":
           return (
             "vLLM requires authentication to be registered as a provider. " +
             'Set VLLM_API_KEY (any value works) or run "quiet-core-bot configure". ' +
-            "See: https://github.com/liuda1999/Quiet-Core-bot/providers/vllm"
+            "See: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/providers/vllm.md"
           );
         default:
           return undefined;

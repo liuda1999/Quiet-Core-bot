@@ -2533,8 +2533,7 @@ export function registerConfigCli(program: Command) {
     )
     .addHelpText(
       "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/config", "github.com/liuda1999/Quiet-Core-bot/cli/config")}\n`,
+      () => `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/config", "docs/cli/config.md")}\n`,
     )
     .option(
       "--section <section>",

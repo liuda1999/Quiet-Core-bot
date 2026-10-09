@@ -159,7 +159,7 @@ describe("diagnostics command", () => {
       "Diagnostics can include sensitive local logs and host-level runtime metadata.",
     );
     expect(execCall.defaults.approvalWarningText).toContain(
-      "https://github.com/liuda1999/Quiet-Core-bot/gateway/diagnostics",
+      "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/gateway/diagnostics.md",
     );
     expect(execCall.params.security).toBe("allowlist");
     expect(execCall.params.ask).toBe("always");
@@ -231,7 +231,7 @@ describe("diagnostics command", () => {
       "Diagnostics can include sensitive local logs and host-level runtime metadata.",
     );
     expect(result?.reply?.text).toContain(
-      "https://github.com/liuda1999/Quiet-Core-bot/gateway/diagnostics",
+      "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/gateway/diagnostics.md",
     );
     expect(result?.reply?.text).toContain("no interactive approval client");
     expect(execCalls).toHaveLength(1);

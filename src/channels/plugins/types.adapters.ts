@@ -190,7 +190,11 @@ export type ChannelStatusAdapter<ResolvedAccount, Probe = unknown, Audit = unkno
     }) => Record<string, unknown> | Promise<Record<string, unknown>>
   >;
   probeAccount?: ChannelAdapterCallback<
-    (params: { account: ResolvedAccount; timeoutMs: number; cfg: QuietCoreConfig }) => Promise<Probe>
+    (params: {
+      account: ResolvedAccount;
+      timeoutMs: number;
+      cfg: QuietCoreConfig;
+    }) => Promise<Probe>
   >;
   formatCapabilitiesProbe?: ChannelAdapterCallback<
     (params: { probe: Probe }) => ChannelCapabilitiesDisplayLine[]
@@ -308,7 +312,7 @@ export type ChannelGatewayContext<ResolvedAccount = unknown> = {
    * - External plugins should check for undefined before using
    *
    * @since Plugin SDK 2026.2.19
-   * @see {@link https://github.com/liuda1999/Quiet-Core-bot/plugins/building-plugins | Plugin SDK documentation}
+   * @see {@link https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/plugins/building-plugins.md | Plugin SDK documentation}
    */
   channelRuntime?: ChannelRuntimeSurface;
 };

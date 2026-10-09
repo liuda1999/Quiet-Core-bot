@@ -675,9 +675,9 @@ describe("launchctl list detection", () => {
   );
 
   it.runIf(process.platform === "darwin")("disables explicit legacy updater jobs", async () => {
-    await expect(disableQuietCoreUpdateLaunchdJob("ai.quiet-core-bot.update.2026.5.12")).resolves.toBe(
-      true,
-    );
+    await expect(
+      disableQuietCoreUpdateLaunchdJob("ai.quiet-core-bot.update.2026.5.12"),
+    ).resolves.toBe(true);
 
     const domain = typeof process.getuid === "function" ? `gui/${process.getuid()}` : "gui/501";
     expect(state.launchctlCalls).toContainEqual([
@@ -834,7 +834,8 @@ describe("launchd install", () => {
 
     const plistPath = resolveLaunchAgentPlistPath(env);
     const envFilePath = "/Users/test/.quiet-core-bot/service-env/ai.quiet-core-bot.gateway.env";
-    const wrapperPath = "/Users/test/.quiet-core-bot/service-env/ai.quiet-core-bot.gateway-env-wrapper.sh";
+    const wrapperPath =
+      "/Users/test/.quiet-core-bot/service-env/ai.quiet-core-bot.gateway-env-wrapper.sh";
     const plist = state.files.get(plistPath) ?? "";
     expect(plist).not.toContain("<key>EnvironmentVariables</key>");
     expect(plist).not.toContain(apiKey);
@@ -857,7 +858,8 @@ describe("launchd install", () => {
 
   it("warns before overwriting a customized generated LaunchAgent env wrapper", async () => {
     const env = createDefaultLaunchdEnv();
-    const wrapperPath = "/Users/test/.quiet-core-bot/service-env/ai.quiet-core-bot.gateway-env-wrapper.sh";
+    const wrapperPath =
+      "/Users/test/.quiet-core-bot/service-env/ai.quiet-core-bot.gateway-env-wrapper.sh";
     await installLaunchAgent({
       env,
       stdout: new PassThrough(),
@@ -895,7 +897,8 @@ describe("launchd install", () => {
 
   it("warns before overwriting a customized generated LaunchAgent env wrapper during restart rewrite", async () => {
     const env = createDefaultLaunchdEnv();
-    const wrapperPath = "/Users/test/.quiet-core-bot/service-env/ai.quiet-core-bot.gateway-env-wrapper.sh";
+    const wrapperPath =
+      "/Users/test/.quiet-core-bot/service-env/ai.quiet-core-bot.gateway-env-wrapper.sh";
     await installLaunchAgent({
       env,
       stdout: new PassThrough(),
@@ -947,10 +950,12 @@ describe("launchd install", () => {
     });
 
     const plistPath = resolveLaunchAgentPlistPath(callerEnv);
-    const envFilePath = "/Users/test/service-env/custom-state/service-env/ai.quiet-core-bot.gateway.env";
+    const envFilePath =
+      "/Users/test/service-env/custom-state/service-env/ai.quiet-core-bot.gateway.env";
     const wrapperPath =
       "/Users/test/service-env/custom-state/service-env/ai.quiet-core-bot.gateway-env-wrapper.sh";
-    const callerEnvFilePath = "/Users/test/.quiet-core-bot/service-env/ai.quiet-core-bot.gateway.env";
+    const callerEnvFilePath =
+      "/Users/test/.quiet-core-bot/service-env/ai.quiet-core-bot.gateway.env";
     const callerWrapperPath =
       "/Users/test/.quiet-core-bot/service-env/ai.quiet-core-bot.gateway-env-wrapper.sh";
     const mangledEnvFilePath =
@@ -1817,11 +1822,13 @@ describe("launchd install", () => {
   it("hands restart off to a detached helper when invoked from the current LaunchAgent", async () => {
     const env = createDefaultLaunchdEnv();
 
-    const result = await withProcessEnv({ LAUNCH_JOB_LABEL: "ai.quiet-core-bot.gateway" }, async () =>
-      restartLaunchAgent({
-        env,
-        stdout: new PassThrough(),
-      }),
+    const result = await withProcessEnv(
+      { LAUNCH_JOB_LABEL: "ai.quiet-core-bot.gateway" },
+      async () =>
+        restartLaunchAgent({
+          env,
+          stdout: new PassThrough(),
+        }),
     );
 
     expect(result).toEqual({ outcome: "scheduled" });
@@ -1856,11 +1863,13 @@ describe("launchd install", () => {
       ].join("\n"),
     );
 
-    const result = await withProcessEnv({ LAUNCH_JOB_LABEL: "ai.quiet-core-bot.gateway" }, async () =>
-      restartLaunchAgent({
-        env,
-        stdout: new PassThrough(),
-      }),
+    const result = await withProcessEnv(
+      { LAUNCH_JOB_LABEL: "ai.quiet-core-bot.gateway" },
+      async () =>
+        restartLaunchAgent({
+          env,
+          stdout: new PassThrough(),
+        }),
     );
 
     expect(result).toEqual({ outcome: "scheduled" });
@@ -1869,7 +1878,9 @@ describe("launchd install", () => {
       mode: "reload",
       waitForPid: process.pid,
     });
-    expect(state.files.get(plistPath)).toContain("/Users/test/Library/Logs/quiet-core-bot/gateway.log");
+    expect(state.files.get(plistPath)).toContain(
+      "/Users/test/Library/Logs/quiet-core-bot/gateway.log",
+    );
     expect(state.launchctlCalls).toStrictEqual([]);
   });
 
@@ -1956,7 +1967,9 @@ describe("launchd install", () => {
     }
     expect(message).toContain("logged-in macOS GUI session");
     expect(message).toContain("wrong user (including sudo)");
-    expect(message).toContain("https://github.com/liuda1999/Quiet-Core-bot/gateway");
+    expect(message).toContain(
+      "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/gateway/index.md",
+    );
   });
 
   it("surfaces generic bootstrap failures without GUI-specific guidance", async () => {

@@ -13,8 +13,7 @@ export function registerDocsCli(program: Command) {
     .argument("[query...]", "Search query")
     .addHelpText(
       "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/docs", "github.com/liuda1999/Quiet-Core-bot/cli/docs")}\n`,
+      () => `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/docs", "docs/cli/docs.md")}\n`,
     )
     .action(async (queryParts: string[]) => {
       await runCommandWithRuntime(defaultRuntime, async () => {

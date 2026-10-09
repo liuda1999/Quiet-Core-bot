@@ -142,7 +142,7 @@ describe("configureProgramHelp", () => {
     expect(version).toBe(testProgramContext.programVersion);
     expect(options?.mode).toBe("default");
     expect(help).toContain("Examples:");
-    expect(help).toContain("https://github.com/liuda1999/Quiet-Core-bot/cli");
+    expect(help).toContain("https://docs/cli/index.md");
   });
 
   it("suppresses banner formatting when parent default help requests it", () => {

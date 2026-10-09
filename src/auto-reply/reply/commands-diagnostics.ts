@@ -7,10 +7,6 @@ import { formatErrorMessage } from "../../infra/errors.js";
 import type { ExecApprovalRequest } from "../../infra/exec-approvals.js";
 import type { ReplyPayload } from "../types.js";
 import {
-  buildCurrentQuietCoreCliCommand,
-  buildCurrentQuietCoreCliExecEnv,
-} from "./commands-quiet-core-bot-cli.js";
-import {
   deliverPrivateCommandReply,
   readCommandDeliveryTarget,
   readCommandMessageThreadId,
@@ -18,10 +14,15 @@ import {
   resolvePrivateCommandRouteTargets,
   type PrivateCommandRouteTarget,
 } from "./commands-private-route.js";
+import {
+  buildCurrentQuietCoreCliCommand,
+  buildCurrentQuietCoreCliExecEnv,
+} from "./commands-quiet-core-bot-cli.js";
 import type { CommandHandler, HandleCommandsParams } from "./commands-types.js";
 
 const DIAGNOSTICS_COMMAND = "/diagnostics";
-const DIAGNOSTICS_DOCS_URL = "https://github.com/liuda1999/Quiet-Core-bot/gateway/diagnostics";
+const DIAGNOSTICS_DOCS_URL =
+  "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/gateway/diagnostics.md";
 const GATEWAY_DIAGNOSTICS_EXPORT_JSON_LABEL = "quiet-core-bot gateway diagnostics export --json";
 const DIAGNOSTICS_EXEC_SCOPE_KEY = "chat:diagnostics";
 const DIAGNOSTICS_PRIVATE_ROUTE_UNAVAILABLE =

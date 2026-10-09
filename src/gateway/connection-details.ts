@@ -89,7 +89,7 @@ export function buildGatewayConnectionDetailsWithResolvers(
           ? undefined
           : "Break-glass (trusted private networks only): set QUIET_CORE_ALLOW_INSECURE_PRIVATE_WS=1",
         "Doctor: quiet-core-bot doctor --fix",
-        "Docs: https://github.com/liuda1999/Quiet-Core-bot/gateway/remote",
+        "Docs: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/gateway/remote.md",
       ].join("\n"),
     );
   }

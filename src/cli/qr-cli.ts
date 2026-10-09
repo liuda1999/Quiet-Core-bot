@@ -97,8 +97,7 @@ export function registerQrCli(program: Command) {
     .description("Generate a mobile pairing QR code and setup code")
     .addHelpText(
       "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/qr", "github.com/liuda1999/Quiet-Core-bot/cli/qr")}\n`,
+      () => `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/qr", "docs/cli/qr.md")}\n`,
     )
     .option(
       "--remote",

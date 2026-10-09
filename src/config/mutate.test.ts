@@ -495,7 +495,7 @@ describe("config mutate helpers", () => {
         },
       }),
     ).rejects.toThrow(
-      "Quiet Core bot Nix overview: https://github.com/liuda1999/Quiet-Core-bot/install/nix",
+      "Quiet Core bot Nix overview: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/install/nix.md",
     );
 
     expect(ioMocks.writeConfigFile).not.toHaveBeenCalled();

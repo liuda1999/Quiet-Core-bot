@@ -6,7 +6,7 @@ export const NIX_QUIET_CORE_AGENT_FIRST_URL =
   "https://github.com/liuda1999/nix-openclaw#quick-start";
 /** Public Quiet Core bot Nix overview shown with immutable-config errors. */
 export const QUIET_CORE_NIX_OVERVIEW_URL =
-  "https://github.com/liuda1999/Quiet-Core-bot/install/nix";
+  "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/install/nix.md";
 
 /** Error thrown when a mutating config path is attempted while Nix owns config state. */
 export class NixModeConfigMutationError extends Error {

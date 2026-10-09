@@ -438,7 +438,7 @@ export async function runPluginsDoctorCommand(): Promise<void> {
     }
     lines.push("No plugin install-tree issues detected; configuration warnings remain.");
   }
-  const docs = formatDocsLink("/plugin", "github.com/liuda1999/Quiet-Core-bot/plugin");
+  const docs = formatDocsLink("/tools/plugin", "docs/tools/plugin.md");
   lines.push("");
   lines.push(`${theme.muted("Docs:")} ${docs}`);
   defaultRuntime.log(lines.join("\n"));

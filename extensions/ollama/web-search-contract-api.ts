@@ -14,7 +14,7 @@ export function createOllamaWebSearchProvider(): WebSearchProviderPlugin {
     envVars: [],
     placeholder: "(run ollama signin)",
     signupUrl: "https://ollama.com/",
-    docsUrl: "https://github.com/liuda1999/Quiet-Core-bot/tools/web",
+    docsUrl: "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/tools/web.md",
     autoDetectOrder: 110,
     credentialPath: "",
     ...createWebSearchProviderContractFields({

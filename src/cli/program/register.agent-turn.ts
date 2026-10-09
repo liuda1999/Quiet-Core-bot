@@ -92,7 +92,7 @@ ${formatHelpExamples([
   ],
 ])}
 
-${theme.muted("Docs:")} ${formatDocsLink("/cli/agent", "github.com/liuda1999/Quiet-Core-bot/cli/agent")}`,
+${theme.muted("Docs:")} ${formatDocsLink("/cli/agent", "docs/cli/agent.md")}`,
     )
     .action(async (opts): Promise<void> => {
       const verboseLevel =

@@ -77,8 +77,7 @@ export function registerAgentsCommands(program: Command): void {
     .description("Manage isolated agents (workspaces + auth + routing)")
     .addHelpText(
       "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/agents", "github.com/liuda1999/Quiet-Core-bot/cli/agents")}\n`,
+      () => `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/agents", "docs/cli/agents.md")}\n`,
     );
 
   agents

@@ -12,8 +12,7 @@ export function registerMaintenanceCommands(program: Command) {
     .description("Health checks + quick fixes for the gateway and channels")
     .addHelpText(
       "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/doctor", "github.com/liuda1999/Quiet-Core-bot/cli/doctor")}\n`,
+      () => `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/doctor", "docs/cli/doctor.md")}\n`,
     )
     .option("--no-workspace-suggestions", "Disable workspace memory system suggestions", false)
     .option("--yes", "Accept defaults without prompting", false)
@@ -105,7 +104,7 @@ export function registerMaintenanceCommands(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/dashboard", "github.com/liuda1999/Quiet-Core-bot/cli/dashboard")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/dashboard", "docs/cli/dashboard.md")}\n`,
     )
     .option("--no-open", "Print URL but do not launch a browser")
     .option("--yes", "Start/install the gateway without prompting when needed", false)
@@ -124,8 +123,7 @@ export function registerMaintenanceCommands(program: Command) {
     .description("Reset local config/state (keeps the CLI installed)")
     .addHelpText(
       "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/reset", "github.com/liuda1999/Quiet-Core-bot/cli/reset")}\n`,
+      () => `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/reset", "docs/cli/reset.md")}\n`,
     )
     .option("--scope <scope>", "config|config+creds+sessions|full (default: interactive prompt)")
     .option("--yes", "Skip confirmation prompts", false)
@@ -149,7 +147,7 @@ export function registerMaintenanceCommands(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/uninstall", "github.com/liuda1999/Quiet-Core-bot/cli/uninstall")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/uninstall", "docs/cli/uninstall.md")}\n`,
     )
     .option("--service", "Remove the gateway service", false)
     .option("--state", "Remove state + config", false)

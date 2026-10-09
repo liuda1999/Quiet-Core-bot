@@ -224,8 +224,8 @@ export function formatControlUiSshHint(params: {
     "BYOH note: lan, tailnet, and custom bind are currently IPv4-only.",
     "If your host is IPv6-only, use an IPv4 sidecar or proxy in front of the Gateway.",
     "Docs:",
-    "https://github.com/liuda1999/Quiet-Core-bot/gateway/remote",
-    "https://github.com/liuda1999/Quiet-Core-bot/web/control-ui",
+    "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/gateway/remote.md",
+    "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/web/control-ui.md",
   ]
     .filter(Boolean)
     .join("\n");

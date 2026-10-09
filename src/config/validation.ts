@@ -152,7 +152,7 @@ function stripPreservedLegacyRootKeysForValidation(
 
 const CUSTOM_EXPECTED_ONE_OF_RE = /expected one of ((?:"[^"]+"(?:\|"?[^"]+"?)*)+)/i;
 const SECRETREF_POLICY_DOC_URL =
-  "https://github.com/liuda1999/Quiet-Core-bot/reference/secretref-credential-surface";
+  "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/reference/secretref-credential-surface.md";
 const bundledChannelSchemaById = new Map<string, unknown>(
   GENERATED_BUNDLED_CHANNEL_CONFIG_METADATA.filter((entry) => entry.configurable !== false).map(
     (entry) => [entry.channelId, entry.schema] as const,
@@ -1092,7 +1092,9 @@ export function validateConfigObjectRaw(
       issues: mergeUnsupportedMutableSecretRefIssues(policyIssues, schemaIssues),
     };
   }
-  const validatedConfig = materializeBundledModelProviderOverlays(validated.data as QuietCoreConfig);
+  const validatedConfig = materializeBundledModelProviderOverlays(
+    validated.data as QuietCoreConfig,
+  );
   const channelIssues =
     policyIssues.length > 0 || opts?.validateBundledChannels
       ? collectRawBundledChannelConfigIssues(validatedConfig)

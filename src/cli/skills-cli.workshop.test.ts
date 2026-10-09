@@ -47,7 +47,7 @@ vi.mock("../runtime.js", () => ({
 }));
 
 vi.mock("../terminal/links.js", () => ({
-  formatDocsLink: () => "github.com/liuda1999/Quiet-Core-bot/cli/skills",
+  formatDocsLink: () => "docs/cli/skills.md",
 }));
 
 vi.mock("../terminal/theme.js", () => ({

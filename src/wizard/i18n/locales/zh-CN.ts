@@ -99,7 +99,7 @@ export const zh_CN = {
     },
     gatewayTailscale: {
       docsNote:
-        "文档：\nhttps://github.com/liuda1999/Quiet-Core-bot/gateway/tailscale\nhttps://github.com/liuda1999/Quiet-Core-bot/web",
+        "文档：\nhttps://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/gateway/tailscale.md\nhttps://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/web/index.md",
       funnel: "Funnel",
       funnelHint: "通过 Tailscale Funnel 暴露公网 HTTPS",
       missingBinNote:
@@ -310,7 +310,7 @@ export const zh_CN = {
         "在 Linux 容器中会隐藏仅支持 brew 的技能安装项，因为官方镜像不包含 Homebrew。",
       containerBrewManual: "请使用预装 Homebrew 的自定义镜像，或手动安装这些依赖。",
       containerInstallsTitle: "容器技能安装",
-      docsLine: "文档：https://github.com/liuda1999/Quiet-Core-bot/skills",
+      docsLine: "文档：https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/tools/skills.md",
       enterEnv: "输入 {env}",
       homebrewCommand: "显示 Homebrew 安装命令？",
       homebrewInstallTitle: "Homebrew 安装",
@@ -886,7 +886,8 @@ export const zh_CN = {
       codexNativeSearchOnly: "仅用于支持 Codex 的模型。",
       codexNativeSearchTitle: "Codex 原生搜索",
       controlUiTitle: "Control UI",
-      controlUiDocs: "文档：https://github.com/liuda1999/Quiet-Core-bot/web/control-ui",
+      controlUiDocs:
+        "文档：https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/web/control-ui.md",
       dashboardCopyPaste: "在本机浏览器中复制/粘贴这个 URL 来控制 Quiet Core bot。",
       dashboardLinkWithToken: "Dashboard 链接（含令牌）：{url}",
       dashboardOpened: "已在浏览器中打开。保留该标签页以控制 Quiet Core bot。",
@@ -946,7 +947,7 @@ export const zh_CN = {
       rerunInstallDaemon: "或重新运行：{command}",
       restart: "重启",
       securityReminder:
-        "在你的电脑上运行 agent 存在风险，请加固设置：https://github.com/liuda1999/Quiet-Core-bot/security",
+        "在你的电脑上运行 agent 存在风险，请加固设置：https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/gateway/security/index.md",
       secretRefAuthFailed: "无法解析用于设置认证的 {field} SecretRef。",
       skipHealthNextTime: "下次也可跳过此探测：{command}",
       skipControlUi: "跳过 Control UI/TUI 提示。",
@@ -957,7 +958,7 @@ export const zh_CN = {
         "Linux 安装默认使用 systemd 用户服务。没有 lingering 时，systemd 会在用户会话退出/空闲后停止会话并终止 Gateway。",
       systemdUnavailable: "systemd 用户服务不可用。跳过 lingering 检查和服务安装。",
       terminalHatch: "在终端中启动（推荐）",
-      webDocs: "文档：https://github.com/liuda1999/Quiet-Core-bot/tools/web",
+      webDocs: "文档：https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/tools/web.md",
       webSearchAutoDetected: "Web search 可通过 {provider} 使用（自动检测）。",
       webSearchDisabled: "Web search（{provider}）已配置但被禁用。",
       webSearchEnabled: "Web search 已启用，agent 可在需要时在线查询。",
@@ -980,10 +981,11 @@ export const zh_CN = {
         "重新启用该 provider 或选择其他 provider 前，web_search 无法工作。",
       webUiUrl: "Web UI：{url}",
       webUiWithTokenUrl: "Web UI（含令牌）：{url}",
-      whatNow: "下一步：https://github.com/liuda1999/Quiet-Core-bot",
+      whatNow: "下一步：https://github.com/liuda1999/Quiet-Core-bot/tree/main/docs",
       whatNowTitle: "下一步",
       workspaceBackupTitle: "工作区备份",
-      workspaceDocs: "文档：https://github.com/liuda1999/Quiet-Core-bot/concepts/agent-workspace",
+      workspaceDocs:
+        "文档：https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/concepts/agent-workspace.md",
       workspaceReady: "你的工作区已就绪。",
     },
     gatewayNotes: {

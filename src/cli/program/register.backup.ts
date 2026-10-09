@@ -15,8 +15,7 @@ export function registerBackupCommand(program: Command) {
     .description("Create and verify local backup archives for Quiet Core bot state")
     .addHelpText(
       "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/backup", "github.com/liuda1999/Quiet-Core-bot/cli/backup")}\n`,
+      () => `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/backup", "docs/cli/backup.md")}\n`,
     );
 
   backup

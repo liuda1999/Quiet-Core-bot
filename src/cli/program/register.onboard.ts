@@ -96,8 +96,7 @@ export function registerOnboardCommand(program: Command): void {
     .description("Guided setup for auth, models, Gateway, workspace, channels, and skills")
     .addHelpText(
       "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/onboard", "github.com/liuda1999/Quiet-Core-bot/cli/onboard")}\n`,
+      () => `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/onboard", "docs/cli/onboard.md")}\n`,
     )
     .option("--workspace <dir>", "Agent workspace directory (default: ~/.quiet-core-bot/workspace)")
     .option(

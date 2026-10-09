@@ -371,7 +371,7 @@ export function registerExecPolicyCli(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/approvals", "github.com/liuda1999/Quiet-Core-bot/cli/approvals")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/approvals", "docs/cli/approvals.md")}\n`,
     );
 
   execPolicy

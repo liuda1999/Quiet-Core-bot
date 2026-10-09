@@ -367,8 +367,8 @@ export async function finalizeSetupWizard(
         await prompter.note(
           [
             t("common.docs"),
-            "https://github.com/liuda1999/Quiet-Core-bot/gateway/health",
-            "https://github.com/liuda1999/Quiet-Core-bot/gateway/troubleshooting",
+            "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/gateway/health.md",
+            "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/gateway/troubleshooting.md",
           ].join("\n"),
           t("wizard.finalize.healthCheckHelp"),
         );
@@ -384,8 +384,8 @@ export async function finalizeSetupWizard(
       await prompter.note(
         [
           t("common.docs"),
-          "https://github.com/liuda1999/Quiet-Core-bot/gateway/health",
-          "https://github.com/liuda1999/Quiet-Core-bot/gateway/troubleshooting",
+          "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/gateway/health.md",
+          "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/gateway/troubleshooting.md",
         ].join("\n"),
         t("wizard.finalize.healthCheckHelp"),
       );
@@ -673,7 +673,9 @@ export async function finalizeSetupWizard(
           `  ${formatCliCommand("quiet-core-bot configure --section web")}`,
           "",
           t("wizard.finalize.webSearchGetKey", {
-            url: entry?.signupUrl ?? "https://github.com/liuda1999/Quiet-Core-bot/tools/web",
+            url:
+              entry?.signupUrl ??
+              "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/tools/web.md",
           }),
           t("wizard.finalize.webDocs"),
         ].join("\n"),

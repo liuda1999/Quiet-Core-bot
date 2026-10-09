@@ -11,8 +11,7 @@ export function registerDaemonCli(program: Command) {
     .description("Manage the Gateway service (launchd/systemd/schtasks)")
     .addHelpText(
       "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/gateway", "github.com/liuda1999/Quiet-Core-bot/cli/gateway")}\n`,
+      () => `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/gateway", "docs/cli/gateway.md")}\n`,
     );
 
   addGatewayServiceCommands(daemon, {

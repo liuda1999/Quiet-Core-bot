@@ -91,7 +91,7 @@ export default definePluginEntry({
       buildUnknownModelHint: () =>
         "vLLM requires authentication to be registered as a provider. " +
         'Set VLLM_API_KEY (any value works) or run "quiet-core-bot configure". ' +
-        "See: https://github.com/liuda1999/Quiet-Core-bot/providers/vllm",
+        "See: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/providers/vllm.md",
       resolveThinkingProfile,
       wrapStreamFn: wrapVllmProviderStream,
     });

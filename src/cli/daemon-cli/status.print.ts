@@ -522,6 +522,6 @@ export function printDaemonStatus(status: DaemonStatus, opts: { json: boolean; d
 
   defaultRuntime.log(`${label("Troubles:")} run ${formatCliCommand("quiet-core-bot status")}`);
   defaultRuntime.log(
-    `${label("Troubleshooting:")} https://github.com/liuda1999/Quiet-Core-bot/troubleshooting`,
+    `${label("Troubleshooting:")} https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/help/troubleshooting.md`,
   );
 }

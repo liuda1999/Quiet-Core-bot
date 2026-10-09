@@ -115,7 +115,7 @@ function isNpmAliasOverrideComparatorError(result: { stdout: string; stderr: str
 }
 
 const MISSING_EXTENSIONS_ERROR =
-  'package.json missing quiet-core-bot.extensions; update the plugin package to include quiet-core-bot.extensions (for example ["./dist/index.js"]). See https://github.com/liuda1999/Quiet-Core-bot/help/troubleshooting#plugin-install-fails-with-missing-quiet-core-bot-extensions';
+  'package.json missing quiet-core-bot.extensions; update the plugin package to include quiet-core-bot.extensions (for example ["./dist/index.js"]). See https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/help/troubleshooting.md#plugin-install-fails-with-missing-quiet-core-bot-extensions';
 const PLUGIN_ARCHIVE_ROOT_MARKERS = [
   "package.json",
   "quiet-core-bot.plugin.json",
@@ -1726,7 +1726,9 @@ async function installPluginFromManagedNpmRoot(
         logger,
       });
       if (repairedQuietCorePeer) {
-        logger.info?.(`Repaired stale quiet-core-bot peer dependency in ${npmRoot} after npm install`);
+        logger.info?.(
+          `Repaired stale quiet-core-bot peer dependency in ${npmRoot} after npm install`,
+        );
       }
     }
     try {

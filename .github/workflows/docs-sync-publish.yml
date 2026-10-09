@@ -46,7 +46,7 @@ jobs:
           for attempt in 1 2 3 4 5; do
             rm -rf publish
             if git clone \
-              "https://x-access-token:${QUIET_CORE_DOCS_SYNC_TOKEN}@github.com/openclaw/docs.git" \
+              "https://x-access-token:${QUIET_CORE_DOCS_SYNC_TOKEN}@github.com/${GITHUB_REPOSITORY_OWNER}/docs.git" \
               publish; then
               exit 0
             fi

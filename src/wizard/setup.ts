@@ -266,7 +266,7 @@ export async function runSetupWizard(
         [
           ...snapshot.issues.map((iss) => `- ${iss.path}: ${iss.message}`),
           "",
-          "Docs: https://github.com/liuda1999/Quiet-Core-bot/gateway/configuration",
+          "Docs: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/gateway/configuration.md",
         ].join("\n"),
         "Config issues",
       );

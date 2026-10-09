@@ -18,7 +18,8 @@ const report: HookStatusReport = {
       handlerPath: "/tmp/hooks/session-memory/handler.js",
       hookKey: "session-memory",
       emoji: "💾",
-      homepage: "https://github.com/liuda1999/Quiet-Core-bot/automation/hooks#session-memory",
+      homepage:
+        "https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/automation/hooks.md#session-memory",
       events: ["command:new"],
       always: false,
       enabledByConfig: true,

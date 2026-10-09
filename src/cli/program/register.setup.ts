@@ -19,7 +19,7 @@ export function registerSetupCommand(program: Command): void {
         `    ${theme.muted("Create config, workspace, and session folders.")}\n` +
         `  ${theme.command(formatCliCommand("quiet-core-bot setup --wizard"))}\n` +
         `    ${theme.muted("Run full onboarding for auth, models, Gateway, and channels.")}\n\n` +
-        `${theme.muted("Docs:")} ${formatDocsLink("/cli/setup", "github.com/liuda1999/Quiet-Core-bot/cli/setup")}\n`,
+        `${theme.muted("Docs:")} ${formatDocsLink("/cli/setup", "docs/cli/setup.md")}\n`,
     )
     .option(
       "--workspace <dir>",

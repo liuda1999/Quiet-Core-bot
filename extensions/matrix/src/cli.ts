@@ -1,7 +1,10 @@
 // Matrix plugin module implements cli behavior.
 import type { Command } from "commander";
 import { normalizeAccountId } from "quiet-core-bot/plugin-sdk/account-id";
-import { parseStrictInteger, timestampMsToIsoString } from "quiet-core-bot/plugin-sdk/number-runtime";
+import {
+  parseStrictInteger,
+  timestampMsToIsoString,
+} from "quiet-core-bot/plugin-sdk/number-runtime";
 import type { ChannelSetupInput } from "quiet-core-bot/plugin-sdk/setup";
 import { resolveMatrixAccount, resolveMatrixAccountConfig } from "./matrix/accounts.js";
 import { listMatrixOwnDevices, pruneMatrixStaleGatewayDevices } from "./matrix/actions/devices.js";
@@ -1407,7 +1410,8 @@ export function registerMatrixCli(params: { program: Command }): void {
     .description("Matrix channel utilities")
     .addHelpText(
       "after",
-      () => "\nDocs: https://github.com/liuda1999/Quiet-Core-bot/channels/matrix\n",
+      () =>
+        "\nDocs: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/channels/matrix.md\n",
     );
 
   const account = root.command("account").description("Manage matrix channel accounts");

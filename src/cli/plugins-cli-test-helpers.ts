@@ -179,7 +179,7 @@ vi.mock("../config/config.js", () => ({
           "Config is managed by Nix (`QUIET_CORE_NIX_MODE=1`), so Quiet Core bot treats quiet-core-bot.json as immutable.",
           "Do not run setup, onboarding, quiet-core-bot update, plugin install/update/uninstall/enable, doctor repair/token-generation, or config set against this file.",
           "Agent-first Nix setup: https://github.com/liuda1999/nix-openclaw#quick-start",
-          "Quiet Core bot Nix overview: https://github.com/liuda1999/Quiet-Core-bot/install/nix",
+          "Quiet Core bot Nix overview: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/install/nix.md",
         ].join("\n"),
       );
     }

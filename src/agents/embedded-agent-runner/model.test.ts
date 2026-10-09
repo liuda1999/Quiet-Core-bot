@@ -124,7 +124,7 @@ vi.mock("../model-suppression.js", () => {
         return `Unknown model: ${provider}/gpt-5.3-codex-spark. gpt-5.3-codex-spark is available only through ChatGPT/Codex OAuth. Run \`quiet-core-bot models auth login --provider openai\` and use openai/gpt-5.3-codex-spark with that OAuth profile; OpenAI API-key auth cannot use this model.`;
       }
       if (isUnsupportedXaiMultiAgentModel(provider, id)) {
-        return "Unknown model: xai/grok-4.20-multi-agent-0309. Quiet Core bot does not currently support xAI multi-agent models; choose another xAI model. See https://github.com/liuda1999/Quiet-Core-bot/providers/xai.";
+        return "Unknown model: xai/grok-4.20-multi-agent-0309. Quiet Core bot does not currently support xAI multi-agent models; choose another xAI model. See https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/providers/xai.md.";
       }
       return undefined;
     },
@@ -2828,7 +2828,7 @@ describe("resolveModel", () => {
     });
 
     expect(result.error).toBe(
-      'Unknown model: microsoft-foundry/Kimi-K2.6-1. Found agents.defaults.models["microsoft-foundry/Kimi-K2.6-1"], but no matching models.providers["microsoft-foundry"].models[] entry. Add { "id": "Kimi-K2.6-1", "name": "Kimi-K2.6-1" } to models.providers["microsoft-foundry"].models[] to register this provider model. For custom or proxy providers, also set api and baseUrl so requests route to the intended endpoint. See https://github.com/liuda1999/Quiet-Core-bot/concepts/model-providers.',
+      'Unknown model: microsoft-foundry/Kimi-K2.6-1. Found agents.defaults.models["microsoft-foundry/Kimi-K2.6-1"], but no matching models.providers["microsoft-foundry"].models[] entry. Add { "id": "Kimi-K2.6-1", "name": "Kimi-K2.6-1" } to models.providers["microsoft-foundry"].models[] to register this provider model. For custom or proxy providers, also set api and baseUrl so requests route to the intended endpoint. See https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/concepts/model-providers.md.',
     );
   });
 
@@ -3474,7 +3474,7 @@ describe("resolveModel", () => {
 
     expect(result.model).toBeUndefined();
     expect(result.error).toBe(
-      "Unknown model: xai/grok-4.20-multi-agent-0309. Quiet Core bot does not currently support xAI multi-agent models; choose another xAI model. See https://github.com/liuda1999/Quiet-Core-bot/providers/xai.",
+      "Unknown model: xai/grok-4.20-multi-agent-0309. Quiet Core bot does not currently support xAI multi-agent models; choose another xAI model. See https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/providers/xai.md.",
     );
   });
 

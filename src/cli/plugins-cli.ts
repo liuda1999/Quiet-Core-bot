@@ -69,8 +69,7 @@ export function registerPluginsCli(program: Command) {
     .description("Manage Quiet Core bot plugins and extensions")
     .addHelpText(
       "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/plugins", "github.com/liuda1999/Quiet-Core-bot/cli/plugins")}\n`,
+      () => `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/plugins", "docs/cli/plugins.md")}\n`,
     );
 
   plugins

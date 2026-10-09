@@ -100,7 +100,7 @@ export const en = {
     },
     gatewayTailscale: {
       docsNote:
-        "Docs:\nhttps://github.com/liuda1999/Quiet-Core-bot/gateway/tailscale\nhttps://github.com/liuda1999/Quiet-Core-bot/web",
+        "Docs:\nhttps://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/gateway/tailscale.md\nhttps://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/web/index.md",
       funnel: "Funnel",
       funnelHint: "Public HTTPS via Tailscale Funnel (internet)",
       missingBinNote:
@@ -319,7 +319,7 @@ export const en = {
       containerBrewManual:
         "Use a custom image with Homebrew preinstalled or install those dependencies manually.",
       containerInstallsTitle: "Container skill installs",
-      docsLine: "Docs: https://github.com/liuda1999/Quiet-Core-bot/skills",
+      docsLine: "Docs: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/tools/skills.md",
       enterEnv: "Enter {env}",
       homebrewCommand: "Show Homebrew install command?",
       homebrewInstallTitle: "Homebrew install",
@@ -919,7 +919,8 @@ export const en = {
       codexNativeSearchOnly: "Used only for Codex-capable models.",
       codexNativeSearchTitle: "Codex native search",
       controlUiTitle: "Control UI",
-      controlUiDocs: "Docs: https://github.com/liuda1999/Quiet-Core-bot/web/control-ui",
+      controlUiDocs:
+        "Docs: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/web/control-ui.md",
       dashboardCopyPaste:
         "Copy/paste this URL in a browser on this machine to control Quiet Core bot.",
       dashboardLinkWithToken: "Dashboard link (with token): {url}",
@@ -984,7 +985,7 @@ export const en = {
       rerunInstallDaemon: "Or rerun with: {command}",
       restart: "Restart",
       securityReminder:
-        "Running agents on your computer is risky — harden your setup: https://github.com/liuda1999/Quiet-Core-bot/security",
+        "Running agents on your computer is risky — harden your setup: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/gateway/security/index.md",
       secretRefAuthFailed: "Could not resolve {field} SecretRef for setup auth.",
       skipHealthNextTime: "Or skip this probe next time: {command}",
       skipControlUi: "Skipping Control UI/TUI prompts.",
@@ -996,7 +997,7 @@ export const en = {
       systemdUnavailable:
         "Systemd user services are unavailable. Skipping lingering checks and service install.",
       terminalHatch: "Hatch in Terminal (recommended)",
-      webDocs: "Docs: https://github.com/liuda1999/Quiet-Core-bot/tools/web",
+      webDocs: "Docs: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/tools/web.md",
       webSearchAutoDetected: "Web search is available via {provider} (auto-detected).",
       webSearchDisabled: "Web search ({provider}) is configured but disabled.",
       webSearchEnabled:
@@ -1020,10 +1021,11 @@ export const en = {
         "web_search will not work until the provider is re-enabled or a different provider is selected.",
       webUiUrl: "Web UI: {url}",
       webUiWithTokenUrl: "Web UI (with token): {url}",
-      whatNow: "What now: https://github.com/liuda1999/Quiet-Core-bot",
+      whatNow: "What now: https://github.com/liuda1999/Quiet-Core-bot/tree/main/docs",
       whatNowTitle: "What now",
       workspaceBackupTitle: "Workspace backup",
-      workspaceDocs: "Docs: https://github.com/liuda1999/Quiet-Core-bot/concepts/agent-workspace",
+      workspaceDocs:
+        "Docs: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/concepts/agent-workspace.md",
       workspaceReady: "Your workspace is ready.",
     },
     gatewayNotes: {

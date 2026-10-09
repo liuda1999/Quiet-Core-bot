@@ -26,11 +26,11 @@ const shouldWarnCompatImport =
 
 if (shouldWarnCompatImport) {
   process.emitWarning(
-    "quiet-core-bot/plugin-sdk/compat is deprecated for new plugins. Migrate to focused quiet-core-bot/plugin-sdk/<subpath> imports. See https://github.com/liuda1999/Quiet-Core-bot/plugins/sdk-migration",
+    "quiet-core-bot/plugin-sdk/compat is deprecated for new plugins. Migrate to focused quiet-core-bot/plugin-sdk/<subpath> imports. See https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/plugins/sdk-migration.md",
     {
       code: "QUIET_CORE_PLUGIN_SDK_COMPAT_DEPRECATED",
       detail:
-        "Bundled plugins must use scoped plugin-sdk subpaths. External plugins may keep compat temporarily while migrating. Migration guide: https://github.com/liuda1999/Quiet-Core-bot/plugins/sdk-migration",
+        "Bundled plugins must use scoped plugin-sdk subpaths. External plugins may keep compat temporarily while migrating. Migration guide: https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/plugins/sdk-migration.md",
     },
   );
 }
