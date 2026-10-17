@@ -133,7 +133,7 @@ overrides:
   "@grpc/grpc-js": 1.14.6
   "simple-git": 4.0.2
   "@simple-git/argv-parser": 2.0.1
-  "@a2ui/web_core": 0.13.0
+  "@a2ui/web_core": 0.10.7
   "@vitest/browser": 5.0.5
 
 allowBuilds:
