@@ -468,11 +468,13 @@ jobs:
           QUIET_CORE_INSTALL_SMOKE_SKIP_NONROOT: "0"
           QUIET_CORE_INSTALL_SMOKE_SKIP_NPM_GLOBAL: "1"
           QUIET_CORE_INSTALL_SMOKE_SKIP_PREVIOUS: "1"
-          # Update smoke needs a published baseline on npm (`quiet-core-bot@latest`).
-          # This package is not published to the public npm registry yet, so the
-          # baseline fetch always 404s. Remove SKIP_UPDATE once the first public
-          # npm release exists and the upgrade path should be validated again.
+          # Update smoke and npm freshness smoke both resolve `quiet-core-bot@latest`
+          # from the public npm registry. This package is not published to npm yet,
+          # so both fail with "failed to resolve quiet-core-bot@latest" / 404.
+          # Remove SKIP_UPDATE and SKIP_FRESHNESS once the first public npm release
+          # exists, so the upgrade path and release freshness are validated again.
           QUIET_CORE_INSTALL_SMOKE_SKIP_UPDATE: "1"
+          QUIET_CORE_INSTALL_SMOKE_SKIP_FRESHNESS: "1"
           QUIET_CORE_INSTALL_SMOKE_UPDATE_BASELINE: ${{ inputs.update_baseline_version || 'latest' }}
           QUIET_CORE_INSTALL_SMOKE_UPDATE_DIST_IMAGE: ${{ needs.root_dockerfile_image.outputs.image_ref }}
           QUIET_CORE_INSTALL_SMOKE_UPDATE_SKIP_LOCAL_BUILD: "1"
