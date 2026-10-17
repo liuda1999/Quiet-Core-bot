@@ -164,13 +164,14 @@
 > 需要 **Node.js ≥ 22.19**。自 **0.1.4** 起，npm 包内已包含完整构建产物（`dist/`）与 Web 控制台（`dist/control-ui/`），**安装后无需再构建**。
 
 ```bash
-npm install -g quiet-core-bot
+npm install -g quiet-core-bot@latest
 
 quiet-core-bot onboard                    # 引导式配置：网关、工作区、渠道、技能
 quiet-core-bot gateway run --port 18789   # 前台启动网关
 ```
 
 > **版本提醒**：`0.1.3` 及更早的 npm 包缺少 `dist/entry.js` 与 Web 控制台资产，除 `--version` 外无法运行。请使用 **0.1.4 及以上**。
+> 若 `quiet-core-bot --version` 仍显示旧版本，多为 npm 本地缓存的旧元数据所致，可执行 `npm install -g quiet-core-bot@0.1.4` 或 `npm cache verify` 后重试。
 
 ### 方式 B：从源码构建
 
