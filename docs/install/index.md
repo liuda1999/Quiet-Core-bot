@@ -17,9 +17,9 @@ title: "Install"
 
 The fastest way to install. It detects your OS, installs Node if needed, installs Quiet Core bot, and launches onboarding.
 
-<Warning>
-The npm package `quiet-core-bot` is **not published yet**, so the installer's default **npm** method fails. Pass `--install-method git` (shown below) to install from the GitHub checkout, or build from source.
-</Warning>
+<Note>
+The npm package `quiet-core-bot` **is published** (0.1.4+ ships the full build and the Control UI), so the installer's default **npm** method works. Pass `--install-method git` (shown below) if you prefer installing from the GitHub checkout, or build from source.
+</Note>
 
 <Note>
 Windows desktop users can also install the native [Windows Hub](/platforms/windows#recommended-windows-hub) companion app, which includes setup, tray status, chat, node mode, and local MCP mode.

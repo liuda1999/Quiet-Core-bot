@@ -101,7 +101,7 @@ The Gateway is the single source of truth for sessions, routing, and channel con
     curl -fsSL https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash -s -- --install-method git
     ```
 
-    > The npm package `quiet-core-bot` is **not published yet** (404 on the npm registry), so the installer's **default npm method fails**; the `--install-method git` flag above installs from the GitHub checkout instead. You can also build from source. See [Install](/install).
+    > The npm package `quiet-core-bot` **is published** (0.1.4+ ships the full build and the Control UI), so the installer's default **npm** method works. Use the `--install-method git` flag above if you prefer installing from the GitHub checkout, or build from source. See [Install](/install).
 
   </Step>
   <Step title="Onboard and install the service">

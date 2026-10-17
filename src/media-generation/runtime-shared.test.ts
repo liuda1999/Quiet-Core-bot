@@ -94,9 +94,12 @@ describe("media-generation runtime shared candidates", () => {
       ],
     });
 
+    // With no configured default provider, remaining provider defaults are ordered
+    // deterministically by provider id (resolveAutoCapabilityFallbackRefs), so "fal"
+    // precedes "openai" even though listProviders() yields openai first.
     expect(candidates).toEqual([
-      { provider: "openai", model: "gpt-image-1" },
       { provider: "fal", model: "fal-ai/flux/dev" },
+      { provider: "openai", model: "gpt-image-1" },
     ]);
   });
 

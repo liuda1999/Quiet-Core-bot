@@ -45,7 +45,7 @@ Need to install Node? See [Node setup](/install/node).
     </Tabs>
 
     <Note>
-    The npm package `quiet-core-bot` is **not published yet**, so the installer's default **npm** method fails; the commands above use `--install-method git` (installs from the GitHub checkout). Other methods (Docker, Nix, source build): [Install](/install).
+    The npm package `quiet-core-bot` **is published** (0.1.4+ ships the full build and the Control UI), so the installer's default **npm** method works; the commands above use `--install-method git` (installs from the GitHub checkout). Other methods (Docker, Nix, source build): [Install](/install).
     </Note>
 
   </Step>

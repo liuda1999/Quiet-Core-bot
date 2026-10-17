@@ -23,6 +23,7 @@ export const MODEL_CATALOG_THINKING_FORMATS = [
   "deepseek",
   "qwen",
   "qwen-chat-template",
+  "together",
 ] as const;
 
 /** Thinking/reasoning wire format for model compatibility. */

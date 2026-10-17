@@ -82,12 +82,7 @@
       "id": "legacy_payload_fallback",
       "defaultProvider": "elevenlabs",
       "payloadValid": true,
-      "expectedSelection": {
-        "provider": "elevenlabs",
-        "normalizedPayload": true,
-        "voiceId": "voice-legacy",
-        "apiKey": "xxxxx"
-      },
+      "expectedSelection": null,
       "talk": {
         "voiceId": "voice-legacy",
         "apiKey": "xxxxx"

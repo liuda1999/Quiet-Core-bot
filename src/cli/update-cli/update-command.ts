@@ -1096,7 +1096,7 @@ async function resolvePackageRuntimePreflightError(params: {
       ? "Upgrade the Node runtime that owns the managed Gateway service, then rerun `quiet-core-bot update`."
       : "Upgrade Node to 22.19+ or Node 24, then rerun `quiet-core-bot update`.",
     "Bare `npm i -g quiet-core-bot` can silently install an older compatible release.",
-    "After upgrading Node, use `npm i -g quiet-core-bot@latest` (note: the `quiet-core-bot` npm package is not published yet — prefer the installer with `--install-method git` or a source build).",
+    "After upgrading Node, use `npm i -g quiet-core-bot@latest` (the npm package is published; 0.1.4+ ships the full build).",
   ].join("\n");
 }
 
@@ -3762,7 +3762,7 @@ async function updateCommandInternal(opts: UpdateCommandOptions): Promise<void> 
       );
       defaultRuntime.log(
         theme.muted(
-          `Examples: install via the installer with \`--install-method git\`, or build from source (the \`quiet-core-bot\` npm package is not published yet)`,
+          `Examples: \`npm install -g quiet-core-bot@latest\`, install via the installer with \`--install-method git\`, or build from source`,
         ),
       );
     }

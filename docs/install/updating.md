@@ -105,7 +105,7 @@ curl -fsSL https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scrip
 ## Alternative: manual npm, pnpm, or bun
 
 <Warning>
-The npm package `quiet-core-bot` is **not published yet**, so the `npm` / `pnpm` / `bun` commands in this section fail until it is published. Use the installer with `--install-method git`, or build from source.
+The npm package `quiet-core-bot` is published (0.1.4+), so the `npm` / `pnpm` / `bun` commands in this section work. You can alternatively use the installer with `--install-method git`, or build from source.
 </Warning>
 
 ```bash
@@ -253,7 +253,7 @@ quiet-core-bot health
 
 ### Pin a version (npm)
 
-> ⚠️ The npm package `quiet-core-bot` is **not published yet**, so this npm rollback path is unavailable until publication. Build from source (pin a commit instead).
+> The npm package `quiet-core-bot` is published (0.1.4+), so this npm rollback path is available. You can also build from source (pinning a commit) instead.
 
 ```bash
 npm i -g quiet-core-bot@<version>

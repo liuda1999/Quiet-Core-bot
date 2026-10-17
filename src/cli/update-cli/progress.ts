@@ -100,7 +100,7 @@ export function inferUpdateFailureHints(result: UpdateRunResult): string[] {
       "System install outline: quiet-core-bot gateway stop -> sudo <system-npm> i -g quiet-core-bot@latest -> quiet-core-bot gateway install --force -> quiet-core-bot gateway restart.",
     );
     hints.push(
-      "Note: the `quiet-core-bot` npm package is not published yet — reinstall via the installer with `--install-method git`, or build from source.",
+      "Note: the `quiet-core-bot` npm package is published (0.1.4+) — retry with `npm install -g quiet-core-bot@latest` if the npm update failed.",
     );
   }
 
@@ -112,7 +112,7 @@ export function inferUpdateFailureHints(result: UpdateRunResult): string[] {
       "Detected native optional dependency build failure. The updater retries with --omit=optional automatically.",
     );
     hints.push(
-      "If it still fails: npm i -g quiet-core-bot@latest --omit=optional (note: the npm package is not published yet — prefer the installer with `--install-method git` or a source build)",
+      "If it still fails: npm i -g quiet-core-bot@latest --omit=optional (the npm package is published; 0.1.4+ ships the full build)",
     );
   }
 

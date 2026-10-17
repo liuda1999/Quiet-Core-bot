@@ -159,10 +159,25 @@
 
 ## 六、快速开始（推荐）
 
-> **注意：npm 包尚未发布**（`registry.npmjs.org` 上查无 `quiet-core-bot`），因此当前请先从源码构建再运行（见 [七、从源码构建与部署](#七从源码构建与部署)）。
+### 方式 A：npm 全局安装（最快）
+
+> 需要 **Node.js ≥ 22.19**。自 **0.1.4** 起，npm 包内已包含完整构建产物（`dist/`）与 Web 控制台（`dist/control-ui/`），**安装后无需再构建**。
 
 ```bash
-# 1) 首次：从源码构建
+npm install -g quiet-core-bot
+
+quiet-core-bot onboard                    # 引导式配置：网关、工作区、渠道、技能
+quiet-core-bot gateway run --port 18789   # 前台启动网关
+```
+
+> **版本提醒**：`0.1.3` 及更早的 npm 包缺少 `dist/entry.js` 与 Web 控制台资产，除 `--version` 外无法运行。请使用 **0.1.4 及以上**。
+
+### 方式 B：从源码构建
+
+适用于二次开发、离线部署或需要定制产物（见 [七、从源码构建与部署](#七从源码构建与部署)）。
+
+```bash
+# 1) 克隆并构建
 git clone https://github.com/liuda1999/Quiet-Core-bot.git
 cd Quiet-Core-bot
 corepack enable && pnpm install
@@ -184,6 +199,14 @@ node dist/index.js dashboard          # 打开 Web 控制台（自动带上访�
 
 > 若已把 CLI 链接到全局（`npm link` 或 `pnpm link -g`），上述 `node dist/index.js` 均可简写为 `quiet-core-bot`。
 > 首次连接需要**设备配对**（pairing）。控制台顶部会给出配对命令或二维码：`quiet-core-bot devices list`。
+
+### 两种方式的选择
+
+|              | npm 全局安装                         | 源码构建                                 |
+| ------------ | ------------------------------------ | ---------------------------------------- |
+| 适用场景     | 只想使用、快速上手                   | 二次开发、离线/定制部署                  |
+| 是否需要构建 | 否（包内已含 `dist/` 与 Control UI） | 是（`pnpm build`）                       |
+| 升级方式     | `npm update -g quiet-core-bot`       | `git pull && pnpm install && pnpm build` |
 
 ---
 

@@ -57,6 +57,11 @@ describe("readMemoryFile", () => {
   });
 
   it("rejects extra path reads through symlinked directory components", async () => {
+    // Creating symlinks on Windows requires elevated privileges (or developer mode);
+    // without them the link is never created and the traversal guard is not reached.
+    if (process.platform === "win32") {
+      return;
+    }
     const tmpRoot = await fs.mkdtemp(path.join(os.tmpdir(), "memory-read-file-"));
     try {
       const workspaceDir = path.join(tmpRoot, "workspace");

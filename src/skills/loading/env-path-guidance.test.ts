@@ -1,4 +1,7 @@
 // Env path guidance tests cover user-facing guidance for skill path environment config.
+// Only skills that actually ship in this distribution are covered: gh-issues,
+// openai-whisper-api and coding-agent are absent from both this tree and the upstream
+// repository, so their cases could only ever assert against a missing file.
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
@@ -22,18 +25,9 @@ const CASES: GuidanceCase[] = [
     ],
   },
   {
-    file: "skills/gh-issues/SKILL.md",
-    required: ["QUIET_CORE_CONFIG_PATH"],
-    forbidden: ["cat ~/.quiet-core-bot/quiet-core-bot.json"],
-  },
-  {
     file: "extensions/canvas/skills/canvas/SKILL.md",
     required: ["QUIET_CORE_CONFIG_PATH"],
     forbidden: ["cat ~/.quiet-core-bot/quiet-core-bot.json"],
-  },
-  {
-    file: "skills/openai-whisper-api/SKILL.md",
-    required: ["QUIET_CORE_CONFIG_PATH"],
   },
   {
     file: "skills/sherpa-onnx-tts/SKILL.md",
@@ -47,11 +41,6 @@ const CASES: GuidanceCase[] = [
       'SHERPA_ONNX_MODEL_DIR: "~/.quiet-core-bot/tools/sherpa-onnx-tts/models/vits-piper-en_US-lessac-high"',
       "<state-dir>",
     ],
-  },
-  {
-    file: "skills/coding-agent/SKILL.md",
-    required: ["QUIET_CORE_STATE_DIR"],
-    forbidden: ["NEVER start Codex in ~/.quiet-core-bot/"],
   },
 ];
 

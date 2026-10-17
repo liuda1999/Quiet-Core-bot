@@ -193,7 +193,7 @@ quiet-core-bot gateway restart
 quiet-core-bot health
 ```
 
-> ⚠️ The npm package `quiet-core-bot` is **not published yet**, so the update command fails. Re-run the installer with `--install-method git`, or rebuild from source.
+> The npm package `quiet-core-bot` is published (0.1.4+), so the update command works. Alternatively re-run the installer with `--install-method git`, or rebuild from source.
 
 Guide: [Updating](/install/updating)
 

@@ -221,7 +221,9 @@ describe("skill workshop proposals", () => {
     async () => {
       const workspaceDir = await makeWorkspace();
       const targetSkillsDir = await tempDirs.make("quiet-core-bot-skill-workshop-support-trusted-");
-      const untrustedSkillsDir = await tempDirs.make("quiet-core-bot-skill-workshop-support-untrusted-");
+      const untrustedSkillsDir = await tempDirs.make(
+        "quiet-core-bot-skill-workshop-support-untrusted-",
+      );
       await fs.symlink(targetSkillsDir, path.join(workspaceDir, "skills"), "dir");
       await fs.symlink(untrustedSkillsDir, path.join(workspaceDir, "other-skills"), "dir");
       const config = {
@@ -270,7 +272,9 @@ describe("skill workshop proposals", () => {
     "blocks untrusted workspace skills symlink targets before support files are written",
     async () => {
       const workspaceDir = await makeWorkspace();
-      const targetSkillsDir = await tempDirs.make("quiet-core-bot-skill-workshop-untrusted-skills-");
+      const targetSkillsDir = await tempDirs.make(
+        "quiet-core-bot-skill-workshop-untrusted-skills-",
+      );
       await fs.symlink(targetSkillsDir, path.join(workspaceDir, "skills"), "dir");
       const proposal = await proposeCreateSkill({
         workspaceDir,
@@ -976,6 +980,11 @@ describe("skill workshop proposals", () => {
   });
 
   it("rejects non-text and executable proposal directory support files", async () => {
+    // Windows has no POSIX executable bit, so fs.chmod(0o755) below cannot make the
+    // support file executable and the guard has nothing to reject. POSIX-only case.
+    if (process.platform === "win32") {
+      return;
+    }
     const draftDir = path.join(await makeWorkspace(), "draft");
     await fs.mkdir(path.join(draftDir, "assets"), { recursive: true });
     await fs.writeFile(path.join(draftDir, "PROPOSAL.md"), "# Binary Asset\n", "utf8");
