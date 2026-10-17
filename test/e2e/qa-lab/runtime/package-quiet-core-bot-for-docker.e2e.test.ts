@@ -252,7 +252,7 @@ describe("package-quiet-core-bot-for-docker", () => {
           restoreChangelog: async () => {},
           runCaptureImpl: async () => `${filename}\n`,
         }),
-      ).rejects.toThrow("npm pack reported unsafe Quiet Core bot tarball filename");
+      ).rejects.toThrow("npm pack reported unsafe QuietCore tarball filename");
     }
   });
 
@@ -267,7 +267,7 @@ describe("package-quiet-core-bot-for-docker", () => {
           restoreChangelog: async () => {},
           runCaptureImpl: async () => "npm notice\n",
         }),
-      ).rejects.toThrow("missing packed Quiet Core bot tarball");
+      ).rejects.toThrow("missing packed QuietCore tarball");
 
       await expect(
         packQuietCorePackageForDocker("/repo", outputDir, {
@@ -510,7 +510,9 @@ describe("package-quiet-core-bot-for-docker", () => {
 
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-package-signal-"));
     const childPidPath = path.join(tempDir, "child.pid");
-    const scriptUrl = pathToFileURL(path.resolve("scripts/package-quiet-core-bot-for-docker.mjs")).href;
+    const scriptUrl = pathToFileURL(
+      path.resolve("scripts/package-quiet-core-bot-for-docker.mjs"),
+    ).href;
     let childPid = 0;
     let runnerPid;
     try {

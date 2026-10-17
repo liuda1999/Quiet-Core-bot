@@ -83,6 +83,8 @@ predicate allowedRawSocketClientCall(Expr call) {
   allowedOwnerScope(call, "extensions/qa-lab/src/lab-server-capture.ts", "probeTcpReachability")
   or
   allowedOwnerScope(call, "extensions/qa-lab/src/lab-server-ui.ts", "proxyUpgradeRequest")
+  or
+  allowedOwnerScope(call, "src/infra/net/proxy/managed-proxy-unreachable-hint.ts", "defaultConnectProbe")
 }
 
 from Expr call

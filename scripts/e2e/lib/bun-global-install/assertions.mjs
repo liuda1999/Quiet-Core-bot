@@ -195,7 +195,11 @@ if (mode === "assert-image-providers") {
     throw new Error("image providers output is empty");
   }
   const ids = new Set(parsed.map((entry) => (typeof entry?.id === "string" ? entry.id : "")));
-  for (const expected of ["google", "openai", "xai"]) {
+  // Bundled image providers are the local/self-hosted backends shipped with QuietCore:
+  // comfy (ComfyUI) and litellm (OpenAI-compatible local proxy).
+  // The upstream openclaw suite also expected google/openai/xai, which are cloud
+  // paid-API providers that this distribution does not bundle.
+  for (const expected of ["comfy", "litellm"]) {
     if (!ids.has(expected)) {
       throw new Error(`image providers output is missing bundled provider '${expected}'`);
     }
