@@ -63,6 +63,7 @@ export const MODEL_THINKING_FORMATS = [
   "deepseek",
   "qwen",
   "qwen-chat-template",
+  "together",
 ] as const satisfies readonly SupportedThinkingFormat[];
 
 /** Runtime guard for config-provided thinking format strings. */

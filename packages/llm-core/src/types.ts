@@ -426,8 +426,8 @@ export interface OpenAICompletionsCompat {
   requiresThinkingAsText?: boolean;
   /** Whether all replayed assistant messages must include an empty reasoning_content field when reasoning is enabled. Default: auto-detected from URL. */
   requiresReasoningContentOnAssistantMessages?: boolean;
-  /** Format for reasoning/thinking parameter. "openai" uses reasoning_effort, "deepseek" uses thinking: { type } plus reasoning_effort, "qwen" uses top-level enable_thinking: boolean, and "qwen-chat-template" uses chat_template_kwargs.enable_thinking. Default: "openai". */
-  thinkingFormat?: "openai" | "deepseek" | "qwen" | "qwen-chat-template";
+  /** Format for reasoning/thinking parameter. "openai" uses reasoning_effort, "deepseek" uses thinking: { type } plus reasoning_effort, "qwen" uses top-level enable_thinking: boolean, "qwen-chat-template" uses chat_template_kwargs.enable_thinking, and "together" uses the OpenAI-style reasoning_effort parameter. Default: "openai". */
+  thinkingFormat?: "openai" | "deepseek" | "qwen" | "qwen-chat-template" | "together";
   /** OpenRouter-specific routing preferences. Only used when baseUrl points to OpenRouter. */
   openRouterRouting?: OpenRouterRouting;
   /** Vercel AI Gateway routing preferences. Only used when baseUrl points to Vercel AI Gateway. */

@@ -117,6 +117,7 @@ const OpenAICompletionsCompatSchema = Type.Object({
       Type.Literal("deepseek"),
       Type.Literal("qwen"),
       Type.Literal("qwen-chat-template"),
+      Type.Literal("together"),
     ]),
   ),
   cacheControlFormat: Type.Optional(Type.Literal("anthropic")),

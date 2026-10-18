@@ -141,4 +141,98 @@ describe("models panel", () => {
       [expect.objectContaining({ id: "deepseek-chat" })],
     );
   });
+
+  it("allowlists a new model when the agent already keeps an explicit allowlist", () => {
+    const props = baseProps({
+      formValue: {
+        models: {
+          providers: {
+            deepseek: {
+              baseUrl: "https://api.deepseek.com",
+              api: "openai-completions",
+              models: [],
+            },
+          },
+        },
+        agents: { defaults: { models: { "local/qwen": {} } } },
+      },
+    });
+    const root = renderPanel(props);
+
+    const input = root.querySelector<HTMLInputElement>(".mp-add-row__input");
+    expect(input).not.toBeNull();
+    if (!input) {
+      return;
+    }
+    input.value = "deepseek-chat";
+    const addButtons = root.querySelectorAll<HTMLButtonElement>(".mp-add-row .btn");
+    addButtons[addButtons.length - 1].click();
+
+    expect(props.onPatch).toHaveBeenCalledWith(
+      ["agents", "defaults", "models", "deepseek/deepseek-chat"],
+      {},
+    );
+  });
+
+  it("leaves an empty agent allowlist untouched so every model stays visible", () => {
+    const props = baseProps({
+      formValue: {
+        models: {
+          providers: {
+            deepseek: {
+              baseUrl: "https://api.deepseek.com",
+              api: "openai-completions",
+              models: [],
+            },
+          },
+        },
+        agents: { defaults: { models: {} } },
+      },
+    });
+    const root = renderPanel(props);
+
+    const input = root.querySelector<HTMLInputElement>(".mp-add-row__input");
+    expect(input).not.toBeNull();
+    if (!input) {
+      return;
+    }
+    input.value = "deepseek-chat";
+    const addButtons = root.querySelectorAll<HTMLButtonElement>(".mp-add-row .btn");
+    addButtons[addButtons.length - 1].click();
+
+    const paths = (props.onPatch as unknown as { mock: { calls: unknown[][] } }).mock.calls.map(
+      (call) => call[0],
+    );
+    expect(paths).toEqual([["models", "providers", "deepseek", "models"]]);
+  });
+
+  it("drops the allowlist entry when a model is removed", () => {
+    const props = baseProps({
+      formValue: {
+        models: {
+          providers: {
+            deepseek: {
+              baseUrl: "https://api.deepseek.com",
+              api: "openai-completions",
+              models: [{ id: "deepseek-chat", name: "deepseek-chat" }],
+            },
+          },
+        },
+        agents: {
+          defaults: {
+            models: { "deepseek/deepseek-chat": {}, "local/qwen": {} },
+          },
+        },
+      },
+    });
+    const root = renderPanel(props);
+
+    const remove = root.querySelector<HTMLButtonElement>(".mp-chip__remove");
+    expect(remove).not.toBeNull();
+    remove?.click();
+
+    expect(props.onPatch).toHaveBeenCalledWith(["agents", "defaults", "models"], {
+      "local/qwen": {},
+    });
+  });
 });

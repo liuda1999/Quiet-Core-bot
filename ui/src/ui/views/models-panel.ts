@@ -181,6 +181,53 @@ function buildModelEntry(id: string): Record<string, unknown> {
   };
 }
 
+// `agents.defaults.models` acts as an explicit model allowlist: once it holds
+// any entry, the chat model picker only lists the models named there (see
+// createModelVisibilityPolicy in src/agents/model-selection-shared.ts). A model
+// added on this panel is written to models.providers but stays invisible in chat
+// unless it is allowlisted too, so adding and removing models here has to keep
+// the allowlist in sync.
+function readAgentModelAllowlist(
+  formValue: Record<string, unknown> | null,
+): Record<string, unknown> | null {
+  const agents = isRecord(formValue?.agents) ? (formValue.agents as Record<string, unknown>) : null;
+  const defaults = isRecord(agents?.defaults) ? (agents.defaults as Record<string, unknown>) : null;
+  return isRecord(defaults?.models) ? (defaults.models as Record<string, unknown>) : null;
+}
+
+function agentModelKey(providerId: string, modelId: string): string {
+  return `${providerId}/${modelId}`;
+}
+
+// An empty allowlist means "no restriction" (every configured model is
+// visible), so writing to it would narrow visibility instead of widening it.
+// Only append when the user already maintains an explicit allowlist.
+function allowModelForAgent(props: ModelsPanelProps, providerId: string, modelId: string): void {
+  const allowlist = readAgentModelAllowlist(props.formValue);
+  if (!allowlist || Object.keys(allowlist).length === 0) {
+    return;
+  }
+  const key = agentModelKey(providerId, modelId);
+  if (key in allowlist) {
+    return;
+  }
+  props.onPatch(["agents", "defaults", "models", key], {});
+}
+
+function disallowModelForAgent(props: ModelsPanelProps, providerId: string, modelId: string): void {
+  const allowlist = readAgentModelAllowlist(props.formValue);
+  if (!allowlist) {
+    return;
+  }
+  const key = agentModelKey(providerId, modelId);
+  if (!(key in allowlist)) {
+    return;
+  }
+  const next: Record<string, unknown> = { ...allowlist };
+  delete next[key];
+  props.onPatch(["agents", "defaults", "models"], next);
+}
+
 function addProviderModel(
   entry: ProviderEntry,
   props: ModelsPanelProps,
@@ -194,6 +241,7 @@ function addProviderModel(
     ["models", "providers", entry.id, "models"],
     [...entry.models, buildModelEntry(value)],
   );
+  allowModelForAgent(props, entry.id, value);
   props.onRequestUpdate?.();
   return true;
 }
@@ -241,8 +289,13 @@ function renderModelChips(
               title=${t("settingsLabels.modelsPanel.removeModel")}
               ?disabled=${disabled}
               @click=${() => {
+                const removed = entry.models[index];
+                const removedId = typeof removed?.id === "string" ? removed.id : "";
                 const next = entry.models.filter((_, i) => i !== index);
                 props.onPatch(["models", "providers", entry.id, "models"], next);
+                if (removedId) {
+                  disallowModelForAgent(props, entry.id, removedId);
+                }
                 props.onRequestUpdate?.();
               }}
             >
