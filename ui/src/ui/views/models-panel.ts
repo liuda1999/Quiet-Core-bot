@@ -202,6 +202,15 @@ function agentModelKey(providerId: string, modelId: string): string {
 // An empty allowlist means "no restriction" (every configured model is
 // visible), so writing to it would narrow visibility instead of widening it.
 // Only append when the user already maintains an explicit allowlist.
+//
+// The entry value is `{ streaming: true }` rather than `{}` on purpose: the
+// submit path runs form values through sanitizeRedactedFormForSubmit, which
+// drops an empty object that did not exist in the original config (it treats
+// it as a render artifact, see OMIT_VALUE in controllers/config/form-utils.ts).
+// `streaming: true` is the documented default for AgentModelEntryConfig, so the
+// entry behaves exactly like an empty one while surviving serialization.
+const AGENT_MODEL_ENTRY_DEFAULT = { streaming: true } as const;
+
 function allowModelForAgent(props: ModelsPanelProps, providerId: string, modelId: string): void {
   const allowlist = readAgentModelAllowlist(props.formValue);
   if (!allowlist || Object.keys(allowlist).length === 0) {
@@ -211,7 +220,7 @@ function allowModelForAgent(props: ModelsPanelProps, providerId: string, modelId
   if (key in allowlist) {
     return;
   }
-  props.onPatch(["agents", "defaults", "models", key], {});
+  props.onPatch(["agents", "defaults", "models", key], { ...AGENT_MODEL_ENTRY_DEFAULT });
 }
 
 function disallowModelForAgent(props: ModelsPanelProps, providerId: string, modelId: string): void {

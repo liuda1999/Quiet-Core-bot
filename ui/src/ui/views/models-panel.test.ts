@@ -170,7 +170,7 @@ describe("models panel", () => {
 
     expect(props.onPatch).toHaveBeenCalledWith(
       ["agents", "defaults", "models", "deepseek/deepseek-chat"],
-      {},
+      { streaming: true },
     );
   });
 
