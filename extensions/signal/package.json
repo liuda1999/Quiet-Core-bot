@@ -4,7 +4,7 @@
   "description": "QuietCore Signal channel plugin",
   "type": "module",
   "dependencies": {
-    "ws": "8.21.0"
+    "ws": "8.22.0"
   },
   "devDependencies": {
     "@quiet-core/plugin-sdk": "workspace:*"
