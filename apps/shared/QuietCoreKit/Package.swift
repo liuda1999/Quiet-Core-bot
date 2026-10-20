@@ -18,7 +18,7 @@ let package = Package(
         .default(enabledTraits: ["Talk"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/steipete/ElevenLabsKit", exact: "0.1.1"),
+        .package(url: "https://github.com/steipete/ElevenLabsKit", exact: "0.1.3"),
     ],
     targets: [
         .target(
