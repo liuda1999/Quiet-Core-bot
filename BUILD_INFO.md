@@ -7,11 +7,11 @@ disagrees with `git` in your working copy, trust `git`.
 | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Project                  | `quiet-core-bot`                                                                                                                                   |
 | Product name             | Quiet Core bot                                                                                                                                     |
-| Version (`package.json`) | `0.2.0`                                                                                                                                            |
+| Version (`package.json`) | `0.2.1`                                                                                                                                            |
 | Git branch               | `main`                                                                                                                                             |
-| Git commit               | `ba60d9da62393de0b884c24f5b56e2a842d74bdb` (`ba60d9da`)                                                                                            |
+| Git commit               | `d9d8083732b5642324a885eb46f96ba7405c774b` (`d9d80837`)                                                                                            |
 | Commit date              | `2026-11-17`                                                                                                                                       |
-| Commit subject           | `fix(audit): 契约基线、lint/类型门禁与 Windows 测试修复`                                                                                           |
+| Commit subject           | `fix(prompt): 修正系统提示词中过时的 web 工具描述`                                                                                                 |
 | Repository status        | independent repository; the pre-rebrand `quiet-core-bot` history is not carried over                                                               |
 | Upstream remote          | _(none configured in this checkout)_ — this project started from the upstream quiet-core-bot codebase: https://github.com/liuda1999/Quiet-Core-bot |
 | Package manager          | `pnpm@11.2.2` (see `packageManager` in `package.json`)                                                                                             |
