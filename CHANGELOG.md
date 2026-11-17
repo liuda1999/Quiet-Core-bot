@@ -2,6 +2,12 @@
 
 Docs: https://github.com/liuda1999/Quiet-Core-bot
 
+## 0.2.1
+
+### 修复
+
+- **系统提示词中的 web 工具描述：** `## Tooling` 段落仍写 `web_search` 为 "Search the web using the configured provider"，与 0.2.0 的内置免密钥实现不符，会诱导模型向用户索要已不再生效的 provider 配置；改为 "built-in backend (no API key; merges 1-4 queries)"，`web_fetch` 同步为实际行为（HTTP(S) 抓取并解码为可读文本）。
+
 ## 0.2.0
 
 ### 亮点

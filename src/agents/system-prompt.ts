@@ -749,8 +749,8 @@ export function buildAgentSystemPrompt(params: {
     ls: "List directory contents",
     exec: "Run shell commands (pty available for TTY-required CLIs)",
     process: "Manage background exec sessions",
-    web_search: "Search the web using the configured provider",
-    web_fetch: "Fetch and extract readable content from a URL",
+    web_search: "Search the web with the built-in backend (no API key; merges 1-4 queries)",
+    web_fetch: "Fetch an HTTP(S) URL and return it decoded to readable text",
     // Channel docking: add login tools here when a channel needs interactive linking.
     browser: "Control web browser",
     canvas: "Present/eval/snapshot the Canvas",
