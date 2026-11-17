@@ -2,6 +2,34 @@
 
 Docs: https://github.com/liuda1999/Quiet-Core-bot
 
+## 0.2.0
+
+### 亮点
+
+- **Web 工具改为内置免密钥实现：** `web_search` / `web_fetch` 迁移到内置的 dsh-web-kit 运行时，搜索不再依赖外部 provider 与 API key，抓取自带 SSRF 防护、同源重定向限制和渲染兜底。
+- **搜索与抓取开箱可用：** 默认使用 Bing HTML 搜索（失败时退到系统 Edge/Chrome），抓取在静态响应为空壳时按需渲染。
+
+### 破坏性变更
+
+- `web_search` 参数改为 `queries: string[]`（1–4 条，结果合并）；旧的 `query` 仍接受但标记为弃用。`count` 上限为 10。
+- `web_fetch` 移除 `extractMode` 参数；HTML 一律转为 Markdown，纯文本原样返回。`maxChars` 仍可用，且受 `tools.web.fetch.maxCharsCap` 限制。
+- `tools.web.search.cacheTtlMinutes`、`tools.web.fetch.cacheTtlMinutes`、`tools.web.fetch.readability` 不再生效（内置实现不缓存、始终抽取正文）。
+- `tools.web.search.provider` / `tools.web.fetch.provider` 的旧插件 provider id 不再驱动内置工具；可用的搜索后端为 `bing-html`、`searxng`、`ddg-html`、`so360-html`、`browser`、`local-index`。
+
+### 修复
+
+- **契约测试基线（plugins/channels）：** 契约用例表与硬编码路径改为按本仓库实际存在的扩展过滤，裁剪版下 150 个假失败清零；`qa-lab` 的 `@openclaw/crabline` 归入运行时依赖。
+- **Windows 环境测试：** 21 个依赖 POSIX 语义的单测（路径断言、`chmod` 模式、符号链接、`statfs` 网络卷）改为平台守卫，`test:fast` 全绿。
+- **lint 与类型门禁：** `pnpm lint` 65 个存量错误清零；`tsgo:prod` 26 个类型错误清零（裁剪版 live 测试排除、telegram 传输惰性加载、`MemorySearchResult.belowMinScore` 类型补齐）。
+- **文档流水线（Windows）：** `scripts/format-docs.mjs` 按平台设置命令行预算，修复 `cmd.exe` 8,191 字符上限导致的 `check:docs` 失败。
+- **行数检查：** `check-ts-max-loc` 增加 vendored 源码豁免与串行读取，新增 `check:loc:strict` 作为显式门禁。
+- **附件投递与模型请求重试：** `host-hook-attachments` 对投递结果做空值保护；`provider-transport-fetch` 重试计数与循环结构整理。
+
+### 其它
+
+- 内置 web 工具进程级复用同一个运行时，网关关闭时释放浏览器进程。
+- 默认抓取输出上限保持 20,000 字符，避免一次性塞满上下文。
+
 ## 0.1.3
 
 ### 亮点

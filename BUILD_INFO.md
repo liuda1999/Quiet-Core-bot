@@ -7,11 +7,11 @@ disagrees with `git` in your working copy, trust `git`.
 | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Project                  | `quiet-core-bot`                                                                                                                                   |
 | Product name             | Quiet Core bot                                                                                                                                     |
-| Version (`package.json`) | `0.1.3`                                                                                                                                            |
+| Version (`package.json`) | `0.2.0`                                                                                                                                            |
 | Git branch               | `main`                                                                                                                                             |
-| Git commit               | `ce1ec2183d753cb22f96e88410b538c79a5a6bb4` (`ce1ec218`)                                                                                            |
-| Commit date              | `2026-10-08`                                                                                                                                       |
-| Commit subject           | `fix(plugin-sdk): anthropic facade 缺失时优雅降级，修复全部 / 命令派发报错`                                                                        |
+| Git commit               | `ba60d9da62393de0b884c24f5b56e2a842d74bdb` (`ba60d9da`)                                                                                            |
+| Commit date              | `2026-11-17`                                                                                                                                       |
+| Commit subject           | `fix(audit): 契约基线、lint/类型门禁与 Windows 测试修复`                                                                                           |
 | Repository status        | independent repository; the pre-rebrand `quiet-core-bot` history is not carried over                                                               |
 | Upstream remote          | _(none configured in this checkout)_ — this project started from the upstream quiet-core-bot codebase: https://github.com/liuda1999/Quiet-Core-bot |
 | Package manager          | `pnpm@11.2.2` (see `packageManager` in `package.json`)                                                                                             |
