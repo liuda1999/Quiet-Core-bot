@@ -168,7 +168,9 @@ describe("managed proxy unreachable hint", () => {
 
   it("detects a listening loopback endpoint with the real socket probe", async () => {
     const server = createServer();
-    await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+    await new Promise<void>((resolve) => {
+      server.listen(0, "127.0.0.1", resolve);
+    });
     const address = server.address();
     try {
       const port = typeof address === "object" && address ? address.port : 0;
@@ -181,7 +183,9 @@ describe("managed proxy unreachable hint", () => {
         }),
       ).resolves.toBe("up");
     } finally {
-      await new Promise<void>((resolve) => server.close(() => resolve()));
+      await new Promise<void>((resolve) => {
+        server.close(() => resolve());
+      });
     }
   });
 

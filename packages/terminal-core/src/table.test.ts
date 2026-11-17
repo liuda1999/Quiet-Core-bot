@@ -124,6 +124,7 @@ describe("renderTable", () => {
     // the ANSI style directly after the cell border with no extra indentation.
     expect(styledLines.length).toBeGreaterThan(1);
     for (const line of styledLines) {
+      // eslint-disable-next-line no-control-regex -- the fixture intentionally asserts the raw ANSI SGR escape sequence.
       expect(line).toMatch(/[│|] \u001b\[2m\S/u);
       expect(line).not.toContain("\u001b[2m ");
     }

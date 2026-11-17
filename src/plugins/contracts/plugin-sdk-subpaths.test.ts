@@ -55,6 +55,7 @@ import { expectNoReaddirSyncDuring } from "../../test-utils/fs-scan-assertions.j
 import { listGitTrackedFiles, toRepoRelativePath } from "../../test-utils/repo-files.js";
 import type { PluginRuntime } from "../runtime/types.js";
 import type { QuietCorePluginApi } from "../types.js";
+import { isBundledExtensionPresent } from "./test-helpers/bundled-extension-presence.js";
 
 const SRC_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const REPO_ROOT = resolve(SRC_ROOT, "..");
@@ -1263,9 +1264,11 @@ describe("plugin-sdk subpath exports", () => {
     expectSourceOmitsSnippet("google-model-id", "./google.js");
     expectSourceOmitsSnippet("google-model-id", "./facade-runtime.js");
     expectSourceOmitsSnippet("google-model-id", "../../extensions/");
-    expectRepoSourceOmitsSnippet("extensions/xai/model-id.ts", "./xai.js");
-    expectRepoSourceOmitsSnippet("extensions/xai/model-id.ts", "./facade-runtime.js");
-    expectRepoSourceOmitsSnippet("extensions/xai/model-id.ts", "../../extensions/");
+    if (isBundledExtensionPresent("xai")) {
+      expectRepoSourceOmitsSnippet("extensions/xai/model-id.ts", "./xai.js");
+      expectRepoSourceOmitsSnippet("extensions/xai/model-id.ts", "./facade-runtime.js");
+      expectRepoSourceOmitsSnippet("extensions/xai/model-id.ts", "../../extensions/");
+    }
     expectSourceMentions("sandbox", ["registerSandboxBackend", "runPluginCommandWithTimeout"]);
 
     expectSourceMentions("secret-input", [
@@ -1353,7 +1356,9 @@ describe("plugin-sdk subpath exports", () => {
     const globalSingletonSdk = await importResolvedPluginSdkSubpath(
       "quiet-core-bot/plugin-sdk/global-singleton",
     );
-    const pluginEntrySdk = await importResolvedPluginSdkSubpath("quiet-core-bot/plugin-sdk/plugin-entry");
+    const pluginEntrySdk = await importResolvedPluginSdkSubpath(
+      "quiet-core-bot/plugin-sdk/plugin-entry",
+    );
     const channelLifecycleSdk = await importResolvedPluginSdkSubpath(
       "quiet-core-bot/plugin-sdk/channel-lifecycle",
     );
@@ -1365,7 +1370,9 @@ describe("plugin-sdk subpath exports", () => {
     );
     const representativeModules = [];
     for (const id of representativeRuntimeSmokeSubpaths) {
-      representativeModules.push(await importResolvedPluginSdkSubpath(`quiet-core-bot/plugin-sdk/${id}`));
+      representativeModules.push(
+        await importResolvedPluginSdkSubpath(`quiet-core-bot/plugin-sdk/${id}`),
+      );
     }
 
     expect(coreSdk.definePluginEntry).toBe(pluginEntrySdk.definePluginEntry);

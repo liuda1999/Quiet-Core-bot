@@ -115,7 +115,7 @@ describe("writeAnnounceDropDiagnostic", () => {
       expect(writeAnnounceDropDiagnostic({ runId: "run-c", reason: "  " })).toBe(false);
 
       const events = readDiagnosticEvents({ scope: SUBAGENT_ANNOUNCE_DROP_SCOPE });
-      expect(events.map((event) => event.eventKey).sort()).toEqual(["run-a", "run-b"]);
+      expect(events.map((event) => event.eventKey).toSorted()).toEqual(["run-a", "run-b"]);
       const runA = events.find((event) => event.eventKey === "run-a");
       expect(runA?.payload).toMatchObject({ reason: "expiry", reasons: ["expiry"], dropCount: 1 });
     });

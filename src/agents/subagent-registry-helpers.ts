@@ -186,7 +186,7 @@ export async function appendUndeliveredCompletionNotice(params: {
         deliveryMirror: { kind: "subagent-completion-undelivered" },
       }),
     );
-    if (result.ok !== true) {
+    if (!result.ok) {
       logRequesterTranscriptAppendFailure({
         label: "Subagent completion undelivered notice",
         requesterSessionKey,
@@ -287,7 +287,7 @@ export async function appendDeliveredCompletionReceipt(params: {
         deliveryMirror: { kind: "subagent-completion-delivered" },
       }),
     );
-    if (result.ok !== true) {
+    if (!result.ok) {
       logRequesterTranscriptAppendFailure({
         label: "Subagent completion receipt write",
         requesterSessionKey,

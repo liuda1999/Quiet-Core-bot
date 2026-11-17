@@ -5,12 +5,16 @@ import { resolveManifestContractPluginIds } from "../plugin-registry.js";
 import { testing as providerTesting } from "../providers.js";
 import { resolveBundledContractSnapshotPluginIds } from "./inventory/bundled-capability-metadata.js";
 import { providerContractPluginIds } from "./registry.js";
+import { filterPresentBundledExtensions } from "./test-helpers/bundled-extension-presence.js";
 
 function resolveBundledManifestProviderPluginIds() {
   return uniqueSortedStrings(resolveBundledContractSnapshotPluginIds("providerIds"));
 }
 
-const ACTIVATION_SCOPED_WEB_SEARCH_PLUGIN_IDS = ["codex", "qa-lab"] as const;
+const ACTIVATION_SCOPED_WEB_SEARCH_PLUGIN_IDS = filterPresentBundledExtensions([
+  "codex",
+  "qa-lab",
+] as const);
 const ACTIVATION_SCOPED_WEB_SEARCH_PLUGIN_ID_SET = new Set<string>(
   ACTIVATION_SCOPED_WEB_SEARCH_PLUGIN_IDS,
 );

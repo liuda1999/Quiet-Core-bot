@@ -1,15 +1,23 @@
 // Channel catalog contract tests cover bundled and registry-backed channel catalog invariants.
+import { describe, it } from "vitest";
+import { isBundledExtensionPresent } from "../../../plugins/contracts/test-helpers/bundled-extension-presence.js";
 import {
   describeBundledMetadataOnlyChannelCatalogContract,
   describeChannelCatalogEntryContract,
   describeOfficialFallbackChannelCatalogContract,
 } from "./test-helpers/channel-catalog-contract.js";
 
-describeChannelCatalogEntryContract({
-  channelId: "msteams",
-  npmSpec: "@quiet-core/msteams",
-  alias: "teams",
-});
+if (isBundledExtensionPresent("msteams")) {
+  describeChannelCatalogEntryContract({
+    channelId: "msteams",
+    npmSpec: "@quiet-core/msteams",
+    alias: "teams",
+  });
+} else {
+  describe("msteams channel catalog contract", () => {
+    it.skip("covers the shipped msteams catalog entry when the bundled channel ships", () => {});
+  });
+}
 
 const whatsappMeta = {
   id: "whatsapp",

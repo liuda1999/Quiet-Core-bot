@@ -849,7 +849,6 @@ export class MemoryIndexManager extends MemoryManagerEmbeddingOps implements Mem
       : [];
 
     if (!hybrid.enabled || !this.fts.enabled || !this.fts.available) {
-      const matchThreshold = resolveMatchThreshold(minScore);
       return vectorResults.filter((entry) => entry.score >= matchThreshold).slice(0, maxResults);
     }
 
@@ -903,7 +902,7 @@ export class MemoryIndexManager extends MemoryManagerEmbeddingOps implements Mem
     // which is why callers could not tell "no match" from "match".
     return results
       .filter((entry) => entry.score >= relaxedMinScore)
-      .map((entry) => ({ ...entry, belowMinScore: true }))
+      .map((entry) => Object.assign({}, entry, { belowMinScore: true }))
       .slice(0, maxResults);
   }
 

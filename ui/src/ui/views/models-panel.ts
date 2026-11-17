@@ -55,8 +55,8 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function providersRecord(formValue: Record<string, unknown> | null): Record<string, unknown> {
-  const models = isRecord(formValue?.models) ? (formValue.models as Record<string, unknown>) : {};
-  return isRecord(models.providers) ? { ...(models.providers as Record<string, unknown>) } : {};
+  const models = isRecord(formValue?.models) ? formValue.models : {};
+  return isRecord(models.providers) ? { ...models.providers } : {};
 }
 
 function readProviders(formValue: Record<string, unknown> | null): ProviderEntry[] {
@@ -190,9 +190,9 @@ function buildModelEntry(id: string): Record<string, unknown> {
 function readAgentModelAllowlist(
   formValue: Record<string, unknown> | null,
 ): Record<string, unknown> | null {
-  const agents = isRecord(formValue?.agents) ? (formValue.agents as Record<string, unknown>) : null;
-  const defaults = isRecord(agents?.defaults) ? (agents.defaults as Record<string, unknown>) : null;
-  return isRecord(defaults?.models) ? (defaults.models as Record<string, unknown>) : null;
+  const agents = isRecord(formValue?.agents) ? formValue.agents : null;
+  const defaults = isRecord(agents?.defaults) ? agents.defaults : null;
+  return isRecord(defaults?.models) ? defaults.models : null;
 }
 
 function agentModelKey(providerId: string, modelId: string): string {

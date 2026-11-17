@@ -51,6 +51,14 @@ let resolvePluginSkillDirs: typeof import("./plugin-skills.js").resolvePluginSki
 
 const tempDirs = createTrackedTempDirs();
 
+// Windows directory symlinks need SeCreateSymbolicLinkPrivilege; junctions are
+// the unprivileged equivalent the production code already uses there.
+const DIR_SYMLINK_TYPE = process.platform === "win32" ? "junction" : "dir";
+
+function createDirSymlinkSync(target: string, linkPath: string): void {
+  fsSync.symlinkSync(target, linkPath, DIR_SYMLINK_TYPE);
+}
+
 async function expectPathMissing(targetPath: string): Promise<void> {
   try {
     await fs.lstat(targetPath);
@@ -299,7 +307,7 @@ describe("resolvePluginSkillDirs", () => {
     const staleRoot = await tempDirs.make("stale-plugin-skills-");
     const staleSkill = path.join(staleRoot, "stale-skill");
     await fs.mkdir(staleSkill, { recursive: true });
-    fsSync.symlinkSync(staleSkill, path.join(pluginSkillsDir, "stale-skill"), "dir");
+    createDirSymlinkSync(staleSkill, path.join(pluginSkillsDir, "stale-skill"));
 
     hoisted.loadPluginManifestRegistryForInstalledIndex.mockReturnValue({
       diagnostics: [],
@@ -321,7 +329,7 @@ describe("resolvePluginSkillDirs", () => {
     const staleRoot = await tempDirs.make("stale-plugin-skills-");
     const staleSkill = path.join(staleRoot, "stale-skill");
     await fs.mkdir(staleSkill, { recursive: true });
-    fsSync.symlinkSync(staleSkill, path.join(pluginSkillsDir, "stale-skill"), "dir");
+    createDirSymlinkSync(staleSkill, path.join(pluginSkillsDir, "stale-skill"));
 
     const dirs = resolvePluginSkillDirs({
       workspaceDir: undefined,
@@ -467,7 +475,7 @@ describe("publishPluginSkills", () => {
     const dir1 = await writeSkillDir(skillParent1, "my-skill", "old");
     const dir2 = await writeSkillDir(skillParent2, "my-skill", "new");
 
-    fsSync.symlinkSync(dir1, path.join(managedDir, "my-skill"), "dir");
+    createDirSymlinkSync(dir1, path.join(managedDir, "my-skill"));
 
     publishPluginSkills([dir2], { pluginSkillsDir: managedDir });
 
@@ -483,7 +491,7 @@ describe("publishPluginSkills", () => {
     const currentDir = await writeSkillDir(currentParent, "my-skill", "new");
     const linkPath = path.join(managedDir, "my-skill");
 
-    fsSync.symlinkSync(staleDir, linkPath, "dir");
+    createDirSymlinkSync(staleDir, linkPath);
     await fs.rm(staleParent, { recursive: true, force: true });
 
     publishPluginSkills([currentDir], { pluginSkillsDir: managedDir });
@@ -514,7 +522,7 @@ describe("publishPluginSkills", () => {
     const dir = await writeSkillDir(skillParent, "current-skill");
     const staleDir = await writeSkillDir(skillParent, "stale-skill");
 
-    fsSync.symlinkSync(staleDir, path.join(managedDir, "stale-skill"), "dir");
+    createDirSymlinkSync(staleDir, path.join(managedDir, "stale-skill"));
 
     publishPluginSkills([dir], { pluginSkillsDir: managedDir });
 
@@ -553,7 +561,9 @@ describe("publishPluginSkills", () => {
     expect(withPlatform("win32", () => isGeneratedPluginSkillEntry(regularEntry))).toBe(false);
   });
 
-  it("cleans up broken symlinks (dangling)", async () => {
+  // Windows junctions cannot point at a nonexistent directory, so a dangling
+  // directory link is not creatable there.
+  it.runIf(process.platform !== "win32")("cleans up broken symlinks (dangling)", async () => {
     const skillParent = await tempDirs.make("plugin-skills-");
     const managedDir = await tempDirs.make("managed-skills-");
 
@@ -561,7 +571,7 @@ describe("publishPluginSkills", () => {
     const nonexistentDir = path.join(skillParent, "nonexistent");
 
     // Create a symlink to a nonexistent directory.
-    fsSync.symlinkSync(nonexistentDir, path.join(managedDir, "broken-skill"), "dir");
+    createDirSymlinkSync(nonexistentDir, path.join(managedDir, "broken-skill"));
 
     publishPluginSkills([dir], { pluginSkillsDir: managedDir });
 

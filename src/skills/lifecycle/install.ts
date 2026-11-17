@@ -122,10 +122,13 @@ function resolveDefaultNodeInstallStateDir({
   homedir?: () => string;
   platform?: NodeJS.Platform;
 } = {}): string {
+  // Honor the injected platform for path semantics so tests and callers can
+  // model POSIX/Windows layouts regardless of the host running the code.
+  const pathForPlatform = platform === "win32" ? path.win32 : path.posix;
   if (platform !== "win32" && getuid?.() === 0) {
-    return path.join(path.parse(cwd).root, "var", "lib", "quiet-core-bot");
+    return pathForPlatform.join(pathForPlatform.parse(cwd).root, "var", "lib", "quiet-core-bot");
   }
-  return path.join(homedir(), ".quiet-core-bot");
+  return pathForPlatform.join(homedir(), ".quiet-core-bot");
 }
 
 async function buildNodeInstallEnv(prefs: SkillsInstallPreferences): Promise<NodeJS.ProcessEnv> {
@@ -511,7 +514,11 @@ export async function installSkill(params: SkillInstallRequest): Promise<SkillIn
   }
   // Warn when install is triggered from a non-bundled source.
   // Workspace/project/personal agent skills can contain attacker-controlled metadata.
-  const trustedInstallSources = new Set(["quiet-core-bot-bundled", "quiet-core-bot-managed", "quiet-core-bot-extra"]);
+  const trustedInstallSources = new Set([
+    "quiet-core-bot-bundled",
+    "quiet-core-bot-managed",
+    "quiet-core-bot-extra",
+  ]);
   if (!trustedInstallSources.has(skillSource)) {
     warnings.push(
       `WARNING: Skill "${params.skillName}" install triggered from non-bundled source "${skillSource}". Verify the install recipe is trusted.`,

@@ -127,7 +127,7 @@ function resolveLoopDetectionConfig(config?: ToolLoopDetectionConfig): ResolvedL
     globalCircuitBreakerThreshold = criticalThreshold + 1;
   }
 
-  let singleStepCriticalThreshold = asPositiveInt(
+  const singleStepCriticalThreshold = asPositiveInt(
     config?.singleStepConcurrent?.criticalThreshold,
     DEFAULT_LOOP_DETECTION_CONFIG.singleStepConcurrent.criticalThreshold,
   );

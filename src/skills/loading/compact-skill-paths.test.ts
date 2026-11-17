@@ -77,7 +77,9 @@ describe("compactSkillPaths", () => {
     );
 
     expect(prompt).toContain(`<location>${skillFile}</location>`);
-    expect(prompt).not.toContain("~/.quiet-core-bot/skills/world-cup-soccer-quiet-core-bot-skill/SKILL.md");
+    expect(prompt).not.toContain(
+      "~/.quiet-core-bot/skills/world-cup-soccer-quiet-core-bot-skill/SKILL.md",
+    );
   });
 
   it("does not compact explicit state-root plugin skill paths to OS-home tilde paths", () => {
@@ -127,7 +129,9 @@ describe("compactSkillPaths", () => {
         }),
     );
 
-    expect(prompt).toContain("<location>~/.quiet-core-bot/skills/home-managed-skill/SKILL.md</location>");
+    expect(prompt).toContain(
+      "<location>~/.quiet-core-bot/skills/home-managed-skill/SKILL.md</location>",
+    );
     expect(prompt).not.toContain(`<location>${path.join(skillDir, "SKILL.md")}</location>`);
   });
 
@@ -140,24 +144,29 @@ describe("compactSkillPaths", () => {
     expect(compactedPath).toBe("~/.quiet-core-bot-test-skills/win-skill/SKILL.md");
   });
 
-  it("preserves POSIX literal backslashes after home compaction", () => {
-    const home = os.homedir();
-    const skillDir = path.join(home, ".quiet-core-bot-test-skills\\literal-skill");
+  // Windows path.join treats the literal backslash as a separator, so a POSIX
+  // literal-backslash segment cannot be represented there.
+  it.runIf(process.platform !== "win32")(
+    "preserves POSIX literal backslashes after home compaction",
+    () => {
+      const home = os.homedir();
+      const skillDir = path.join(home, ".quiet-core-bot-test-skills\\literal-skill");
 
-    const prompt = buildPromptForFixtureSkill({
-      workspaceRoot: home,
-      skillDir,
-      name: "literal-skill",
-      description: "POSIX literal backslash skill",
-    });
+      const prompt = buildPromptForFixtureSkill({
+        workspaceRoot: home,
+        skillDir,
+        name: "literal-skill",
+        description: "POSIX literal backslash skill",
+      });
 
-    const locationMatch = prompt.match(/<location>([^<]+)<\/location>/);
-    if (!locationMatch) {
-      throw new Error("expected prompt location tag");
-    }
-    expect(locationMatch[1]).toContain("~/");
-    expect(locationMatch[1]).toContain("\\literal-skill");
-  });
+      const locationMatch = prompt.match(/<location>([^<]+)<\/location>/);
+      if (!locationMatch) {
+        throw new Error("expected prompt location tag");
+      }
+      expect(locationMatch[1]).toContain("~/");
+      expect(locationMatch[1]).toContain("\\literal-skill");
+    },
+  );
 
   it("preserves paths outside home directory", () => {
     const outsideHome = path.join(path.parse(os.homedir()).root, "quiet-core-bot-external-skills");

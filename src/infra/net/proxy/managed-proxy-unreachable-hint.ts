@@ -134,7 +134,9 @@ export async function probeManagedProxyLiveness(params?: {
       return "up";
     }
     if (attempt < attempts - 1 && delayMs > 0) {
-      await new Promise((resolve) => setTimeout(resolve, delayMs));
+      await new Promise((resolve) => {
+        setTimeout(resolve, delayMs);
+      });
     }
   }
   recordManagedProxyLiveness("down");

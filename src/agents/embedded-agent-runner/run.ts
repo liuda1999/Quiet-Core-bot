@@ -3105,7 +3105,7 @@ async function runEmbeddedAgentInternal(
               // like-for-like ratio.
               log.info(
                 `[compaction-token-dimensions] trigger=overflow diagId=${overflowDiagId} ` +
-                  `compacted=${compactResult.compacted === true} ` +
+                  `compacted=${compactResult.compacted} ` +
                   `providerRequestTokens=${derivePromptTokens(lastRunPromptUsage) ?? "unknown"} ` +
                   `localEstimatedPromptTokensBefore=${
                     lastContextBudgetStatus?.estimatedPromptTokens ?? "unknown"
@@ -3115,7 +3115,7 @@ async function runEmbeddedAgentInternal(
                   `dimensionBasis=provider_request_vs_local_estimate`,
               );
               const compactionDidNotReduce =
-                compactResult.compacted === true &&
+                compactResult.compacted &&
                 !compactionMeaningfullyReducedInput({
                   tokensAfter: compactionTokensAfter,
                   beforeTokens: compactionTokensBeforeLikeForLike ?? compactionBeforeTokens,

@@ -47,6 +47,7 @@ import type { PluginRuntime } from "../runtime/types.js";
 import { createPluginRecord } from "../status.test-helpers.js";
 import { runTrustedToolPolicies } from "../trusted-tool-policy.js";
 import { registerHostHookFixture, registerTrustedHostHookFixture } from "./host-hook-fixture.js";
+import { isBundledExtensionPresent } from "./test-helpers/bundled-extension-presence.js";
 
 async function waitForPluginEventHandlers(): Promise<void> {
   await new Promise<void>((resolve) => {
@@ -483,38 +484,48 @@ describe("host-hook fixture plugin contract", () => {
     expect(result?.blockReason).toBe("bundled policy");
   });
 
-  it("allows the official npm Codex plugin to keep /codex command ownership", () => {
-    const { config, registry } = createPluginRegistryFixture();
-    const codexRoot = path.join("/tmp", ".quiet-core-bot", "npm", "node_modules", "@quiet-core-bot", "codex");
-    registerTestPlugin({
-      registry,
-      config,
-      record: createPluginRecord({
-        id: "codex",
-        name: "Codex",
-        origin: "global",
-        rootDir: codexRoot,
-        source: path.join(codexRoot, "index.ts"),
-      }),
-      register(api) {
-        api.registerCommand({
-          name: "codex",
-          description: "Official npm Codex command",
-          ownership: "reserved",
-          handler: async () => ({ text: "ok" }),
-        });
-      },
-    });
+  it.skipIf(!isBundledExtensionPresent("codex"))(
+    "allows the official npm Codex plugin to keep /codex command ownership",
+    () => {
+      const { config, registry } = createPluginRegistryFixture();
+      const codexRoot = path.join(
+        "/tmp",
+        ".quiet-core-bot",
+        "npm",
+        "node_modules",
+        "@quiet-core-bot",
+        "codex",
+      );
+      registerTestPlugin({
+        registry,
+        config,
+        record: createPluginRecord({
+          id: "codex",
+          name: "Codex",
+          origin: "global",
+          rootDir: codexRoot,
+          source: path.join(codexRoot, "index.ts"),
+        }),
+        register(api) {
+          api.registerCommand({
+            name: "codex",
+            description: "Official npm Codex command",
+            ownership: "reserved",
+            handler: async () => ({ text: "ok" }),
+          });
+        },
+      });
 
-    expect(registry.registry.commands.map((entry) => entry.command.name)).toEqual(["codex"]);
-    expect(
-      diagnosticSummaries(registry.registry.diagnostics).some(
-        (entry) =>
-          entry.pluginId === "codex" &&
-          entry.message?.includes("only bundled plugins can claim reserved command"),
-      ),
-    ).toBe(false);
-  });
+      expect(registry.registry.commands.map((entry) => entry.command.name)).toEqual(["codex"]);
+      expect(
+        diagnosticSummaries(registry.registry.diagnostics).some(
+          (entry) =>
+            entry.pluginId === "codex" &&
+            entry.message?.includes("only bundled plugins can claim reserved command"),
+        ),
+      ).toBe(false);
+    },
+  );
 
   it("allows the official ClawHub Codex plugin to keep /codex command ownership", () => {
     const { config, registry } = createPluginRegistryFixture();
@@ -1483,81 +1494,84 @@ describe("host-hook fixture plugin contract", () => {
     });
     setActivePluginRegistry(registry.registry);
 
-    await withHostHookState("quiet-core-bot-host-hooks-patch-", async ({ storePath, tempConfig }) => {
-      await updateSessionStore(storePath, (store) => {
-        store["agent:main:main"] = {
-          sessionId: "session-1",
-          updatedAt: Date.now(),
-          pluginExtensions: {
-            "patch-fixture": { workflow: { state: "waiting" } },
-          },
-        };
-        return undefined;
-      });
+    await withHostHookState(
+      "quiet-core-bot-host-hooks-patch-",
+      async ({ storePath, tempConfig }) => {
+        await updateSessionStore(storePath, (store) => {
+          store["agent:main:main"] = {
+            sessionId: "session-1",
+            updatedAt: Date.now(),
+            pluginExtensions: {
+              "patch-fixture": { workflow: { state: "waiting" } },
+            },
+          };
+          return undefined;
+        });
 
-      await expect(
-        patchPluginSessionExtension({
-          cfg: tempConfig,
-          sessionKey: "agent:main:main",
-          pluginId: "patch-fixture",
-          namespace: "workflow",
-        }),
-      ).resolves.toEqual({
-        ok: false,
-        error: "plugin session extension value is required unless unset is true",
-      });
-      expect(
-        loadSessionStore(storePath)["agent:main:main"]?.pluginExtensions?.["patch-fixture"]
-          ?.workflow,
-      ).toEqual({ state: "waiting" });
+        await expect(
+          patchPluginSessionExtension({
+            cfg: tempConfig,
+            sessionKey: "agent:main:main",
+            pluginId: "patch-fixture",
+            namespace: "workflow",
+          }),
+        ).resolves.toEqual({
+          ok: false,
+          error: "plugin session extension value is required unless unset is true",
+        });
+        expect(
+          loadSessionStore(storePath)["agent:main:main"]?.pluginExtensions?.["patch-fixture"]
+            ?.workflow,
+        ).toEqual({ state: "waiting" });
 
-      await expect(
-        patchPluginSessionExtension({
-          cfg: tempConfig,
-          sessionKey: "agent:main:main",
-          pluginId: "patch-fixture",
-          namespace: "workflow",
-          value: { state: "ambiguous" },
-          unset: true,
-        }),
-      ).resolves.toEqual({
-        ok: false,
-        error: "plugin session extension cannot specify both unset and value",
-      });
-      expect(
-        loadSessionStore(storePath)["agent:main:main"]?.pluginExtensions?.["patch-fixture"]
-          ?.workflow,
-      ).toEqual({ state: "waiting" });
+        await expect(
+          patchPluginSessionExtension({
+            cfg: tempConfig,
+            sessionKey: "agent:main:main",
+            pluginId: "patch-fixture",
+            namespace: "workflow",
+            value: { state: "ambiguous" },
+            unset: true,
+          }),
+        ).resolves.toEqual({
+          ok: false,
+          error: "plugin session extension cannot specify both unset and value",
+        });
+        expect(
+          loadSessionStore(storePath)["agent:main:main"]?.pluginExtensions?.["patch-fixture"]
+            ?.workflow,
+        ).toEqual({ state: "waiting" });
 
-      await expect(
-        patchPluginSessionExtension({
-          cfg: tempConfig,
-          sessionKey: "agent:main:main",
-          pluginId: "patch-fixture",
-          namespace: "workflow",
+        await expect(
+          patchPluginSessionExtension({
+            cfg: tempConfig,
+            sessionKey: "agent:main:main",
+            pluginId: "patch-fixture",
+            namespace: "workflow",
+            value: { state: "approved" },
+          }),
+        ).resolves.toEqual({
+          ok: true,
+          key: "agent:main:main",
           value: { state: "approved" },
-        }),
-      ).resolves.toEqual({
-        ok: true,
-        key: "agent:main:main",
-        value: { state: "approved" },
-      });
+        });
 
-      await expect(
-        patchPluginSessionExtension({
-          cfg: tempConfig,
-          sessionKey: "agent:main:main",
-          pluginId: "patch-fixture",
-          namespace: "workflow",
-          unset: true,
-        }),
-      ).resolves.toEqual({
-        ok: true,
-        key: "agent:main:main",
-        value: undefined,
-      });
-      expect(loadSessionStore(storePath)["agent:main:main"]?.pluginExtensions).toBeUndefined();
-    });
+        await expect(
+          patchPluginSessionExtension({
+            cfg: tempConfig,
+            sessionKey: "agent:main:main",
+            pluginId: "patch-fixture",
+            namespace: "workflow",
+            unset: true,
+          }),
+        ).resolves.toEqual({
+          ok: true,
+          key: "agent:main:main",
+          value: undefined,
+        });
+        expect(loadSessionStore(storePath)["agent:main:main"]?.pluginExtensions).toBeUndefined();
+      },
+    );
   });
 
   it("models queued next-turn injections and agent_turn_prepare as one prompt context", async () => {
@@ -1678,50 +1692,53 @@ describe("host-hook fixture plugin contract", () => {
   });
 
   it("reports duplicate next-turn injections as not newly enqueued", async () => {
-    await withHostHookState("quiet-core-bot-host-hooks-injection-", async ({ storePath, tempConfig }) => {
-      await updateSessionStore(storePath, (store) => {
-        store["agent:main:main"] = {
-          sessionId: "session-1",
-          updatedAt: Date.now(),
-        };
-        return undefined;
-      });
-      const now = Date.now();
+    await withHostHookState(
+      "quiet-core-bot-host-hooks-injection-",
+      async ({ storePath, tempConfig }) => {
+        await updateSessionStore(storePath, (store) => {
+          store["agent:main:main"] = {
+            sessionId: "session-1",
+            updatedAt: Date.now(),
+          };
+          return undefined;
+        });
+        const now = Date.now();
 
-      const first = await enqueuePluginNextTurnInjection({
-        cfg: tempConfig,
-        pluginId: "approval-fixture",
-        injection: {
-          sessionKey: "agent:main:main",
-          text: "resume approval workflow",
-          placement: "prepend_context",
-          idempotencyKey: "approval:resume",
-        },
-        now,
-      });
-      const duplicate = await enqueuePluginNextTurnInjection({
-        cfg: tempConfig,
-        pluginId: "approval-fixture",
-        injection: {
-          sessionKey: "agent:main:main",
-          text: "resume approval workflow again",
-          placement: "prepend_context",
-          idempotencyKey: "approval:resume",
-        },
-        now: now + 1,
-      });
+        const first = await enqueuePluginNextTurnInjection({
+          cfg: tempConfig,
+          pluginId: "approval-fixture",
+          injection: {
+            sessionKey: "agent:main:main",
+            text: "resume approval workflow",
+            placement: "prepend_context",
+            idempotencyKey: "approval:resume",
+          },
+          now,
+        });
+        const duplicate = await enqueuePluginNextTurnInjection({
+          cfg: tempConfig,
+          pluginId: "approval-fixture",
+          injection: {
+            sessionKey: "agent:main:main",
+            text: "resume approval workflow again",
+            placement: "prepend_context",
+            idempotencyKey: "approval:resume",
+          },
+          now: now + 1,
+        });
 
-      expect(first.enqueued).toBe(true);
-      expect(duplicate).toEqual({
-        enqueued: false,
-        id: first.id,
-        sessionKey: "agent:main:main",
-      });
-      const stored = loadSessionStore(storePath, { skipCache: true });
-      expect(
-        stored["agent:main:main"]?.pluginNextTurnInjections?.["approval-fixture"],
-      ).toHaveLength(1);
-    });
+        expect(first.enqueued).toBe(true);
+        expect(duplicate).toEqual({
+          enqueued: false,
+          id: first.id,
+          sessionKey: "agent:main:main",
+        });
+        const stored = loadSessionStore(storePath, { skipCache: true });
+        expect(
+          stored["agent:main:main"]?.pluginNextTurnInjections?.["approval-fixture"],
+        ).toHaveLength(1);
+      },
+    );
   });
 
   it("suppresses stale next-turn injections from plugins that are no longer loaded", async () => {
@@ -1826,52 +1843,55 @@ describe("host-hook fixture plugin contract", () => {
       }),
     );
     setActivePluginRegistry(registry);
-    await withHostHookState("quiet-core-bot-host-hooks-order-", async ({ storePath, tempConfig }) => {
-      await updateSessionStore(storePath, (store) => {
-        store["agent:main:main"] = {
-          sessionId: "session-1",
-          updatedAt: Date.now(),
-          pluginNextTurnInjections: {
-            "injector-a": [
-              {
-                id: "a1",
-                pluginId: "injector-a",
-                text: "first",
-                placement: "append_context",
-                createdAt: 1,
-              },
-              {
-                id: "a2",
-                pluginId: "injector-a",
-                text: "third",
-                placement: "append_context",
-                createdAt: 3,
-              },
-            ],
-            "injector-b": [
-              {
-                id: "b1",
-                pluginId: "injector-b",
-                text: "second",
-                placement: "append_context",
-                createdAt: 2,
-              },
-            ],
-          },
-        };
-        return undefined;
-      });
+    await withHostHookState(
+      "quiet-core-bot-host-hooks-order-",
+      async ({ storePath, tempConfig }) => {
+        await updateSessionStore(storePath, (store) => {
+          store["agent:main:main"] = {
+            sessionId: "session-1",
+            updatedAt: Date.now(),
+            pluginNextTurnInjections: {
+              "injector-a": [
+                {
+                  id: "a1",
+                  pluginId: "injector-a",
+                  text: "first",
+                  placement: "append_context",
+                  createdAt: 1,
+                },
+                {
+                  id: "a2",
+                  pluginId: "injector-a",
+                  text: "third",
+                  placement: "append_context",
+                  createdAt: 3,
+                },
+              ],
+              "injector-b": [
+                {
+                  id: "b1",
+                  pluginId: "injector-b",
+                  text: "second",
+                  placement: "append_context",
+                  createdAt: 2,
+                },
+              ],
+            },
+          };
+          return undefined;
+        });
 
-      const drained = await drainPluginNextTurnInjections({
-        cfg: tempConfig,
-        sessionKey: "agent:main:main",
-        now: 4,
-      });
-      expect(drained).toHaveLength(3);
-      expectRecordFields(drained[0], { id: "a1", text: "first" });
-      expectRecordFields(drained[1], { id: "b1", text: "second" });
-      expectRecordFields(drained[2], { id: "a2", text: "third" });
-    });
+        const drained = await drainPluginNextTurnInjections({
+          cfg: tempConfig,
+          sessionKey: "agent:main:main",
+          now: 4,
+        });
+        expect(drained).toHaveLength(3);
+        expectRecordFields(drained[0], { id: "a1", text: "first" });
+        expectRecordFields(drained[1], { id: "b1", text: "second" });
+        expectRecordFields(drained[2], { id: "a2", text: "third" });
+      },
+    );
   });
 
   it("validates gateway protocol envelopes for plugin patch and UI descriptors", () => {
@@ -2818,25 +2838,55 @@ describe("host-hook fixture plugin contract", () => {
       },
     });
 
-    await withHostHookState("quiet-core-bot-host-hooks-store-", async ({ storePath, tempConfig }) => {
-      await updateSessionStore(storePath, (store) => {
-        store["agent:main:main"] = {
-          sessionId: "session-1",
-          updatedAt: Date.now(),
+    await withHostHookState(
+      "quiet-core-bot-host-hooks-store-",
+      async ({ storePath, tempConfig }) => {
+        await updateSessionStore(storePath, (store) => {
+          store["agent:main:main"] = {
+            sessionId: "session-1",
+            updatedAt: Date.now(),
+            pluginExtensions: {
+              "cleanup-fixture": { workflow: { state: "waiting" } },
+              "other-plugin": { workflow: { state: "keep" } },
+            },
+            pluginNextTurnInjections: {
+              "cleanup-fixture": [
+                {
+                  id: "resume",
+                  pluginId: "cleanup-fixture",
+                  text: "resume",
+                  placement: "prepend_context",
+                  createdAt: 1,
+                },
+              ],
+              "other-plugin": [
+                {
+                  id: "keep",
+                  pluginId: "other-plugin",
+                  text: "keep",
+                  placement: "append_context",
+                  createdAt: 1,
+                },
+              ],
+            },
+          };
+          return undefined;
+        });
+
+        const cleanupResult = await runPluginHostCleanup({
+          cfg: tempConfig,
+          registry: registry.registry,
+          pluginId: "cleanup-fixture",
+          reason: "disable",
+        });
+        expect(cleanupResult.failures).toEqual([]);
+
+        const stored = loadSessionStore(storePath, { skipCache: true });
+        expectRecordFields(stored["agent:main:main"], {
           pluginExtensions: {
-            "cleanup-fixture": { workflow: { state: "waiting" } },
             "other-plugin": { workflow: { state: "keep" } },
           },
           pluginNextTurnInjections: {
-            "cleanup-fixture": [
-              {
-                id: "resume",
-                pluginId: "cleanup-fixture",
-                text: "resume",
-                placement: "prepend_context",
-                createdAt: 1,
-              },
-            ],
             "other-plugin": [
               {
                 id: "keep",
@@ -2847,36 +2897,9 @@ describe("host-hook fixture plugin contract", () => {
               },
             ],
           },
-        };
-        return undefined;
-      });
-
-      const cleanupResult = await runPluginHostCleanup({
-        cfg: tempConfig,
-        registry: registry.registry,
-        pluginId: "cleanup-fixture",
-        reason: "disable",
-      });
-      expect(cleanupResult.failures).toEqual([]);
-
-      const stored = loadSessionStore(storePath, { skipCache: true });
-      expectRecordFields(stored["agent:main:main"], {
-        pluginExtensions: {
-          "other-plugin": { workflow: { state: "keep" } },
-        },
-        pluginNextTurnInjections: {
-          "other-plugin": [
-            {
-              id: "keep",
-              pluginId: "other-plugin",
-              text: "keep",
-              placement: "append_context",
-              createdAt: 1,
-            },
-          ],
-        },
-      });
-    });
+        });
+      },
+    );
   });
 
   it("does not clear unrelated run context during session-scoped cleanup", async () => {

@@ -853,7 +853,10 @@ async function reportPendingExecApprovalHint(params: {
       return;
     }
     const ids = pending
-      .map((entry) => String((entry as { id?: unknown }).id ?? "").slice(0, 8))
+      .map((entry) => {
+        const id = (entry as { id?: unknown }).id;
+        return typeof id === "string" || typeof id === "number" ? String(id).slice(0, 8) : "";
+      })
       .filter((value) => value.length > 0)
       .join(", ");
     params.runtime.error?.(
@@ -905,7 +908,10 @@ function startPendingExecApprovalWatch(params: {
           return;
         }
         const ids = pending
-          .map((entry) => String((entry as { id?: unknown }).id ?? "").slice(0, 8))
+          .map((entry) => {
+            const id = (entry as { id?: unknown }).id;
+            return typeof id === "string" || typeof id === "number" ? String(id).slice(0, 8) : "";
+          })
           .filter((value) => value.length > 0)
           .join(", ");
         params.runtime.error?.(

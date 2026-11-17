@@ -122,7 +122,7 @@ describe("security audit small-model risk findings", () => {
   });
 
   const localProviderConfig = {
-    baseUrl: "http://192.168.0.108:23456/v1",
+    baseUrl: "http://127.0.0.1:23456/v1",
     models: [],
   };
 

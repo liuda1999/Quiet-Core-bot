@@ -1,5 +1,6 @@
 // Compact format tests cover compact skill prompt serialization.
 import os from "node:os";
+import path from "node:path";
 import { formatSkillsForPrompt as upstreamFormatSkillsForPrompt } from "quiet-core-bot/plugin-sdk/agent-sessions";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import type { QuietCoreConfig } from "../../config/config.js";
@@ -120,7 +121,9 @@ describe("applySkillsPromptLimits (via buildWorkspaceSkillsPrompt)", () => {
   let envSnapshot: SkillsHomeEnvSnapshot;
 
   beforeEach(() => {
-    envSnapshot = setMockSkillsHomeEnv("/Users/quiet-core-bot-test-user");
+    // Resolve so the mocked home is an absolute path with native separators on
+    // every platform; production compacts against path.resolve(home).
+    envSnapshot = setMockSkillsHomeEnv(path.resolve("/Users/quiet-core-bot-test-user"));
   });
 
   afterEach(() => restoreMockSkillsHomeEnv(envSnapshot));
@@ -278,7 +281,7 @@ describe("applySkillsPromptLimits (via buildWorkspaceSkillsPrompt)", () => {
       makeSkill(
         `skill-${i}`,
         "A".repeat(200),
-        `${home}/.quiet-core-bot/workspace/skills/skill-${i}/SKILL.md`,
+        path.join(home, ".quiet-core-bot", "workspace", "skills", `skill-${i}`, "SKILL.md"),
       ),
     );
     // Compute compacted lengths (what the prompt will actually contain)
@@ -321,7 +324,11 @@ describe("applySkillsPromptLimits (via buildWorkspaceSkillsPrompt)", () => {
   it("resolvedSkills in snapshot keeps canonical paths, not compacted", () => {
     const home = os.homedir();
     const skills = Array.from({ length: 5 }, (_, i) =>
-      makeSkill(`skill-${i}`, "A skill", `${home}/.quiet-core-bot/workspace/skills/skill-${i}/SKILL.md`),
+      makeSkill(
+        `skill-${i}`,
+        "A skill",
+        path.join(home, ".quiet-core-bot", "workspace", "skills", `skill-${i}`, "SKILL.md"),
+      ),
     );
     const snapshot = buildWorkspaceSkillSnapshot("/fake", {
       entries: skills.map(makeEntry),

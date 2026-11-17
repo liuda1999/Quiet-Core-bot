@@ -304,12 +304,16 @@ function readPersistedPendingTerminalWrites(): Array<{
 /** Mirror the in-memory compensation queue to disk so a crash cannot drop a terminal decision. */
 function writePersistedPendingTerminalWrites(): void {
   const file = resolvePendingTerminalWriteFile();
-  const entries = [...pendingTerminalWrites.values()].map((entry) => ({
-    runId: entry.runId,
-    status: entry.status,
-    ...(entry.endedReason !== undefined ? { endedReason: entry.endedReason } : {}),
-    ...(entry.endedAt !== undefined ? { endedAt: entry.endedAt } : {}),
-  }));
+  const entries = [...pendingTerminalWrites.values()].map((entry) =>
+    Object.assign(
+      {
+        runId: entry.runId,
+        status: entry.status,
+      },
+      entry.endedReason !== undefined ? { endedReason: entry.endedReason } : {},
+      entry.endedAt !== undefined ? { endedAt: entry.endedAt } : {},
+    ),
+  );
   try {
     if (entries.length === 0) {
       fs.rmSync(file, { force: true });
@@ -384,7 +388,7 @@ export function flushPendingTerminalWrites(): number {
   }
   const now = Date.now();
   let closed = 0;
-  for (const [runId, entry] of [...pendingTerminalWrites]) {
+  for (const [runId, entry] of pendingTerminalWrites) {
     if (entry.nextAttemptAtMs > now) {
       continue;
     }
@@ -460,7 +464,7 @@ export function sweepStaleAgentRuns(params?: {
           .where("status", "=", "running"),
       ).rows;
       const staleRunIds = runningRows
-        .filter((row) => row.owner_pid === null || !ownerAlive(Number(row.owner_pid)))
+        .filter((row) => row.owner_pid === null || !ownerAlive(row.owner_pid))
         .map((row) => row.run_id);
       if (staleRunIds.length === 0) {
         return 0;

@@ -65,6 +65,34 @@ describe("format-docs", () => {
     ]);
   });
 
+  it("keeps Windows shim batches under the cmd.exe command-line limit", () => {
+    const root = createTempDir("quiet-core-bot-format-docs-windows-budget-");
+    const calls: Array<{ args: string[] }> = [];
+    const files = Array.from(
+      { length: 240 },
+      (_, index) => `docs/windows-budget-${index}-aaaaaaaaaaaaaaaaaaaaaaaaaaaa.md`,
+    );
+
+    runOxfmt(
+      files,
+      { comSpec: "C:\\Windows\\System32\\cmd.exe", platform: "win32", repoRoot: root },
+      {
+        existsSync: (candidate: string) => candidate.endsWith("oxfmt.cmd"),
+        spawnSync: (_command: string, args: string[]) => {
+          calls.push({ args });
+          return { status: 0, stderr: "", stdout: "" };
+        },
+      },
+    );
+
+    // cmd.exe rejects command lines beyond 8,191 characters, so the docs pass
+    // must split into several shim invocations on Windows.
+    expect(calls.length).toBeGreaterThan(1);
+    for (const call of calls) {
+      expect(call.args[3]?.length ?? 0).toBeLessThan(8191);
+    }
+  });
+
   it("reports git and oxfmt spawn diagnostics", () => {
     const root = createTempDir("quiet-core-bot-format-docs-failures-");
 

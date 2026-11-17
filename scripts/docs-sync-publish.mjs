@@ -743,13 +743,13 @@ function main() {
   }
 
   const clawhubRepo = resolveClawHubRepoPath(args.clawhubRepo, {
-    required: args.skipClawhub !== true,
+    required: !args.skipClawhub,
   });
   const sources = syncDocsTree(targetRoot, {
     clawhubRepo,
     clawhubSourceRepo: args.clawhubSourceRepo,
     clawhubSourceSha: args.clawhubSourceSha,
-    clawhubRequired: args.skipClawhub !== true,
+    clawhubRequired: !args.skipClawhub,
   });
   syncSupportFiles(targetRoot);
   writeSyncMetadata(targetRoot, args, sources);

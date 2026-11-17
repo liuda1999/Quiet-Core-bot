@@ -104,7 +104,9 @@ describe("jsonl replay", () => {
         return {
           scenarioStatus: "pass",
           cell: makeCell(runtime, {
-            toolCalls: [makeToolCall(runtime === "openclaw" ? {} : { argsHash: "args-codex" })],
+            toolCalls: [
+              makeToolCall(runtime === "quiet-core-bot" ? {} : { argsHash: "args-codex" }),
+            ],
           }),
         };
       }
@@ -112,7 +114,7 @@ describe("jsonl replay", () => {
         return {
           scenarioStatus: "pass",
           cell: makeCell(runtime, {
-            finalText: runtime === "openclaw" ? "quiet-core-bot wording" : "codex wording",
+            finalText: runtime === "quiet-core-bot" ? "quiet-core-bot wording" : "codex wording",
           }),
         };
       }
@@ -125,7 +127,7 @@ describe("jsonl replay", () => {
     const result = await runJsonlReplay(
       {
         directory: transcriptDir,
-        runtimePair: ["openclaw", "codex"],
+        runtimePair: ["quiet-core-bot", "codex"],
         providerMode: "mock-openai",
       },
       { runCell },
@@ -149,7 +151,7 @@ describe("jsonl replay", () => {
     const result = await runJsonlReplay(
       {
         directory: fixtureDir,
-        runtimePair: ["openclaw", "codex"],
+        runtimePair: ["quiet-core-bot", "codex"],
         providerMode: "mock-openai",
       },
       { runCell: createMockJsonlReplayCellRunner() },
@@ -162,7 +164,7 @@ describe("jsonl replay", () => {
       renderJsonlReplayMarkdownReport({
         generatedAt: "2026-05-10T00:00:00.000Z",
         providerMode: "mock-openai",
-        runtimePair: ["openclaw", "codex"],
+        runtimePair: ["quiet-core-bot", "codex"],
         transcripts: result.transcripts,
       }),
     ).toContain("| plan-mode-boundaries.jsonl | 3 |  | none, none, none |");

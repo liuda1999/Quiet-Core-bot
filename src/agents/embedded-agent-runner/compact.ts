@@ -1486,11 +1486,12 @@ async function compactEmbeddedAgentSessionDirectOnce(
               // criterion compares against) to the compaction entry so `tokensBefore` and
               // `tokensBeforeLocalEstimate` are recorded side by side instead of one
               // ambiguous "pre-compaction size".
-              return activeSession.compact(params.customInstructions, {
-                ...(fullSessionTokensBefore > 0
+              return activeSession.compact(
+                params.customInstructions,
+                fullSessionTokensBefore > 0
                   ? { tokensBeforeLocalEstimate: fullSessionTokensBefore }
-                  : {}),
-              });
+                  : {},
+              );
             },
             compactionTimeoutMs,
             {

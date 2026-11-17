@@ -7,6 +7,7 @@ import ts from "typescript";
 import { beforeAll, describe, expect, it } from "vitest";
 import { expectNoReaddirSyncDuring } from "../../test-utils/fs-scan-assertions.js";
 import { listGitTrackedFiles, toRepoRelativePath } from "../../test-utils/repo-files.js";
+import { isPathOwnedByPresentBundledExtension } from "./test-helpers/bundled-extension-presence.js";
 
 const SRC_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const REPO_ROOT = resolve(SRC_ROOT, "..");
@@ -97,6 +98,16 @@ const BUNDLED_LIVE_CONFIG_PROVIDER_GUARDS = {
 const BUNDLED_STARTUP_GATED_HOOK_FORBIDDEN_SNIPPETS = {
   "extensions/memory-lancedb/index.ts": ["if (cfg.autoRecall)", "if (cfg.autoCapture)"],
 } as const satisfies Record<string, readonly string[]>;
+
+const PRESENT_BUNDLED_TYPED_HOOK_REGISTRATION_ENTRIES = Object.entries(
+  BUNDLED_TYPED_HOOK_REGISTRATION_GUARDS,
+).filter(([file]) => isPathOwnedByPresentBundledExtension(file));
+const PRESENT_BUNDLED_LIVE_CONFIG_HOOK_GUARD_ENTRIES = Object.entries(
+  BUNDLED_LIVE_CONFIG_HOOK_GUARDS,
+).filter(([file]) => isPathOwnedByPresentBundledExtension(file));
+const PRESENT_BUNDLED_LIVE_CONFIG_PROVIDER_GUARD_ENTRIES = Object.entries(
+  BUNDLED_LIVE_CONFIG_PROVIDER_GUARDS,
+).filter(([file]) => isPathOwnedByPresentBundledExtension(file));
 
 type FileFilter = {
   excludeTests?: boolean;
@@ -379,18 +390,20 @@ describe("plugin contract boundary invariants", () => {
   it("keeps bundled plugin typed hook registrations on an explicit allowlist", () => {
     const files = listTsFiles("extensions", { excludeTests: true });
     const hookRegistrationFiles = files.filter((file) => /\bapi\.on\(/u.test(readRepoSource(file)));
-    expect(hookRegistrationFiles).toEqual(BUNDLED_TYPED_HOOK_REGISTRATION_FILES);
+    expect(hookRegistrationFiles).toEqual(
+      PRESENT_BUNDLED_TYPED_HOOK_REGISTRATION_ENTRIES.map(([file]) => file),
+    );
   });
 
   it("keeps bundled plugin typed hook names on an explicit allowlist", () => {
     expect(
       Object.fromEntries(
-        BUNDLED_TYPED_HOOK_REGISTRATION_FILES.map((file) => [
+        PRESENT_BUNDLED_TYPED_HOOK_REGISTRATION_ENTRIES.map(([file]) => [
           file,
           collectTypedHookNames(readRepoSource(file)),
         ]),
       ),
-    ).toEqual(BUNDLED_TYPED_HOOK_REGISTRATION_GUARDS);
+    ).toEqual(Object.fromEntries(PRESENT_BUNDLED_TYPED_HOOK_REGISTRATION_ENTRIES));
   });
 
   it("keeps bundled plugin production code off raw registerHook calls", () => {
@@ -400,7 +413,7 @@ describe("plugin contract boundary invariants", () => {
   });
 
   it("keeps long-lived bundled hook handlers on live runtime config lookups", () => {
-    const missingGuards = Object.entries(BUNDLED_LIVE_CONFIG_HOOK_GUARDS).flatMap(
+    const missingGuards = PRESENT_BUNDLED_LIVE_CONFIG_HOOK_GUARD_ENTRIES.flatMap(
       ([file, requiredSnippets]) => {
         const source = readRepoSource(file);
         return requiredSnippets
@@ -412,7 +425,7 @@ describe("plugin contract boundary invariants", () => {
   });
 
   it("keeps live provider config surfaces on runtime config lookups", () => {
-    const missingGuards = Object.entries(BUNDLED_LIVE_CONFIG_PROVIDER_GUARDS).flatMap(
+    const missingGuards = PRESENT_BUNDLED_LIVE_CONFIG_PROVIDER_GUARD_ENTRIES.flatMap(
       ([file, requiredSnippets]) => {
         const source = readRepoSource(file);
         return requiredSnippets

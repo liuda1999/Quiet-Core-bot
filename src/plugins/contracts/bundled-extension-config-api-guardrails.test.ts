@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
+import { isPathOwnedByPresentBundledExtension } from "./test-helpers/bundled-extension-presence.js";
 
 const SRC_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const REPO_ROOT = resolve(SRC_ROOT, "..");
@@ -44,8 +45,12 @@ const BUNDLED_EXTENSION_CONFIG_IMPORT_GUARDS = [
   },
 ] as const;
 
+const BUNDLED_EXTENSION_CONFIG_IMPORT_GUARD_ENTRIES = BUNDLED_EXTENSION_CONFIG_IMPORT_GUARDS.filter(
+  (entry) => isPathOwnedByPresentBundledExtension(entry.path),
+);
+
 describe("bundled extension config api guardrails", () => {
-  for (const entry of BUNDLED_EXTENSION_CONFIG_IMPORT_GUARDS) {
+  for (const entry of BUNDLED_EXTENSION_CONFIG_IMPORT_GUARD_ENTRIES) {
     it(`keeps ${entry.path} off the generic concrete-schema barrel`, () => {
       const source = readFileSync(resolve(REPO_ROOT, entry.path), "utf8");
       expect(source).toContain(entry.allowedSpecifier);

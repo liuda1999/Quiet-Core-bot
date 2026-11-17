@@ -1465,7 +1465,9 @@ describe("agentCliCommand", () => {
       );
 
       const run = agentCliCommand({ message: "hi", sessionKey: "agent:main:main" }, runtime);
-      await new Promise((resolve) => setTimeout(resolve, 80));
+      await new Promise((resolve) => {
+        setTimeout(resolve, 80);
+      });
 
       expect(runtime.error).toHaveBeenCalledWith(
         "Still blocked on 1 pending exec approval(s) for agent:main:main: 54d8b109",
@@ -1481,7 +1483,9 @@ describe("agentCliCommand", () => {
       // The watcher must stop with the turn; a later tick would keep printing.
       const callsAfterTurn = (runtime.error as unknown as { mock: { calls: unknown[][] } }).mock
         .calls.length;
-      await new Promise((resolve) => setTimeout(resolve, 40));
+      await new Promise((resolve) => {
+        setTimeout(resolve, 40);
+      });
       expect((runtime.error as unknown as { mock: { calls: unknown[][] } }).mock.calls.length).toBe(
         callsAfterTurn,
       );

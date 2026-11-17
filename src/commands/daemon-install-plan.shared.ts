@@ -59,7 +59,7 @@ export function resolveDaemonNodeBinDir(nodePath?: string): string[] | undefined
 }
 
 function isQuietCoreCommandBasename(basename: string, platform: NodeJS.Platform): boolean {
-  if (basename === "quiet-core-bot" || basename === "quiet-core-bot") {
+  if (basename === "quiet-core-bot") {
     return true;
   }
   if (platform === "win32") {
@@ -130,7 +130,10 @@ export function resolveDaemonQuietCoreBinDir(
     if (!path.isAbsolute(segment)) {
       continue;
     }
-    const candidate = path.join(segment, platform === "win32" ? "quiet-core-bot.cmd" : "quiet-core-bot");
+    const candidate = path.join(
+      segment,
+      platform === "win32" ? "quiet-core-bot.cmd" : "quiet-core-bot",
+    );
     if (!existsSync(candidate)) {
       continue;
     }

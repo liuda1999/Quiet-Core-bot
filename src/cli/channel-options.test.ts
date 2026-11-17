@@ -4,7 +4,9 @@ import { testing, formatCliChannelOptions, resolveCliChannelOptions } from "./ch
 import { testing as startupMetadataTesting } from "./startup-metadata.js";
 
 const readFileSyncMock = vi.hoisted(() => vi.fn());
-const listBundledChannelCatalogEntriesMock = vi.hoisted(() => vi.fn(() => []));
+const listBundledChannelCatalogEntriesMock = vi.hoisted(() =>
+  vi.fn((): Array<{ id: string }> => []),
+);
 
 vi.mock("node:fs", async () => {
   const actual = await vi.importActual<typeof import("node:fs")>("node:fs");

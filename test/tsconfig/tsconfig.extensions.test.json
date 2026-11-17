@@ -10,5 +10,9 @@
     "../../extensions/**/*.test.ts",
     "../../extensions/**/*.test.tsx",
     "../../packages/**/*.d.ts"
+  ],
+  "exclude": [
+    "../../extensions/video-generation-providers.live.test.ts",
+    "../../extensions/music-generation-providers.live.test.ts"
   ]
 }

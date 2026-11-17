@@ -70,7 +70,9 @@ function expectInstallPackageSourceDir(sourceDir: string) {
   if (!call) {
     throw new Error("expected installPackageDir call");
   }
-  expect(call[0]?.sourceDir).toBe(sourceDir);
+  // Production normalizes fixtures through path.resolve/path.join, which yields
+  // platform-native separators and drive prefixes on Windows.
+  expect(path.resolve(call[0]?.sourceDir ?? "")).toBe(path.resolve(sourceDir));
 }
 
 function installPolicyInput() {
@@ -102,7 +104,7 @@ function expectInstalledSkill(
     expect(result.version).toBe(expected.version);
   }
   if (expected.targetDir) {
-    expect(result.targetDir).toBe(expected.targetDir);
+    expect(path.resolve(result.targetDir)).toBe(path.resolve(expected.targetDir));
   }
 }
 

@@ -15,6 +15,10 @@ import {
 } from "../../../scripts/lib/extension-package-boundary.ts";
 import { expectNoReaddirSyncDuring } from "../../test-utils/fs-scan-assertions.js";
 import { listGitTrackedFiles, toRepoRelativePath } from "../../test-utils/repo-files.js";
+import {
+  filterPresentBundledExtensions,
+  isBundledExtensionPresent,
+} from "./test-helpers/bundled-extension-presence.js";
 
 const REPO_ROOT = resolve(import.meta.dirname, "../../..");
 const EXTENSION_PACKAGE_BOUNDARY_PATHS_CONFIG =
@@ -118,10 +122,16 @@ function collectCodeFiles(relativeDir: string): string[] {
 }
 
 function collectCoreReferenceFiles(relativeDir: string): string[] {
-  return collectCodeFiles(relativeDir).filter((file) => {
-    const source = fs.readFileSync(resolve(REPO_ROOT, file), "utf8");
-    return source.includes("../../../../src/") || source.includes("../../../src/");
-  });
+  return (
+    collectCodeFiles(relativeDir)
+      // Test files may import core helpers to build fixtures; the bridge-files
+      // guard covers shipped package code only.
+      .filter((file) => !/(?:\.test|\.spec)\.[cm]?[jt]sx?$/u.test(file))
+      .filter((file) => {
+        const source = fs.readFileSync(resolve(REPO_ROOT, file), "utf8");
+        return source.includes("../../../../src/") || source.includes("../../../src/");
+      })
+  );
 }
 
 function collectQuietCoreRuntimeDirectImportFiles(relativeDir: string): string[] {
@@ -179,13 +189,16 @@ describe("opt-in extension package boundaries", () => {
       return tsconfig.compilerOptions?.paths !== undefined;
     });
 
-    expect(extensionsWithCustomPaths).toEqual(["xai"]);
+    expect(extensionsWithCustomPaths).toEqual(filterPresentBundledExtensions(["xai"]));
   });
 
-  it("keeps xai's boundary-specific path overrides derived from the shared package boundary map", () => {
-    const tsconfig = readExtensionPackageBoundaryTsconfig("xai", REPO_ROOT);
-    expect(tsconfig.compilerOptions?.paths).toEqual(EXTENSION_PACKAGE_BOUNDARY_XAI_PATHS);
-  });
+  it.skipIf(!isBundledExtensionPresent("xai"))(
+    "keeps xai's boundary-specific path overrides derived from the shared package boundary map",
+    () => {
+      const tsconfig = readExtensionPackageBoundaryTsconfig("xai", REPO_ROOT);
+      expect(tsconfig.compilerOptions?.paths).toEqual(EXTENSION_PACKAGE_BOUNDARY_XAI_PATHS);
+    },
+  );
 
   it("keeps plugin-sdk package types generated from the package build, not a hand-maintained types bridge", () => {
     const tsconfig = readJsonFile<TsConfigJson>("packages/plugin-sdk/tsconfig.json");
@@ -205,6 +218,7 @@ describe("opt-in extension package boundaries", () => {
       "../../src/plugin-sdk/**/*.ts",
       "../../src/video-generation/dashscope-compatible.ts",
       "../../src/video-generation/types.ts",
+      "../../src/web-tools/**/*.d.ts",
       "../../src/types/**/*.d.ts",
     ]);
 

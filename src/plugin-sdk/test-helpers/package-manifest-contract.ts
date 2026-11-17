@@ -34,6 +34,13 @@ function bundledPluginFile(pluginId: string, relativePath: string): string {
 /** Installs manifest contract tests for one bundled plugin package. */
 export function describePackageManifestContract(params: PackageManifestContractParams) {
   const packagePath = bundledPluginFile(params.pluginId, "package.json");
+  const hasDependencyChecks = Boolean(params.pluginLocalRuntimeDeps?.length);
+  const hasHostVersionCheck = Boolean(params.minHostVersionBaseline);
+  // Empty suites fail collection, so skip plugins whose manifest carries no
+  // assertion in this contract.
+  if (!hasDependencyChecks && !hasHostVersionCheck) {
+    return;
+  }
 
   describe(`${params.pluginId} package manifest contract`, () => {
     if (params.pluginLocalRuntimeDeps?.length) {

@@ -7,13 +7,13 @@
   "dependencies": {
     "@copilotkit/aimock": "1.27.3",
     "@modelcontextprotocol/sdk": "1.29.0",
+    "@openclaw/crabline": "0.1.6",
     "playwright-core": "1.60.0",
     "yaml": "2.9.0",
     "zod": "4.4.3"
   },
   "devDependencies": {
     "@quiet-core/plugin-sdk": "workspace:*",
-    "@openclaw/crabline": "0.1.6",
     "quiet-core-bot": "workspace:*"
   },
   "peerDependencies": {

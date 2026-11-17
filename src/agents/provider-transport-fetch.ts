@@ -848,7 +848,8 @@ export function buildGuardedModelFetch(
         `proxy=${dispatcherPolicy ? "configured" : useEnvProxy ? "env" : "none"} ` +
         `policy=${policy ? "custom" : "default"}`,
     );
-    for (let attempt = 0; ; attempt += 1) {
+    let attempt = 0;
+    for (;;) {
       try {
         localServiceLease = await ensureModelProviderLocalService(
           model,
@@ -880,7 +881,11 @@ export function buildGuardedModelFetch(
           `[model-fetch] retry provider=${model.provider} model=${model.id} attempt=${attempt + 1}: ` +
             "managed proxy re-probe reported the endpoint is still listening",
         );
-        await new Promise((resolve) => setTimeout(resolve, retry.delayMs));
+        await new Promise((resolve) => {
+          setTimeout(resolve, retry.delayMs);
+        });
+        // eslint-disable-next-line no-useless-assignment -- the rule misses the loop back edge; the next iteration's retry decision reads this attempt count.
+        attempt += 1;
       }
     }
     let response = result.response;

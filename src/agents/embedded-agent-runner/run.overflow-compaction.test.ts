@@ -106,10 +106,14 @@ function codexHarnessSupportsKnownProviders(
 // C-K2-2 tests need a loopback port with nothing listening on it.
 async function reserveClosedLoopbackPort(): Promise<number> {
   const server = createServer();
-  await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+  await new Promise<void>((resolve) => {
+    server.listen(0, "127.0.0.1", resolve);
+  });
   const address = server.address();
   const port = typeof address === "object" && address ? address.port : 0;
-  await new Promise<void>((resolve) => server.close(() => resolve()));
+  await new Promise<void>((resolve) => {
+    server.close(() => resolve());
+  });
   return port;
 }
 
@@ -416,9 +420,9 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
       mockedEnsureAuthProfileStoreWithoutExternalProfiles,
     ) as [string | undefined, { allowKeychainPrompt?: boolean } | undefined];
     expect(typeof agentDir).toBe("string");
-    expect(String(agentDir).replaceAll("\\", "/").endsWith("/.quiet-core-bot/agents/main/agent")).toBe(
-      true,
-    );
+    expect(
+      String(agentDir).replaceAll("\\", "/").endsWith("/.quiet-core-bot/agents/main/agent"),
+    ).toBe(true);
     expect(authStoreOptions).toEqual({ allowKeychainPrompt: false });
   });
 
@@ -2829,7 +2833,10 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
     mockedLog.info.mockClear();
 
     // D-OVF-3 class: the transcript's last entry is already a compaction entry.
-    const alreadyCompacted = await runWithNoop("Already compacted", "quiet-core-bot-dovf4-d-already-");
+    const alreadyCompacted = await runWithNoop(
+      "Already compacted",
+      "quiet-core-bot-dovf4-d-already-",
+    );
     expect(attemptsThatSkippedPrecheck()).toBe(1);
     expect(warnLogsMatching(ALREADY_COMPACTED_SUBMIT_LOG)).toHaveLength(1);
     expect(warnLogsMatching(EMPTY_TRANSCRIPT_SUBMIT_LOG)).toHaveLength(0);
@@ -3415,7 +3422,9 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
 
   it("keeps the model-resolution error unchanged while the managed proxy answers", async () => {
     const server = createServer();
-    await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+    await new Promise<void>((resolve) => {
+      server.listen(0, "127.0.0.1", resolve);
+    });
     const address = server.address();
     const listeningPort = typeof address === "object" && address ? address.port : 0;
     vi.stubEnv("QUIET_CORE_PROXY_ACTIVE", "1");
@@ -3435,7 +3444,9 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
       expect(message).not.toContain("quiet-core-bot proxy start");
     } finally {
       vi.unstubAllEnvs();
-      await new Promise<void>((resolve) => server.close(() => resolve()));
+      await new Promise<void>((resolve) => {
+        server.close(() => resolve());
+      });
     }
   });
 });

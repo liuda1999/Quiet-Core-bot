@@ -1,8 +1,9 @@
 // Provider contract tests cover shared provider plugin behavior across bundled providers.
 import { describeProviderContracts } from "../../plugin-sdk/test-helpers/provider-contract.js";
 import { describeWebSearchProviderContracts } from "../../plugin-sdk/test-helpers/web-search-provider-contract.js";
+import { filterPresentBundledExtensions } from "./test-helpers/bundled-extension-presence.js";
 
-for (const providerId of [
+const TEXT_PROVIDER_PLUGIN_IDS = filterPresentBundledExtensions([
   "anthropic",
   "fal",
   "google",
@@ -11,11 +12,9 @@ for (const providerId of [
   "openai",
   "openrouter",
   "xai",
-] as const) {
-  describeProviderContracts(providerId);
-}
+] as const);
 
-for (const providerId of [
+const WEB_SEARCH_PROVIDER_PLUGIN_IDS = filterPresentBundledExtensions([
   "brave",
   "duckduckgo",
   "exa",
@@ -27,6 +26,12 @@ for (const providerId of [
   "perplexity",
   "tavily",
   "xai",
-] as const) {
-  describeWebSearchProviderContracts(providerId);
+] as const);
+
+for (const pluginId of TEXT_PROVIDER_PLUGIN_IDS) {
+  describeProviderContracts(pluginId);
+}
+
+for (const pluginId of WEB_SEARCH_PROVIDER_PLUGIN_IDS) {
+  describeWebSearchProviderContracts(pluginId);
 }

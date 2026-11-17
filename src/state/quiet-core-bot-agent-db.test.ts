@@ -332,6 +332,9 @@ describe("quiet-core-bot agent database", () => {
     const env = { QUIET_CORE_STATE_DIR: parentDir };
     fs.chmodSync(parentDir, 0o755);
     const databasePath = path.join(parentDir, "worker-1.sqlite");
+    // Compare before/after instead of pinning a literal mode: Windows does not
+    // carry POSIX permission bits, and the assertion is about "no chmod".
+    const modeBefore = fs.statSync(parentDir).mode & 0o777;
 
     openQuietCoreAgentDatabase({
       agentId: "worker-1",
@@ -339,7 +342,7 @@ describe("quiet-core-bot agent database", () => {
       path: databasePath,
     });
 
-    expect(fs.statSync(parentDir).mode & 0o777).toBe(0o755);
+    expect(fs.statSync(parentDir).mode & 0o777).toBe(modeBefore);
   });
 
   it("configures durable SQLite connection pragmas", () => {

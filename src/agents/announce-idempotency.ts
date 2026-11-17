@@ -71,7 +71,7 @@ function announceDropReasonRank(reason: string): number {
 function orderAnnounceDropReasons(reasons: readonly string[]): string[] {
   return reasons
     .map((reason, index) => ({ index, reason }))
-    .sort(
+    .toSorted(
       (a, b) =>
         announceDropReasonRank(a.reason) - announceDropReasonRank(b.reason) || a.index - b.index,
     )

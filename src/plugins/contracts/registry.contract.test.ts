@@ -9,8 +9,15 @@ import {
   providerContractLoadError,
   providerContractPluginIds,
 } from "./registry.js";
+import {
+  filterPresentBundledExtensions,
+  isBundledExtensionPresent,
+} from "./test-helpers/bundled-extension-presence.js";
 
-const ACTIVATION_SCOPED_WEB_SEARCH_PLUGIN_IDS = ["codex", "qa-lab"] as const;
+const ACTIVATION_SCOPED_WEB_SEARCH_PLUGIN_IDS = filterPresentBundledExtensions([
+  "codex",
+  "qa-lab",
+] as const);
 const ACTIVATION_SCOPED_WEB_SEARCH_PLUGIN_ID_SET = new Set<string>(
   ACTIVATION_SCOPED_WEB_SEARCH_PLUGIN_IDS,
 );
@@ -138,7 +145,7 @@ describe("plugin contract registry", () => {
   it("keeps video-only provider auth choices out of text onboarding", () => {
     const registry = loadPluginManifestRegistry({});
 
-    for (const pluginId of ["alibaba", "runway"]) {
+    for (const pluginId of filterPresentBundledExtensions(["alibaba", "runway"] as const)) {
       const plugin = registry.plugins.find(
         (entry) => entry.origin === "bundled" && entry.id === pluginId,
       );
@@ -165,29 +172,32 @@ describe("plugin contract registry", () => {
     }
   });
 
-  it("exposes the GitHub Copilot non-interactive onboarding token flag from manifest metadata", () => {
-    const registry = loadPluginManifestRegistry({});
-    const plugin = registry.plugins.find(
-      (entry) => entry.origin === "bundled" && entry.id === "github-copilot",
-    );
+  it.skipIf(!isBundledExtensionPresent("github-copilot"))(
+    "exposes the GitHub Copilot non-interactive onboarding token flag from manifest metadata",
+    () => {
+      const registry = loadPluginManifestRegistry({});
+      const plugin = registry.plugins.find(
+        (entry) => entry.origin === "bundled" && entry.id === "github-copilot",
+      );
 
-    expect(plugin?.providerAuthChoices).toEqual([
-      {
-        provider: "github-copilot",
-        method: "device",
-        choiceId: "github-copilot",
-        choiceLabel: "GitHub Copilot",
-        choiceHint: "Device login with your GitHub account",
-        groupId: "copilot",
-        groupLabel: "Copilot",
-        groupHint: "GitHub + local proxy",
-        optionKey: "githubCopilotToken",
-        cliFlag: "--github-copilot-token",
-        cliOption: "--github-copilot-token <token>",
-        cliDescription: "GitHub Copilot OAuth token",
-      },
-    ]);
-  });
+      expect(plugin?.providerAuthChoices).toEqual([
+        {
+          provider: "github-copilot",
+          method: "device",
+          choiceId: "github-copilot",
+          choiceLabel: "GitHub Copilot",
+          choiceHint: "Device login with your GitHub account",
+          groupId: "copilot",
+          groupLabel: "Copilot",
+          groupHint: "GitHub + local proxy",
+          optionKey: "githubCopilotToken",
+          cliFlag: "--github-copilot-token",
+          cliOption: "--github-copilot-token <token>",
+          cliDescription: "GitHub Copilot OAuth token",
+        },
+      ]);
+    },
+  );
 
   it("covers every bundled speech plugin discovered from manifests", () => {
     expectRegistryPluginIds({

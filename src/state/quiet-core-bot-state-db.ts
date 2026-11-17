@@ -954,7 +954,7 @@ export function closeQuietCoreStateDatabase(): void {
  */
 export function closeQuietCoreStateDatabaseUnder(rootDir: string): void {
   const resolvedRoot = path.resolve(rootDir);
-  for (const [pathname, database] of [...cachedDatabases]) {
+  for (const [pathname, database] of cachedDatabases) {
     if (!isPathInsideDirectory(resolvedRoot, path.resolve(pathname))) {
       continue;
     }

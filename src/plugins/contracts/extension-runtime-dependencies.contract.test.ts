@@ -271,7 +271,7 @@ describe("extension runtime dependency manifests", () => {
   it("lists extension dependency inputs from git without walking extension dirs", () => {
     expectNoReaddirSyncDuring(() => {
       const manifests = listPackageManifests(EXTENSION_ROOT);
-      const runtimeFiles = listRuntimeFiles("extensions/discord");
+      const runtimeFiles = listRuntimeFiles("extensions/signal");
 
       expect(manifests.length).toBeGreaterThan(0);
       expect(runtimeFiles.length).toBeGreaterThan(0);

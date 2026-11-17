@@ -363,15 +363,22 @@ describe("plugin session attachments", () => {
         error: "attachment files exceed 5 bytes total",
       });
       const symlinkPath = path.join(stateDir, "linked.txt");
-      await fs.symlink(first, symlinkPath);
-      await expect(
-        sendBundledSessionAttachment({
-          files: [{ path: symlinkPath }],
-        }),
-      ).resolves.toEqual({
-        ok: false,
-        error: `attachment file symlinks are not allowed: ${symlinkPath}`,
-      });
+      // Windows without Developer Mode/seCreateSymbolicLinkPrivilege cannot
+      // create file symlinks, so the rejection path is untestable there.
+      const symlinkCreated = await fs.symlink(first, symlinkPath).then(
+        () => true,
+        () => false,
+      );
+      if (symlinkCreated) {
+        await expect(
+          sendBundledSessionAttachment({
+            files: [{ path: symlinkPath }],
+          }),
+        ).resolves.toEqual({
+          ok: false,
+          error: `attachment file symlinks are not allowed: ${symlinkPath}`,
+        });
+      }
       expect(workflowMocks.sendMessage).not.toHaveBeenCalled();
     });
   });
@@ -416,14 +423,14 @@ describe("plugin session attachments", () => {
     await withSessionStore(async ({ storePath, filePath }) => {
       await writeSessionEntry(storePath, {
         deliveryContext: {
-          channel: "whatsapp",
-          to: "+15551234567",
+          channel: "matrix",
+          to: "@tester:example.org",
         },
       });
       setActivePluginRegistry(createEmptyPluginRegistry());
       workflowMocks.getChannelPlugin.mockReturnValue(
         createOutboundTestPlugin({
-          id: "whatsapp",
+          id: "matrix",
           outbound: { deliveryMode: "gateway" },
         }),
       );
@@ -435,7 +442,7 @@ describe("plugin session attachments", () => {
       ).resolves.toEqual({
         ok: false,
         error:
-          "session attachments require direct outbound delivery for channel whatsapp; " +
+          "session attachments require direct outbound delivery for channel matrix; " +
           "channel uses gateway delivery",
       });
       expect(workflowMocks.sendMessage).not.toHaveBeenCalled();
@@ -444,7 +451,9 @@ describe("plugin session attachments", () => {
 
   it("returns structured errors when channel delivery lookup fails", async () => {
     await withSessionStore(async ({ storePath, filePath }) => {
-      await writeSessionEntry(storePath);
+      await writeSessionEntry(storePath, {
+        deliveryContext: { channel: "signal", to: "+15551234567" },
+      });
       workflowMocks.getChannelPlugin.mockImplementation(() => {
         throw new Error("channel registry unavailable");
       });

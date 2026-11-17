@@ -5,7 +5,7 @@ import path from "node:path";
 import { resolveStateDir } from "./config/paths.js";
 import { pathExists as fsSafePathExists } from "./infra/fs-safe.js";
 import { resolveEffectiveHomeDir, resolveHomeRelativePath } from "./infra/home-dir.js";
-import { isPlainObject } from "./infra/plain-object.js";
+import { isPlainObject, isRecord } from "./infra/plain-object.js";
 import { resolveTimerTimeoutMs } from "./shared/number-coercion.js";
 export { escapeRegExp } from "./shared/regexp.js";
 
@@ -39,15 +39,7 @@ export function safeParseJson<T>(raw: string): T | null {
   }
 }
 
-export { isPlainObject };
-
-/**
- * Type guard for Record<string, unknown> (less strict than isPlainObject).
- * Accepts any non-null object that isn't an array.
- */
-export function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
+export { isPlainObject, isRecord };
 
 /** Normalizes phone-like input into the loose E.164 shape used by channel helpers. */
 export function normalizeE164(number: string): string {

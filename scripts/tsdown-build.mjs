@@ -558,7 +558,7 @@ export function resolveTsdownBuildInvocation(params = {}) {
   const forwardedArgs = params.args ?? [];
   const tsdownArgs = [
     "--config-loader",
-    "unrun",
+    env.QUIET_CORE_TSDOWN_CONFIG_LOADER ?? "unrun",
     "--logLevel",
     logLevel,
     "--no-clean",
@@ -647,8 +647,10 @@ export async function runTsdownBuildInvocation(invocation, params = {}) {
     "QUIET_CORE_TSDOWN_TIMEOUT_MS",
   );
   const heartbeatMs =
-    parseNonNegativeIntegerEnv(env.QUIET_CORE_TSDOWN_HEARTBEAT_MS, "QUIET_CORE_TSDOWN_HEARTBEAT_MS") ??
-    DEFAULT_HEARTBEAT_MS;
+    parseNonNegativeIntegerEnv(
+      env.QUIET_CORE_TSDOWN_HEARTBEAT_MS,
+      "QUIET_CORE_TSDOWN_HEARTBEAT_MS",
+    ) ?? DEFAULT_HEARTBEAT_MS;
   let timedOut = false;
   let settled = false;
   let lastOutputAt = Date.now();

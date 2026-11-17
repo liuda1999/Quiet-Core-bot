@@ -8,6 +8,12 @@ import {
   toRepoPath,
   toRepoRelativePath,
 } from "../../test-utils/repo-files.js";
+import { PLUGIN_MANIFEST_FILENAME } from "../manifest.js";
+
+const PLUGIN_MANIFEST_REPO_PATH_PATTERN = new RegExp(
+  `^extensions/[^/]+/${PLUGIN_MANIFEST_FILENAME.replaceAll(".", "\\.")}$`,
+  "u",
+);
 
 type PluginManifestFile = {
   id?: unknown;
@@ -73,7 +79,7 @@ function listGitPluginManifestPaths(extensionsDir: string): string[] | null {
     return null;
   }
   return files
-    .filter((line) => /^extensions\/[^/]+\/openclaw\.plugin\.json$/u.test(line))
+    .filter((line) => PLUGIN_MANIFEST_REPO_PATH_PATTERN.test(line))
     .map((line) => path.join(process.cwd(), ...line.split("/")))
     .filter((filePath) => fs.existsSync(filePath))
     .toSorted();

@@ -51,6 +51,11 @@ export type MemorySearchResult = {
   snippet: string;
   source: MemorySource;
   citation?: string;
+  /**
+   * True when a lexical hit was surfaced even though its combined score stayed
+   * below the configured confidence band (see the memory-core manager).
+   */
+  belowMinScore?: boolean;
 };
 
 /** Health probe result for embedding provider availability checks. */

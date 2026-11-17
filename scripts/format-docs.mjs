@@ -12,6 +12,11 @@ const ROOT = path.resolve(import.meta.dirname, "..");
 const CHECK = process.argv.includes("--check");
 const DOCS_FORMAT_MAX_BUFFER_BYTES = 1024 * 1024 * 16;
 export const DOCS_FORMAT_MAX_COMMAND_LINE_BYTES = 24 * 1024;
+/**
+ * cmd.exe refuses command lines beyond 8,191 characters ("The command line is
+ * too long"), so Windows shim invocations must batch far smaller than POSIX.
+ */
+export const DOCS_FORMAT_WINDOWS_MAX_COMMAND_LINE_BYTES = 7 * 1024;
 const FAILURE_OUTPUT_TAIL_BYTES = 16 * 1024;
 
 function outputText(value) {
@@ -91,6 +96,20 @@ function commandLineBytes(args) {
   return args.reduce((total, arg) => total + Buffer.byteLength(arg, "utf8") + 3, 0);
 }
 
+/**
+ * Windows spawns the oxfmt.cmd shim through cmd.exe, whose command line is
+ * capped at 8,191 characters. POSIX invocations keep the larger budget.
+ */
+function resolveMaxCommandLineBytes(params) {
+  if (params.maxCommandLineBytes !== undefined) {
+    return params.maxCommandLineBytes;
+  }
+  const platform = params.platform ?? process.platform;
+  return platform === "win32"
+    ? DOCS_FORMAT_WINDOWS_MAX_COMMAND_LINE_BYTES
+    : DOCS_FORMAT_MAX_COMMAND_LINE_BYTES;
+}
+
 export function chunkFilesForCommand(
   files,
   prefixArgs,
@@ -156,11 +175,7 @@ export function runOxfmt(files, params = {}, deps = {}) {
   const repoRoot = params.repoRoot ?? ROOT;
   const spawnSyncImpl = deps.spawnSync ?? spawnSync;
   const prefixArgs = ["--write", "--threads=1", "--config", path.join(repoRoot, ".oxfmtrc.jsonc")];
-  for (const chunk of chunkFilesForCommand(
-    files,
-    prefixArgs,
-    params.maxCommandLineBytes ?? DOCS_FORMAT_MAX_COMMAND_LINE_BYTES,
-  )) {
+  for (const chunk of chunkFilesForCommand(files, prefixArgs, resolveMaxCommandLineBytes(params))) {
     const invocation = resolveOxfmtInvocation([...prefixArgs, ...chunk], {
       comSpec: params.comSpec,
       existsSync: deps.existsSync,

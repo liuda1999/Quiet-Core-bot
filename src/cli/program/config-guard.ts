@@ -189,7 +189,7 @@ export async function ensureConfigReady(params: {
     preflightSnapshot = await runStateMigrationPreflight();
   }
 
-  let snapshot = preflightSnapshot ?? (await getConfigSnapshot());
+  const snapshot = preflightSnapshot ?? (await getConfigSnapshot());
   const commandName = commandPath[0];
   const subcommandName = commandPath[1];
   const isBareGatewayForegroundRun =

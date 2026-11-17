@@ -201,11 +201,11 @@ async function buildStructuredTranscript(): Promise<{
 describe("Task 1 · structured input/output audit", () => {
   it("only persists legal transcript entry types", async () => {
     const { entries } = await buildStructuredTranscript();
-    const types = [...new Set(entries.map((entry) => entry.type))].sort();
+    const types = [...new Set(entries.map((entry) => entry.type))].toSorted();
 
     expect(collectIllegalEntryTypes(entries)).toEqual([]);
     expect(types).toEqual(
-      ["custom", "message", "model_change", "session_info", "thinking_level_change"].sort(),
+      ["custom", "message", "model_change", "session_info", "thinking_level_change"].toSorted(),
     );
     // Positive control: the validator can actually detect an illegal type.
     expect(collectIllegalEntryTypes([{ type: "bogus_entry" }])).toEqual(["bogus_entry"]);
@@ -293,6 +293,7 @@ describe("Task 1 · structured input/output audit", () => {
 
     // Still no illegal types and the compaction entry round-trips fully.
     expect(collectIllegalEntryTypes(after)).toEqual([]);
+    // eslint-disable-next-line prefer-structured-clone -- JSON round-trip stability is itself the assertion under test.
     expect(JSON.parse(JSON.stringify(compaction))).toEqual(compaction);
 
     // The post-compaction context must still pair: summarised turns are dropped

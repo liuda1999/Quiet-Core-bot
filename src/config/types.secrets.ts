@@ -1,5 +1,5 @@
 // Defines secret reference and resolution configuration types.
-import { isRecord } from "../utils.js";
+import { isRecord } from "../infra/plain-object.js";
 
 /** Supported secret reference backends in config. */
 export type SecretRefSource = "env" | "file" | "exec"; // pragma: allowlist secret

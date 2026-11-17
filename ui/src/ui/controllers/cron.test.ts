@@ -4,7 +4,6 @@ import { DEFAULT_CRON_FORM } from "../app-defaults.ts";
 import {
   addCronJob,
   cancelCronEdit,
-  hasCronFormErrors,
   loadCronModelSuggestions,
   loadCronJobsPage,
   loadCronRuns,
@@ -1204,9 +1203,15 @@ describe("cron controller", () => {
 
   it("sets a success toast after adding a new job", async () => {
     const request = vi.fn(async (method: string) => {
-      if (method === "cron.add") return { id: "job-new" };
-      if (method === "cron.list") return { jobs: [], total: 0, hasMore: false, nextOffset: null };
-      if (method === "cron.status") return { enabled: true, jobs: 0, nextWakeAtMs: null };
+      if (method === "cron.add") {
+        return { id: "job-new" };
+      }
+      if (method === "cron.list") {
+        return { jobs: [], total: 0, hasMore: false, nextOffset: null };
+      }
+      if (method === "cron.status") {
+        return { enabled: true, jobs: 0, nextWakeAtMs: null };
+      }
       return {};
     });
     const state = createState({
@@ -1228,9 +1233,15 @@ describe("cron controller", () => {
 
   it("sets a save-success toast after editing an existing job", async () => {
     const request = vi.fn(async (method: string) => {
-      if (method === "cron.update") return {};
-      if (method === "cron.list") return { jobs: [], total: 0, hasMore: false, nextOffset: null };
-      if (method === "cron.status") return { enabled: true, jobs: 0, nextWakeAtMs: null };
+      if (method === "cron.update") {
+        return {};
+      }
+      if (method === "cron.list") {
+        return { jobs: [], total: 0, hasMore: false, nextOffset: null };
+      }
+      if (method === "cron.status") {
+        return { enabled: true, jobs: 0, nextWakeAtMs: null };
+      }
       return {};
     });
     const state = createState({
@@ -1814,9 +1825,15 @@ describe("cron controller", () => {
 
   it("editing a job with a zero timeout keeps the form submittable", async () => {
     const request = vi.fn(async (method: string) => {
-      if (method === "cron.update") return {};
-      if (method === "cron.list") return { jobs: [], total: 0, hasMore: false, nextOffset: null };
-      if (method === "cron.status") return { enabled: true, jobs: 0, nextWakeAtMs: null };
+      if (method === "cron.update") {
+        return {};
+      }
+      if (method === "cron.list") {
+        return { jobs: [], total: 0, hasMore: false, nextOffset: null };
+      }
+      if (method === "cron.status") {
+        return { enabled: true, jobs: 0, nextWakeAtMs: null };
+      }
       return {};
     });
     const job = {
@@ -1850,9 +1867,15 @@ describe("cron controller", () => {
 
   it("omits the schedule when editing a one-shot job whose time already passed", async () => {
     const request = vi.fn(async (method: string) => {
-      if (method === "cron.update") return {};
-      if (method === "cron.list") return { jobs: [], total: 0, hasMore: false, nextOffset: null };
-      if (method === "cron.status") return { enabled: true, jobs: 0, nextWakeAtMs: null };
+      if (method === "cron.update") {
+        return {};
+      }
+      if (method === "cron.list") {
+        return { jobs: [], total: 0, hasMore: false, nextOffset: null };
+      }
+      if (method === "cron.status") {
+        return { enabled: true, jobs: 0, nextWakeAtMs: null };
+      }
       return {};
     });
     const job = {
@@ -1883,9 +1906,15 @@ describe("cron controller", () => {
 
   it("still sends the schedule when the editor changes it", async () => {
     const request = vi.fn(async (method: string) => {
-      if (method === "cron.update") return {};
-      if (method === "cron.list") return { jobs: [], total: 0, hasMore: false, nextOffset: null };
-      if (method === "cron.status") return { enabled: true, jobs: 0, nextWakeAtMs: null };
+      if (method === "cron.update") {
+        return {};
+      }
+      if (method === "cron.list") {
+        return { jobs: [], total: 0, hasMore: false, nextOffset: null };
+      }
+      if (method === "cron.status") {
+        return { enabled: true, jobs: 0, nextWakeAtMs: null };
+      }
       return {};
     });
     const job = {

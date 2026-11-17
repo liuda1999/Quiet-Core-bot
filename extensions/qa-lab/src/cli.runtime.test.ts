@@ -1,8 +1,10 @@
 // Qa Lab tests cover cli plugin behavior.
+import { existsSync } from "node:fs";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { fileURLToPath } from "node:url";
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 const {
   runQaManualLane,
@@ -89,9 +91,29 @@ import {
 } from "./cli.runtime.js";
 import { QaSuiteInfraError } from "./errors.js";
 import { QA_EVIDENCE_FILENAME } from "./evidence-summary.js";
-import { runQaTelegramCommand } from "./live-transports/telegram/cli.runtime.js";
 import { defaultQaModelForMode as defaultQaProviderModelForMode } from "./model-selection.js";
 import type { QaProviderModeInput } from "./run-config.js";
+
+// The telegram live transport is trimmed from some deployments. Load it lazily
+// so the rest of the suite still type-checks and runs when it is absent.
+const telegramTransportPresent = existsSync(
+  fileURLToPath(new URL("./live-transports/telegram/cli.runtime.ts", import.meta.url)),
+);
+const itTelegram = telegramTransportPresent ? it : it.skip;
+const telegramCliRuntimeSpecifier = "./live-transports/telegram/cli.runtime.js";
+let runQaTelegramCommandImpl: ((input: Record<string, unknown>) => Promise<unknown>) | undefined;
+beforeAll(async () => {
+  if (!telegramTransportPresent) {
+    return;
+  }
+  ({ runQaTelegramCommand: runQaTelegramCommandImpl } = await import(telegramCliRuntimeSpecifier));
+});
+async function runQaTelegramCommand(input: Record<string, unknown>): Promise<unknown> {
+  if (!runQaTelegramCommandImpl) {
+    throw new Error("telegram live transport is not available");
+  }
+  return runQaTelegramCommandImpl(input);
+}
 
 function mockFirstObjectArg(mock: unknown): Record<string, unknown> {
   const calls = (mock as { mock?: { calls?: Array<Array<unknown>> } }).mock?.calls ?? [];
@@ -808,7 +830,7 @@ describe("qa cli runtime", () => {
     });
   });
 
-  it("resolves telegram qa repo-root-relative paths before dispatching", async () => {
+  itTelegram("resolves telegram qa repo-root-relative paths before dispatching", async () => {
     await runQaTelegramCommand({
       repoRoot: "/tmp/quiet-core-bot-repo",
       outputDir: ".artifacts/qa/telegram",
@@ -842,7 +864,7 @@ describe("qa cli runtime", () => {
     );
   });
 
-  it("defaults telegram qa runs onto the live provider lane", async () => {
+  itTelegram("defaults telegram qa runs onto the live provider lane", async () => {
     await runQaTelegramCommand({
       repoRoot: "/tmp/quiet-core-bot-repo",
       scenarioIds: ["telegram-help-command"],
@@ -855,7 +877,7 @@ describe("qa cli runtime", () => {
     });
   });
 
-  it("prints telegram scenario catalog without starting the live lane", async () => {
+  itTelegram("prints telegram scenario catalog without starting the live lane", async () => {
     await runQaTelegramCommand({
       repoRoot: "/tmp/quiet-core-bot-repo",
       providerMode: "mock-openai",
@@ -870,7 +892,7 @@ describe("qa cli runtime", () => {
     );
   });
 
-  it("sets a failing exit code when the telegram summary reports failures", async () => {
+  itTelegram("sets a failing exit code when the telegram summary reports failures", async () => {
     const priorExitCode = process.exitCode;
     process.exitCode = undefined;
     await fs.writeFile(
@@ -899,7 +921,7 @@ describe("qa cli runtime", () => {
     }
   });
 
-  it("keeps telegram exit code clear when --allow-failures is set", async () => {
+  itTelegram("keeps telegram exit code clear when --allow-failures is set", async () => {
     const priorExitCode = process.exitCode;
     process.exitCode = undefined;
     await fs.writeFile(

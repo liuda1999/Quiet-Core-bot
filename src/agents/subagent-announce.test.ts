@@ -569,6 +569,7 @@ describe("subagent announce seam flow", () => {
     isEmbeddedAgentRunActiveMock.mockReturnValue(true);
     deliveredCompletionReceiptMock.mockResolvedValue(false);
     const logSpy = vi.spyOn(defaultRuntime, "log").mockImplementation(() => {});
+    // eslint-disable-next-line no-useless-assignment -- explicit false documents the flag when the try block throws early.
     let reportedMissingReceipt = false;
     try {
       const didAnnounce = await runSubagentAnnounceFlow({

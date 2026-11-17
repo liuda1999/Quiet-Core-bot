@@ -38,7 +38,7 @@ function normalizeCommandBaseName(token: string | undefined): string {
 
 function isQuietCoreCliCommandName(token: string | undefined): boolean {
   const name = normalizeCommandBaseName(token);
-  return name === "quiet-core-bot" || name === "quiet-core-bot";
+  return name === "quiet-core-bot";
 }
 
 function stripQuietCorePackageRunner(argv: string[]): string[] {

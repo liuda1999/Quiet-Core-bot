@@ -53,7 +53,10 @@ function collectEvents(): { events: DiagnosticEventPayload[]; unsubscribe: () =>
 function reasonsFor(events: readonly DiagnosticEventPayload[], type: string): string[] {
   return events
     .filter((event) => (event as { type?: string }).type === type)
-    .map((event) => String((event as { reason?: unknown }).reason ?? ""));
+    .map((event) => {
+      const reason = (event as { reason?: unknown }).reason;
+      return typeof reason === "string" ? reason : "";
+    });
 }
 
 describe("C-K2-1 no-model-call stall detection", () => {

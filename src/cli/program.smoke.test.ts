@@ -85,13 +85,15 @@ describe("cli program (smoke)", () => {
   });
 
   it("blocks tui startup without an interactive terminal", async () => {
-    guardTuiInteractiveTerminal.mockImplementationOnce(
-      (params: { writeError: (text: string) => void; exit: (code: number) => void }) => {
-        params.writeError("no interactive terminal");
-        params.exit(1);
-        return true;
-      },
-    );
+    guardTuiInteractiveTerminal.mockImplementationOnce((...args: unknown[]) => {
+      const params = args[0] as {
+        writeError: (text: string) => void;
+        exit: (code: number) => void;
+      };
+      params.writeError("no interactive terminal");
+      params.exit(1);
+      return true;
+    });
 
     await expect(runProgram(["tui", "--message", "hi"])).rejects.toThrow("exit");
     expect(runtime.exit).toHaveBeenCalledWith(1);

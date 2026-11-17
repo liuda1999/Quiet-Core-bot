@@ -35,10 +35,7 @@ function hasAnyHint(env: NodeJS.ProcessEnv, keys: readonly string[]): boolean {
 
 function hasQuietCoreGatewayServiceMarker(env: NodeJS.ProcessEnv): boolean {
   const marker = env.QUIET_CORE_SERVICE_MARKER?.trim();
-  return (
-    (marker === "quiet-core-bot" || marker === "quiet-core-bot") &&
-    env.QUIET_CORE_SERVICE_KIND?.trim() === "gateway"
-  );
+  return marker === "quiet-core-bot" && env.QUIET_CORE_SERVICE_KIND?.trim() === "gateway";
 }
 
 function isCurrentGatewayLaunchdJob(env: NodeJS.ProcessEnv): boolean {

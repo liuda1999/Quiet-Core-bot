@@ -603,10 +603,9 @@ function withStableConfiguredCosts(
         if (candidate && typeof candidate === "object" && "cost" in candidate) {
           return model;
         }
-        return {
-          ...(candidate ?? {}),
+        return Object.assign({}, candidate, {
           cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
-        } as unknown as ModelDefinitionConfig;
+        }) as unknown as ModelDefinitionConfig;
       }),
     };
   }

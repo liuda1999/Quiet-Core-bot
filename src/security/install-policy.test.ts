@@ -273,8 +273,14 @@ describe("runInstallPolicy", () => {
       PATH?: string;
       Path?: string;
     };
-    expect(captured.PATH).toBeUndefined();
-    expect(captured.Path).toBeUndefined();
+    expect(captured.PATH).not.toBe("/tmp/untrusted-path");
+    expect(captured.Path).not.toBe("/tmp/untrusted-path");
+    if (process.platform !== "win32") {
+      // Windows CreateProcess always materializes PATH/SystemRoot for the child,
+      // so only the caller-supplied value can be asserted there.
+      expect(captured.PATH).toBeUndefined();
+      expect(captured.Path).toBeUndefined();
+    }
   });
 
   it("skips skill requests when targets only include plugins", async () => {

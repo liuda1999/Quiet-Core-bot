@@ -1,5 +1,6 @@
 // Package manifest contract tests cover plugin package manifest requirements.
 import { describePackageManifestContract } from "quiet-core-bot/plugin-sdk/plugin-test-contracts";
+import { filterPresentBundledExtensions } from "./test-helpers/bundled-extension-presence.js";
 
 type PackageManifestContractParams = Parameters<typeof describePackageManifestContract>[0];
 
@@ -78,6 +79,12 @@ const packageManifestContractTests: PackageManifestContractParams[] = [
   { pluginId: "zalouser", minHostVersionBaseline: "2026.3.22" },
 ];
 
+const presentPackageManifestPluginIds = new Set(
+  filterPresentBundledExtensions(packageManifestContractTests.map((params) => params.pluginId)),
+);
+
 for (const params of packageManifestContractTests) {
-  describePackageManifestContract(params);
+  if (presentPackageManifestPluginIds.has(params.pluginId)) {
+    describePackageManifestContract(params);
+  }
 }

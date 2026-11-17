@@ -116,7 +116,11 @@ describe("skills-install fallback edge cases", () => {
   });
 
   it("handles sudo probe failures for go install without apt fallback", async () => {
-    vi.spyOn(process, "getuid").mockReturnValue(1000);
+    // process.getuid is POSIX-only; on Windows it is absent, which already
+    // means "not root" for the code under test.
+    if (typeof process.getuid === "function") {
+      vi.spyOn(process, "getuid").mockReturnValue(1000);
+    }
 
     for (const testCase of [
       {

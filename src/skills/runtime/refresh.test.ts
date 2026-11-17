@@ -5,6 +5,12 @@ import path from "node:path";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { SkillsChangeEvent } from "./refresh.js";
 
+// Watch targets keep forward slashes (toWatchRoot) after resolving to an
+// absolute path, so expectations must not use the raw platform separator.
+function watchTargetPath(posixPath: string): string {
+  return path.resolve(posixPath).replaceAll("\\", "/");
+}
+
 type WatchEvent = "add" | "addDir" | "change" | "unlink" | "unlinkDir" | "raw" | "error";
 type WatchCallback = (...args: unknown[]) => void;
 
@@ -148,7 +154,9 @@ describe("ensureSkillsWatcher", () => {
 
   it("does not double-refresh polling SKILL.md changes from raw events", async () => {
     vi.useFakeTimers();
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-watch-polling-raw-"));
+    const workspaceDir = await fs.mkdtemp(
+      path.join(os.tmpdir(), "quiet-core-bot-watch-polling-raw-"),
+    );
     const previousPolling = process.env.CHOKIDAR_USEPOLLING;
     const seen: SkillsChangeEvent[] = [];
     try {
@@ -247,7 +255,7 @@ describe("ensureSkillsWatcher", () => {
       {
         workspaceDir,
         reason: "watch",
-        changedPath: "/tmp/workspace/skills/demo/SKILL.md",
+        changedPath: path.normalize("/tmp/workspace/skills/demo/SKILL.md"),
       },
     ]);
   });
@@ -318,8 +326,12 @@ describe("ensureSkillsWatcher", () => {
   it.runIf(process.platform !== "win32")(
     "watches allowed symlink skill targets without following every root symlink",
     async () => {
-      const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-watch-symlink-"));
-      const targetRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-watch-symlink-target-"));
+      const workspaceDir = await fs.mkdtemp(
+        path.join(os.tmpdir(), "quiet-core-bot-watch-symlink-"),
+      );
+      const targetRoot = await fs.mkdtemp(
+        path.join(os.tmpdir(), "quiet-core-bot-watch-symlink-target-"),
+      );
       try {
         const workspaceSkillsDir = path.join(workspaceDir, "skills");
         const targetSkillDir = path.join(targetRoot, "linked-skill");
@@ -352,7 +364,9 @@ describe("ensureSkillsWatcher", () => {
   );
 
   it.runIf(process.platform !== "win32")("watches symlinked skill root targets", async () => {
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-watch-root-link-"));
+    const workspaceDir = await fs.mkdtemp(
+      path.join(os.tmpdir(), "quiet-core-bot-watch-root-link-"),
+    );
     const targetSkillsDir = await fs.mkdtemp(
       path.join(os.tmpdir(), "quiet-core-bot-watch-root-link-target-"),
     );
@@ -384,7 +398,9 @@ describe("ensureSkillsWatcher", () => {
       const workspaceDir = await fs.mkdtemp(
         path.join(os.tmpdir(), "quiet-core-bot-watch-untrusted-link-"),
       );
-      const repoDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-watch-untrusted-repo-"));
+      const repoDir = await fs.mkdtemp(
+        path.join(os.tmpdir(), "quiet-core-bot-watch-untrusted-repo-"),
+      );
       const outsideDir = await fs.mkdtemp(
         path.join(os.tmpdir(), "quiet-core-bot-watch-untrusted-target-"),
       );
@@ -442,7 +458,9 @@ describe("ensureSkillsWatcher", () => {
   });
 
   it("watches nested skills roots for built-in workspace skill dirs", async () => {
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-workspace-skills-"));
+    const workspaceDir = await fs.mkdtemp(
+      path.join(os.tmpdir(), "quiet-core-bot-workspace-skills-"),
+    );
     try {
       await fs.mkdir(path.join(workspaceDir, "skills", "skills", "group", "demo"), {
         recursive: true,
@@ -515,7 +533,9 @@ describe("ensureSkillsWatcher", () => {
   });
 
   it("bumps missing configured root depth for first nested skill creation", async () => {
-    const parentDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-missing-skill-root-"));
+    const parentDir = await fs.mkdtemp(
+      path.join(os.tmpdir(), "quiet-core-bot-missing-skill-root-"),
+    );
     try {
       const missingRoot = path.join(parentDir, "repo");
       refreshModule.ensureSkillsWatcher({
@@ -534,7 +554,9 @@ describe("ensureSkillsWatcher", () => {
   });
 
   it("watches configured roots named skills at grouped depth", async () => {
-    const parentDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-configured-skills-root-"));
+    const parentDir = await fs.mkdtemp(
+      path.join(os.tmpdir(), "quiet-core-bot-configured-skills-root-"),
+    );
     try {
       const skillsDir = path.join(parentDir, "skills");
       await fs.mkdir(skillsDir, { recursive: true });
@@ -618,7 +640,9 @@ describe("ensureSkillsWatcher", () => {
   });
 
   it("watches nested skills roots for plugin skill dirs", async () => {
-    const pluginDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-plugin-skills-watch-"));
+    const pluginDir = await fs.mkdtemp(
+      path.join(os.tmpdir(), "quiet-core-bot-plugin-skills-watch-"),
+    );
     try {
       await fs.mkdir(path.join(pluginDir, "skills", "group", "demo"), { recursive: true });
       await fs.writeFile(
@@ -767,8 +791,11 @@ describe("ensureSkillsWatcher", () => {
     const callPaths = (watchMock.mock.calls as unknown as Array<[string]>).map((call) => call[0]);
     // Each shared target is watched exactly once even though two workspaces
     // include it, instead of one watcher per workspace (the EMFILE root cause).
-    expect(callPaths.filter((target) => target === "/tmp/shared")).toHaveLength(1);
-    expect(callPaths.filter((target) => target === "/tmp/shared/skills")).toHaveLength(1);
+    // Watcher targets are platform-native, so compare normalized paths.
+    expect(callPaths.filter((target) => target === watchTargetPath("/tmp/shared"))).toHaveLength(1);
+    expect(
+      callPaths.filter((target) => target === watchTargetPath("/tmp/shared/skills")),
+    ).toHaveLength(1);
   });
 
   it("fans out a shared-directory change to every subscribed workspace", async () => {
@@ -947,7 +974,9 @@ describe("ensureSkillsWatcher", () => {
       config: { skills: { load: { extraDirs: ["/tmp/shared"], watchDebounceMs: 10 } } },
     });
     const callPaths1 = (watchMock.mock.calls as unknown as Array<[string]>).map((call) => call[0]);
-    const firstSharedIndex = callPaths1.findIndex((target) => target === "/tmp/shared");
+    const firstSharedIndex = callPaths1.findIndex(
+      (target) => target === watchTargetPath("/tmp/shared"),
+    );
 
     // ws-b subscribes to the same path with a different debounce: the shared
     // watcher is rebuilt once, the previous instance closed, and both
@@ -960,10 +989,12 @@ describe("ensureSkillsWatcher", () => {
     expect(createdWatchers[firstSharedIndex]?.close).toHaveBeenCalledTimes(1);
     const callPaths2 = (watchMock.mock.calls as unknown as Array<[string]>).map((call) => call[0]);
     const sharedIndices = callPaths2
-      .map((target, index) => (target === "/tmp/shared" ? index : -1))
+      .map((target, index) => (target === watchTargetPath("/tmp/shared") ? index : -1))
       .filter((index) => index >= 0);
     expect(sharedIndices).toHaveLength(2);
-    expect(callPaths2.filter((target) => target === "/tmp/shared/skills")).toHaveLength(2);
+    expect(
+      callPaths2.filter((target) => target === watchTargetPath("/tmp/shared/skills")),
+    ).toHaveLength(2);
     const liveSharedIndex = sharedIndices[sharedIndices.length - 1] ?? -1;
 
     createdWatchers[liveSharedIndex]?.emit("change", "/tmp/shared/demo/SKILL.md");

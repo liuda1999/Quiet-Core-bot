@@ -5,6 +5,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { expectNoReaddirSyncDuring } from "../../test-utils/fs-scan-assertions.js";
 import { listGitTrackedFiles, toRepoRelativePath } from "../../test-utils/repo-files.js";
 import { loadPluginManifestRegistry } from "../manifest-registry.js";
+import { isBundledExtensionPresent } from "./test-helpers/bundled-extension-presence.js";
 
 type SharedFamilyHookKind = "replay" | "stream" | "tool-compat";
 
@@ -279,7 +280,7 @@ describe("provider family plugin-boundary inventory", () => {
   it("keeps sentinel shared-family assignments wired through bundled provider sources", () => {
     for (const [pluginId, expected] of Object.entries(
       EXPECTED_SENTINEL_SHARED_FAMILY_ASSIGNMENTS,
-    )) {
+    ).filter(([entryPluginId]) => isBundledExtensionPresent(entryPluginId))) {
       if (actualAssignments[pluginId] === undefined) {
         throw new Error(`missing shared provider-family assignment for ${pluginId}`);
       }

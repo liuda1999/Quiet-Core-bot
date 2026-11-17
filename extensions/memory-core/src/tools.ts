@@ -632,8 +632,7 @@ export function createMemorySearchTool(options: {
               // Lexical fallback hits keep recall but never cleared the
               // configured minScore, so noMatch stays true while they are
               // surfaced for callers that want to inspect them anyway.
-              const noMatch =
-                results.length === 0 || results.every((result) => isBelowMinScoreResult(result));
+              const noMatch = results.every((result) => isBelowMinScoreResult(result));
               return jsonResult({
                 results,
                 noMatch,
