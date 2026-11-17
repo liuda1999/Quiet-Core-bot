@@ -62,6 +62,13 @@ function ensureSymlink(targetValue, targetPath, type, fallbackSourcePath) {
       copyPathFallback(fallbackSourcePath, targetPath);
       return;
     }
+    // Windows can still report EEXIST here when the previous target could not
+    // be removed (transient lock or a stale junction). The copy fallback
+    // overwrites files in place, so prefer it over failing the whole build.
+    if (error?.code === "EEXIST" && fallbackSourcePath && process.platform === "win32") {
+      copyPathFallback(fallbackSourcePath, targetPath);
+      return;
+    }
     throw error;
   }
 }

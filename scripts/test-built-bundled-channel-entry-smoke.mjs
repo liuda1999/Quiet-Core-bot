@@ -55,7 +55,13 @@ function smokeInInstalledLayoutIfNeeded() {
   const nodeModulesRoot = path.join(tempRoot, "node_modules");
   const installedPackageRoot = path.join(nodeModulesRoot, "quiet-core-bot");
   fs.mkdirSync(nodeModulesRoot, { recursive: true });
-  fs.symlinkSync(packageRoot, installedPackageRoot, "dir");
+  // Windows without Developer Mode cannot create directory symlinks; NTFS
+  // junctions need no privilege for absolute targets and behave the same here.
+  fs.symlinkSync(
+    packageRoot,
+    installedPackageRoot,
+    process.platform === "win32" ? "junction" : "dir",
+  );
 
   try {
     const result = spawnSync(
@@ -115,7 +121,8 @@ function collectBundledChannelEntryFiles() {
     }
 
     const extensionEntries =
-      Array.isArray(packageJson["quiet-core-bot"].extensions) && packageJson["quiet-core-bot"].extensions.length > 0
+      Array.isArray(packageJson["quiet-core-bot"].extensions) &&
+      packageJson["quiet-core-bot"].extensions.length > 0
         ? packageJson["quiet-core-bot"].extensions
         : ["./index.ts"];
     for (const entry of extensionEntries) {

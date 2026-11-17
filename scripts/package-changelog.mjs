@@ -12,10 +12,19 @@ const BACKUP_PATH = path.join(".artifacts", "package-changelog", "CHANGELOG.md.p
 const MAX_PACKAGED_CHANGELOG_BYTES = 500 * 1024;
 const MIN_RELEASE_SECTION_BODY_BYTES = 32;
 const UNRELEASED_HEADING = "Unreleased";
-const RELEASE_HEADING_PATTERN =
-  /^##\s+([0-9]{4}\.[1-9][0-9]*\.[1-9][0-9]*(?:(?:-(?:alpha|beta)\.[1-9][0-9]*)|(?:-[1-9][0-9]*))?)(?:\s+.*)?$/u;
-const RELEASE_VERSION_PATTERN =
-  /^([0-9]{4}\.[1-9][0-9]*\.[1-9][0-9]*)(?:(?:-(?:alpha|beta)\.[1-9][0-9]*)|(?:-[1-9][0-9]*))?$/u;
+// Release headings accept both calendar versions (YYYY.M.PATCH, used by
+// extension packages) and the semver versions this repository ships for the
+// core package (0.1.3, 0.2.1, ...).
+const RELEASE_CORE_PATTERN = "[0-9]+(?:\\.[0-9]+){2}";
+const RELEASE_SUFFIX_PATTERN = "(?:(?:-(?:alpha|beta)\\.[1-9][0-9]*)|(?:-[1-9][0-9]*))?";
+const RELEASE_HEADING_PATTERN = new RegExp(
+  `^##\\s+(${RELEASE_CORE_PATTERN}${RELEASE_SUFFIX_PATTERN})(?:\\s+.*)?$`,
+  "u",
+);
+const RELEASE_VERSION_PATTERN = new RegExp(
+  `^(${RELEASE_CORE_PATTERN})${RELEASE_SUFFIX_PATTERN}$`,
+  "u",
+);
 const PRERELEASE_VERSION_PATTERN =
   /^([0-9]{4}\.[1-9][0-9]*\.[1-9][0-9]*)-(?:alpha|beta)\.[1-9][0-9]*$/u;
 
