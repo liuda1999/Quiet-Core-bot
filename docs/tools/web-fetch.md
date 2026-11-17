@@ -29,48 +29,39 @@ await web_fetch({ url: "https://example.com/article" });
 URL to fetch. `http(s)` only.
 </ParamField>
 
-<ParamField path="extractMode" type="'markdown' | 'text'" default="markdown">
-Output format after main-content extraction.
-</ParamField>
-
 <ParamField path="maxChars" type="number">
-Truncate output to this many characters.
+Truncate output to this many characters. Clamped to `tools.web.fetch.maxCharsCap`.
 </ParamField>
 
 ## How it works
 
 <Steps>
+  <Step title="Resolve and pin">
+    Resolves the hostname once, rejects any non-public address, and pins the
+    validated address into the connection so a second DNS answer cannot redirect
+    the request. Non-`http(s)` URLs and URLs with embedded credentials are
+    rejected.
+  </Step>
   <Step title="Fetch">
-    Sends an HTTP GET with a Chrome-like User-Agent and `Accept-Language`
-    header. Blocks private/internal hostnames and re-checks redirects.
+    Sends an HTTP GET with a bounded response size and timeout. Only same-origin
+    redirects are followed, up to `maxRedirects`; a cross-origin redirect fails
+    with `WEB_REDIRECT_BLOCKED` and must be retried directly.
   </Step>
   <Step title="Extract">
-    Runs Readability (main-content extraction) on the HTML response.
+    Classifies the content type and extracts the main content. HTML is converted
+    to Markdown; `text/*` is returned as-is.
   </Step>
-  <Step title="Fallback (optional)">
-    If Readability fails and Firecrawl is selected, retries through the
-    Firecrawl API with bot-circumvention mode.
-  </Step>
-  <Step title="Cache">
-    Results are cached for 15 minutes (configurable) to reduce repeated
-    fetches of the same URL.
+  <Step title="Render fallback (optional)">
+    When the static body is an empty shell, the same URL is rendered in a real
+    browser (system Microsoft Edge or Google Chrome) and the rendered DOM is kept
+    only when it scores higher than the static extraction.
   </Step>
 </Steps>
 
 ## Progress updates
 
-`web_fetch` emits a public progress line only when the fetch is still pending
-after five seconds:
-
-```text
-Fetching page content...
-```
-
-Fast cache hits and quick network responses finish before the timer fires, so
-they do not show a progress line. If the call is canceled, the timer is cleared.
-When the fetch eventually completes, the agent receives the normal tool result;
-the progress line is only channel UI state and never contains fetched page
-content.
+The built-in fetcher does not emit progress lines. The call returns when the
+response is read, or after the render fallback finishes.
 
 ## Config
 
@@ -80,20 +71,19 @@ content.
     web: {
       fetch: {
         enabled: true, // default: true
-        provider: "firecrawl", // optional; omit for auto-detect
-        maxChars: 50000, // max output chars
-        maxCharsCap: 50000, // hard cap for maxChars param
-        maxResponseBytes: 2000000, // max download size before truncation
+        maxChars: 20000, // max output chars
+        maxCharsCap: 200000, // hard cap for the maxChars param
+        maxResponseBytes: 5000000, // max download size before truncation
         timeoutSeconds: 30,
-        cacheTtlMinutes: 15,
-        maxRedirects: 3,
-        useTrustedEnvProxy: false, // let a trusted HTTP(S) env proxy resolve DNS
-        readability: true, // use Readability extraction
+        maxRedirects: 5,
+        useTrustedEnvProxy: false, // route through HTTP(S)_PROXY; default strict
         userAgent: "Mozilla/5.0 ...", // override User-Agent
         ssrfPolicy: {
-          allowRfc2544BenchmarkRange: true, // opt-in for trusted fake-IP proxies using 198.18.0.0/15
-          allowIpv6UniqueLocalRange: true, // opt-in for trusted fake-IP proxies using fc00::/7
+          allowRfc2544BenchmarkRange: false, // opt-in for trusted fake-IP proxies using 198.18.0.0/15
+          allowIpv6UniqueLocalRange: false, // opt-in for trusted fake-IP proxies using fc00::/7
         },
+        // provider, cacheTtlMinutes, and readability are accepted for
+        // compatibility but no longer change the built-in fetcher.
       },
     },
   },
@@ -101,6 +91,13 @@ content.
 ```
 
 ## Firecrawl fallback
+
+<Note>
+  The built-in `web_fetch` always uses its own HTTP provider and render
+  fallback. It no longer calls plugin fetch providers such as Firecrawl, and
+  `tools.web.fetch.provider` does not change that behavior. This section
+  documents the plugin SDK contract only.
+</Note>
 
 If Readability extraction fails, `web_fetch` can fall back to
 [Firecrawl](/tools/firecrawl) for bot-circumvention and better extraction:
@@ -187,7 +184,11 @@ outbound policy after DNS resolution.
   `tools.web.fetch.ssrfPolicy.allowIpv6UniqueLocalRange` are narrow opt-ins
   for trusted fake-IP proxy stacks; leave them unset unless your proxy owns
   those synthetic ranges and enforces its own destination policy
-- Redirects are checked and limited by `maxRedirects`
+- Only same-origin redirects are followed, up to `maxRedirects`; a cross-origin
+  redirect fails with `WEB_REDIRECT_BLOCKED`
+- The static body is capped at 5 MB and 300,000 characters
+- A page that looks like an empty shell is rendered in the system browser; the
+  rendered DOM is kept only when it scores higher than the static extraction
 - `useTrustedEnvProxy` is an explicit opt-in and should only be enabled for
   operator-controlled proxies that still enforce outbound policy after DNS
   resolution

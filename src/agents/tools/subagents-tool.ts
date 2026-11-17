@@ -134,7 +134,7 @@ export function createSubagentsTool(opts?: { agentSessionKey?: string }): AnyAge
             error: "runId or childSessionKey required.",
           });
         }
-        let entry: SubagentRunRecord | null = null;
+        let entry: SubagentRunRecord | null;
         try {
           entry = readSubagentRunRecordFromSqlite({ runId, childSessionKey });
         } catch (error) {

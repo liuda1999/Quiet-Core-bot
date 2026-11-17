@@ -24,6 +24,7 @@
     "packages/terminal-core/src/**/*.ts",
     "src/video-generation/dashscope-compatible.ts",
     "src/video-generation/types.ts",
+    "src/web-tools/**/*.d.ts",
     "src/types/**/*.d.ts"
   ],
   "exclude": ["node_modules", "dist", "packages/**/*.test.ts", "src/**/*.test.ts"]

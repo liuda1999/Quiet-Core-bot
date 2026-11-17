@@ -23,6 +23,7 @@
     "../../src/plugin-sdk/**/*.ts",
     "../../src/video-generation/dashscope-compatible.ts",
     "../../src/video-generation/types.ts",
+    "../../src/web-tools/**/*.d.ts",
     "../../src/types/**/*.d.ts"
   ],
   "exclude": [

@@ -1,105 +1,85 @@
-import { describe, it, expect } from "vitest";
-import { getToolTerminalPresentation } from "../tool-terminal-presentation.js";
-import { createWebFetchTool, sanitizeWebFetchUrl } from "./web-fetch.js";
+// web_fetch adapter tests: argument handling, truncation, and error surfacing.
+import { describe, expect, it, vi } from "vitest";
+import { WebError } from "../../web-tools/types.js";
 
-describe("sanitizeWebFetchUrl", () => {
-  it("removes whitespace between scheme and authority (reported bug)", () => {
-    expect(sanitizeWebFetchUrl("https:// github.com/liuda1999/Quiet-Core-bot")).toBe(
-      "https://github.com/liuda1999/Quiet-Core-bot",
-    );
-  });
+const state = vi.hoisted(() => ({
+  handler: null as null | ((request: { url: string }) => Promise<unknown>),
+}));
 
-  it("trims leading and trailing whitespace", () => {
-    expect(sanitizeWebFetchUrl("  https://example.com  ")).toBe("https://example.com");
-  });
-
-  it("trims leading Unicode whitespace", () => {
-    expect(sanitizeWebFetchUrl("\u00a0\ufeffhttps://example.com")).toBe("https://example.com");
-  });
-
-  it("trims trailing newlines", () => {
-    expect(sanitizeWebFetchUrl("https://example.com\n")).toBe("https://example.com");
-  });
-
-  it("preserves trailing Unicode whitespace in paths", () => {
-    expect(sanitizeWebFetchUrl("https://example.com/a\u00a0")).toBe("https://example.com/a\u00a0");
-  });
-
-  it("trims trailing Unicode whitespace after a bare authority", () => {
-    expect(sanitizeWebFetchUrl("https://example.com\u00a0")).toBe("https://example.com");
-  });
-
-  it("preserves spaces in the path component", () => {
-    // WHATWG URL parser percent-encodes path spaces — they must not be stripped
-    const result = sanitizeWebFetchUrl("https://example.com/a b");
-    expect(result).toBe("https://example.com/a b");
-  });
-
-  it("preserves spaces in the query component", () => {
-    const result = sanitizeWebFetchUrl("https://example.com?q=a b");
-    expect(result).toBe("https://example.com?q=a b");
-  });
-
-  it("preserves scheme-like text in the path component", () => {
-    const result = sanitizeWebFetchUrl("https://example.com/a:// b");
-    expect(result).toBe("https://example.com/a:// b");
-  });
-
-  it("preserves scheme-like text in the query component", () => {
-    const result = sanitizeWebFetchUrl("https://example.com?q=x:// y");
-    expect(result).toBe("https://example.com?q=x:// y");
-  });
-
-  it("preserves percent-encoded characters in path", () => {
-    const result = sanitizeWebFetchUrl("https://example.com/a%20b");
-    expect(result).toBe("https://example.com/a%20b");
-  });
-
-  it("does not modify already-valid URLs", () => {
-    expect(sanitizeWebFetchUrl("https://github.com/liuda1999/Quiet-Core-bot")).toBe(
-      "https://github.com/liuda1999/Quiet-Core-bot",
-    );
-  });
-
-  it("handles https:// with tab after scheme", () => {
-    expect(sanitizeWebFetchUrl("https://\texample.com")).toBe("https://example.com");
-  });
-});
-
-describe("web_fetch terminal presentation", () => {
-  it("uses response metadata without page content or URL secrets", () => {
-    const tool = createWebFetchTool();
-    const terminalPresentation = tool ? getToolTerminalPresentation(tool) : undefined;
-    if (!terminalPresentation) {
-      throw new Error("expected web_fetch terminal presentation");
-    }
-
-    const result = {
-      content: [],
-      details: {
-        url: "https://user:pass@example.com/report?token=secret#section",
-        finalUrl: "https://example.com/final?token=secret#section",
-        status: 200,
-        contentType: "text/html",
-        rawLength: 1200,
-        truncated: true,
-        title: "untrusted title",
-        text: "untrusted page content",
+vi.mock("../../web-tools/kit-singleton.js", () => ({
+  getWebKit: () => ({
+    web: {
+      fetch: (request: { url: string }) => {
+        if (state.handler === null) {
+          throw new Error("test handler not configured");
+        }
+        return state.handler(request);
       },
-    };
-    const presentation = terminalPresentation({}, result);
+    },
+  }),
+  disposeWebKit: async () => undefined,
+}));
 
-    expect(presentation?.text).toBe(
-      [
-        "Web fetch completed.",
-        "Origin: https://example.com",
-        "Status: 200",
-        "Content type: text/html",
-        "Content length: 1200 characters",
-        "Truncated: yes",
-      ].join("\n"),
+import { createWebFetchTool } from "./web-fetch.js";
+
+function toolOrThrow() {
+  const tool = createWebFetchTool({ config: {}, sandboxed: false });
+  if (tool === null) {
+    throw new Error("web_fetch was unexpectedly disabled");
+  }
+  return tool;
+}
+
+function textOf(result: unknown): string {
+  const content = (result as { content?: Array<{ text?: string }> }).content;
+  return content?.[0]?.text ?? "";
+}
+
+describe("createWebFetchTool", () => {
+  it("returns formatted content", async () => {
+    state.handler = async (request) => ({
+      url: request.url,
+      statusCode: 200,
+      body: { kind: "text", content: "hello world" },
+      truncated: false,
+    });
+    const result = await toolOrThrow().execute("call-1", { url: "https://example.com" });
+    expect(textOf(result)).toContain("hello world");
+    expect(textOf(result)).toContain("untrusted");
+  });
+
+  it("truncates to the per-call maxChars", async () => {
+    state.handler = async (request) => ({
+      url: request.url,
+      statusCode: 200,
+      body: { kind: "text", content: "x".repeat(5_000) },
+      truncated: false,
+    });
+    const result = await toolOrThrow().execute("call-2", {
+      url: "https://example.com",
+      maxChars: 200,
+    });
+    expect(textOf(result).length).toBeLessThan(1_000);
+  });
+
+  it("rejects an empty url with a routable code", async () => {
+    await expect(toolOrThrow().execute("call-3", { url: "  " })).rejects.toThrow(
+      "web_fetch failed [WEB_INVALID_ARGS]",
     );
-    expect(presentation?.text).not.toContain("secret");
-    expect(presentation?.text).not.toContain("untrusted");
+  });
+
+  it("surfaces kit error codes", async () => {
+    state.handler = async () => {
+      throw new WebError("URL hostname resolves to a non-public IP address", "WEB_BLOCKED_URL");
+    };
+    await expect(
+      toolOrThrow().execute("call-4", { url: "https://internal.example" }),
+    ).rejects.toThrow("web_fetch failed [WEB_BLOCKED_URL]");
+  });
+
+  it("disables web_fetch when explicitly configured", () => {
+    expect(
+      createWebFetchTool({ config: { tools: { web: { fetch: { enabled: false } } } } }),
+    ).toBeNull();
   });
 });

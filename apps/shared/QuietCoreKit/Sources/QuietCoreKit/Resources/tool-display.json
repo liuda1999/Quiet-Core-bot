@@ -595,6 +595,7 @@
       "emoji": "🔎",
       "title": "Web Search",
       "detailKeys": [
+        "queries",
         "query",
         "count"
       ]
@@ -604,7 +605,6 @@
       "title": "Web Fetch",
       "detailKeys": [
         "url",
-        "extractMode",
         "maxChars"
       ]
     },

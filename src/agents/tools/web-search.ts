@@ -1,77 +1,88 @@
 /**
  * web_search built-in tool.
  *
- * Runs the configured runtime provider and returns normalized cached search results.
+ * Backed by the vendored dsh-web-kit runtime: keyless Bing HTML search with a
+ * browser fallback, plus optional SearXNG / DuckDuckGo / 360 / local-index
+ * backends. The config surface is unchanged; see `src/web-tools/adapter.ts`.
  */
+import { Type } from "typebox";
 import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import type { RuntimeWebSearchMetadata } from "../../secrets/runtime-web-tools.types.js";
-import { resolveWebSearchProviderId, runWebSearch } from "../../web-search/runtime.js";
+import { wrapExternalContent } from "../../security/external-content.js";
+import {
+  MAX_SEARCH_QUERIES,
+  MAX_SEARCH_RESULTS,
+  resolveWebToolsOptions,
+  translateWebToolError,
+} from "../../web-tools/adapter.js";
+import { getWebKit } from "../../web-tools/kit-singleton.js";
+import { formatSearchOutput, runSearchQueries } from "../../web-tools/tools/search.js";
 import type { AnyAgentTool } from "./common.js";
-import { asToolParamsRecord, jsonResult } from "./common.js";
-import { MAX_SEARCH_COUNT, SEARCH_CACHE } from "./web-search-provider-common.js";
+import { textResult } from "./common.js";
 import { resolveWebSearchToolRuntimeContext } from "./web-tool-runtime-context.js";
 
-const WebSearchSchema = {
-  type: "object",
-  required: ["query"],
-  properties: {
-    query: { type: "string", description: "Search query." },
-    count: {
-      type: "number",
-      description: "Result count.",
+const WebSearchSchema = Type.Object({
+  queries: Type.Optional(
+    Type.Array(Type.String(), {
+      description: `1-${MAX_SEARCH_QUERIES} search queries; their results are merged.`,
+    }),
+  ),
+  query: Type.Optional(
+    Type.String({ description: "Deprecated: a single query, equivalent to queries: [query]." }),
+  ),
+  count: Type.Optional(
+    Type.Integer({
+      description: "Maximum sources to return.",
       minimum: 1,
-      maximum: MAX_SEARCH_COUNT,
-    },
-    country: {
-      type: "string",
-      description: "2-letter country code.",
-    },
-    language: {
-      type: "string",
-      description: "ISO 639-1 language.",
-    },
-    freshness: {
-      type: "string",
-      description: "Time filter: day/week/month/year.",
-    },
-    date_after: {
-      type: "string",
-      description: "Published after YYYY-MM-DD.",
-    },
-    date_before: {
-      type: "string",
-      description: "Published before YYYY-MM-DD.",
-    },
-    search_lang: {
-      type: "string",
-      description: "Brave result language.",
-    },
-    ui_lang: {
-      type: "string",
-      description: "Brave UI locale.",
-    },
-    domain_filter: {
-      type: "array",
-      items: { type: "string" },
-      description: "Perplexity domain filter.",
-    },
-    max_tokens: {
-      type: "number",
-      description: "Perplexity total token budget.",
-      minimum: 1,
-      maximum: 1000000,
-    },
-    max_tokens_per_page: {
-      type: "number",
-      description: "Perplexity tokens per page.",
-      minimum: 1,
-    },
-  },
-} satisfies Record<string, unknown>;
+      maximum: MAX_SEARCH_RESULTS,
+    }),
+  ),
+});
 
 function isWebSearchDisabled(config?: QuietCoreConfig): boolean {
   const search = config?.tools?.web?.search;
   return Boolean(search && typeof search === "object" && search.enabled === false);
+}
+
+function readRecord(value: unknown): Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {};
+}
+
+function normalizeSearchArgs(args: unknown): { queries: string[]; count?: number } {
+  const record = readRecord(args);
+  const listed = Array.isArray(record.queries)
+    ? record.queries.filter((value): value is string => typeof value === "string")
+    : [];
+  const single = typeof record.query === "string" ? record.query : "";
+  const candidates = listed.length > 0 ? listed : single.length > 0 ? [single] : [];
+
+  const seen = new Set<string>();
+  const queries: string[] = [];
+  for (const candidate of candidates) {
+    const trimmed = candidate.trim();
+    if (trimmed.length === 0 || seen.has(trimmed)) {
+      continue;
+    }
+    seen.add(trimmed);
+    queries.push(trimmed);
+    if (queries.length >= MAX_SEARCH_QUERIES) {
+      break;
+    }
+  }
+  if (queries.length === 0) {
+    throw new Error(
+      "web_search failed [WEB_INVALID_ARGS]: queries must be a non-empty string array",
+    );
+  }
+
+  const rawCount = record.count;
+  const count =
+    typeof rawCount === "number" && Number.isFinite(rawCount)
+      ? Math.min(Math.max(Math.floor(rawCount), 1), MAX_SEARCH_RESULTS)
+      : undefined;
+  return { queries, ...(count !== undefined ? { count } : {}) };
 }
 
 /** Creates the `web_search` tool, or `null` when web search is disabled by config. */
@@ -89,40 +100,38 @@ export function createWebSearchTool(options?: {
   return {
     label: "Web Search",
     name: "web_search",
-    description: "Search web for current info; returns normalized provider results.",
+    description:
+      "Search the web for current information. Returns an optional summary answer and a list of source URLs.",
     parameters: WebSearchSchema,
     execute: async (_toolCallId, args, signal) => {
-      // Late binding lets long-lived agents pick up runtime web-search credentials/config without
-      // rebuilding the tool object.
-      const { config, preferRuntimeProviders, runtimeWebSearch } =
-        resolveWebSearchToolRuntimeContext({
-          config: options?.config,
-          lateBindRuntimeConfig: options?.lateBindRuntimeConfig,
-          runtimeWebSearch: options?.runtimeWebSearch,
-        });
+      const { config } = resolveWebSearchToolRuntimeContext({
+        config: options?.config,
+        lateBindRuntimeConfig: options?.lateBindRuntimeConfig,
+        runtimeWebSearch: options?.runtimeWebSearch,
+      });
       if (isWebSearchDisabled(config)) {
         throw new Error("web_search is disabled.");
       }
-      const result = await runWebSearch({
-        config,
-        agentDir: options?.agentDir,
-        sandboxed: options?.sandboxed,
-        runtimeWebSearch,
-        preferRuntimeProviders,
-        args: asToolParamsRecord(args),
-        signal,
-      });
-      return jsonResult({
-        ...result.result,
-        provider: result.provider,
-      });
+
+      const { queries, count } = normalizeSearchArgs(args);
+      const resolved = resolveWebToolsOptions({ config, sandboxed: options?.sandboxed });
+      const kit = getWebKit(resolved.options, resolved.fingerprint);
+
+      try {
+        const result = await runSearchQueries(
+          kit.web,
+          queries,
+          count ?? resolved.searchMaxResults,
+          signal,
+        );
+        const text = wrapExternalContent(formatSearchOutput(result), {
+          source: "web_search",
+          includeWarning: false,
+        });
+        return textResult(text, result);
+      } catch (error: unknown) {
+        throw translateWebToolError("web_search", error, signal);
+      }
     },
   };
 }
-
-export const testing = {
-  SEARCH_CACHE,
-  resolveSearchProvider: (search?: Parameters<typeof resolveWebSearchProviderId>[0]["search"]) =>
-    resolveWebSearchProviderId({ search }),
-};
-export { testing as __testing };

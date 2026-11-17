@@ -419,12 +419,12 @@ export const TOOL_DISPLAY_CONFIG: ToolDisplayConfig = {
     web_search: {
       emoji: "🔎",
       title: "Web Search",
-      detailKeys: ["query", "count"],
+      detailKeys: ["queries", "query", "count"],
     },
     web_fetch: {
       emoji: "📄",
       title: "Web Fetch",
-      detailKeys: ["url", "extractMode", "maxChars"],
+      detailKeys: ["url", "maxChars"],
     },
     message: {
       emoji: "✉️",

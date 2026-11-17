@@ -54,6 +54,26 @@ local while `web_search` and `x_search` can use xAI Responses under the hood.
   </Step>
 </Steps>
 
+## Built-in search backends
+
+The built-in `web_search` tool no longer needs an API key. It runs a keyless
+Bing HTML scrape first and falls back to a real browser (system Microsoft Edge
+or Google Chrome) when the page comes back empty. Select the backend with
+`tools.web.search.provider`:
+
+| Value                                | Backend                                  |
+| ------------------------------------ | ---------------------------------------- |
+| omitted / `http-first` / `bing-html` | Bing HTML, browser fallback              |
+| `searxng`                            | Self-hosted SearXNG (`SEARXNG_BASE_URL`) |
+| `ddg-html` / `duckduckgo`            | DuckDuckGo HTML                          |
+| `so360-html` / `so360`               | 360 Search HTML                          |
+| `browser`                            | Browser-only Bing                        |
+| `local-index`                        | Pages already fetched on this machine    |
+
+Provider ids from the plugin marketplace (Brave, Exa, Firecrawl, Gemini, …) are
+still available to the plugin SDK and CLI diagnostics, but they no longer drive
+the built-in tool. The sections below document those plugin integrations.
+
 ## Choosing a provider
 
 <CardGroup cols={2}>
@@ -277,10 +297,11 @@ to route them through the managed path.
     web: {
       search: {
         enabled: true, // default: true
-        provider: "brave", // or omit for auto-detection
-        maxResults: 5,
+        provider: "bing-html", // or "searxng" / "ddg-html" / "so360-html" / "browser"
+        maxResults: 8,
         timeoutSeconds: 30,
-        cacheTtlMinutes: 15,
+        // cacheTtlMinutes is accepted for compatibility but the built-in
+        // backend does not cache responses.
       },
     },
   },
@@ -288,12 +309,9 @@ to route them through the managed path.
 ```
 
 Provider-specific config (API keys, base URLs, modes) lives under
-`plugins.entries.<plugin>.config.webSearch.*`. Gemini can also reuse
-`models.providers.google.apiKey` and `models.providers.google.baseUrl` as lower-priority
-fallbacks after its dedicated web-search config and `GEMINI_API_KEY`. See the
-provider pages for examples.
-Grok can also reuse an xAI OAuth auth profile from `quiet-core-bot models auth login
---provider xai --method oauth`; API-key config remains the fallback.
+`plugins.entries.<plugin>.config.webSearch.*`. That plugin path still applies to
+the plugin SDK and external provider integrations; it does not change which
+backend the built-in `web_search` uses.
 
 `tools.web.search.provider` is validated against the web-search provider ids
 declared by bundled and installed plugin manifests. A typo such as `"brvae"`
@@ -368,36 +386,17 @@ show the `x_search` prompt.
 
 ## Tool parameters
 
-| Parameter             | Description                                           |
-| --------------------- | ----------------------------------------------------- |
-| `query`               | Search query (required)                               |
-| `count`               | Results to return (1-10, default: 5)                  |
-| `country`             | 2-letter ISO country code (e.g. "US", "DE")           |
-| `language`            | ISO 639-1 language code (e.g. "en", "de")             |
-| `search_lang`         | Search-language code (Brave only)                     |
-| `freshness`           | Time filter: `day`, `week`, `month`, or `year`        |
-| `date_after`          | Results after this date (YYYY-MM-DD)                  |
-| `date_before`         | Results before this date (YYYY-MM-DD)                 |
-| `ui_lang`             | UI language code (Brave only)                         |
-| `domain_filter`       | Domain allowlist/denylist array (Perplexity only)     |
-| `max_tokens`          | Total content budget, default 25000 (Perplexity only) |
-| `max_tokens_per_page` | Per-page token limit, default 2048 (Perplexity only)  |
+| Parameter | Description                                                                  |
+| --------- | ---------------------------------------------------------------------------- |
+| `queries` | One to four search queries; their results are merged (required).             |
+| `query`   | Deprecated single-query alias, equivalent to `queries: [query]`.             |
+| `count`   | Maximum sources to return (1–10). Defaults to `tools.web.search.maxResults`. |
 
 <Warning>
-  Not all parameters work with all providers. Brave `llm-context` mode
-  rejects `ui_lang`; `date_before` also needs `date_after` because Brave custom
-  freshness ranges require both start and end dates.
-  Gemini, Grok, and Kimi return one synthesized answer with citations. They
-  accept `count` for shared-tool compatibility, but it does not change the
-  grounded answer shape. Gemini treats `day` freshness as a recency hint; wider
-  freshness values and explicit dates set Google Search grounding time ranges.
-  Perplexity behaves the same way when you use the Sonar/OpenRouter
-  compatibility path (`plugins.entries.perplexity.config.webSearch.baseUrl` /
-  `model` or `OPENROUTER_API_KEY`).
-  SearXNG accepts `http://` only for trusted private-network or loopback hosts;
-  public SearXNG endpoints must use `https://`.
-  Firecrawl and Tavily only support `query` and `count` through `web_search`
-  -- use their dedicated tools for advanced options.
+  The built-in backend only accepts `queries`, `query`, and `count`. Provider
+  filters such as `country`, `freshness`, `date_after`, `domain_filter`, and
+  `max_tokens` were removed with the provider runtime; calls that still send
+  them are rejected by schema validation.
 </Warning>
 
 ## x_search
