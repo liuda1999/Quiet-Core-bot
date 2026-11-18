@@ -71,6 +71,18 @@
 
 ---
 
+### 2.1 内置联网搜索（`web_search`）
+
+免 API Key，默认走 Bing HTML 抓取，失败时回退到浏览器渲染。行为约定：
+
+- **合并检索**：一次最多 4 条查询，结果去重合并；`count` 决定最终条数（上限 10）。
+- **只回站内**：`site:example.com` / `site:example.com/docs` 由本地强制约束，返回结果一定属于该站点（含子域、路径前缀），不会出现站外链接。
+- **无命中不报错**：当站点内没有匹配结果时，返回「No results matched inside <host>」并说明约束方式，而不是抛错。注意抓取后端本身不认 `site:`，覆盖率取决于它对该查询已有的排序结果。
+- **相关性守卫**：中文按二元组切词，丢弃单字与纯数字 token，避免单字/年份误匹配；被判无关的结果会触发后端回退。
+- **可替换后端**：`searxng` / `bing-html` / `site-html` / `browser` / `browser-first` / `http-first` / `local-index` 可在配置中切换。
+
+---
+
 ## 三、支持的渠道
 
 文本在各渠道均可用；媒体与表情回应视渠道而定。完整清单见 `quiet-core-bot channels list --all`。

@@ -2,6 +2,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 const calls = vi.hoisted(() => [] as Array<{ queries: string[]; maxResults: number }>);
+const failure = vi.hoisted(() => ({ message: "" }));
 
 vi.mock("../../web-tools/kit-singleton.js", () => ({
   getWebKit: () => ({ web: {} }),
@@ -11,6 +12,9 @@ vi.mock("../../web-tools/kit-singleton.js", () => ({
 vi.mock("../../web-tools/tools/search.js", () => ({
   runSearchQueries: async (_web: unknown, queries: string[], maxResults: number) => {
     calls.push({ queries, maxResults });
+    if (failure.message !== "") {
+      throw new Error(failure.message);
+    }
     return {
       sources: queries.map((query) => ({ url: `https://example.com/${query}` })),
       truncated: false,
@@ -54,6 +58,20 @@ describe("createWebSearchTool", () => {
     await expect(toolOrThrow().execute("call-4", {})).rejects.toThrow(
       "web_search failed [WEB_INVALID_ARGS]",
     );
+  });
+
+  it("explains an empty site: result instead of throwing", async () => {
+    failure.message =
+      "all search providers failed (bing-html: Bing returned no results inside github.com for the remaining terms)";
+    try {
+      const result = await toolOrThrow().execute("call-site", {
+        queries: ["site:github.com microsoft TypeScript"],
+      });
+      expect(result.content[0]?.text).toContain("No results matched inside github.com");
+      expect(result.details).toEqual({ sources: [], truncated: false });
+    } finally {
+      failure.message = "";
+    }
   });
 
   it("refuses to build a tool when disabled", () => {

@@ -12,7 +12,7 @@ QuietCore read-only diff viewer plugin and file renderer for agents.
 ## Distribution
 
 - Package: `@quiet-core/diffs`
-- Install route: npm; ClawHub
+- Install route: included in QuietCore; npm; ClawHub
 
 ## Surface
 

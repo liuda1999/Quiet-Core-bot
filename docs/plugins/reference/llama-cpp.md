@@ -12,7 +12,7 @@ Local GGUF embeddings through node-llama-cpp.
 ## Distribution
 
 - Package: `@quiet-core/llama-cpp-provider`
-- Install route: npm; ClawHub
+- Install route: included in QuietCore; npm; ClawHub
 
 ## Surface
 

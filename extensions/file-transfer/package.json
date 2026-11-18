@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/file-transfer",
-  "version": "0.1.3",
+  "version": "0.2.2",
   "description": "QuietCore file transfer plugin (file_fetch, dir_list, dir_fetch, file_write)",
   "type": "module",
   "dependencies": {

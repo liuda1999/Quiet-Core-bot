@@ -12,7 +12,7 @@ QuietCore diagnostics OpenTelemetry exporter for metrics, traces, and logs.
 ## Distribution
 
 - Package: `@quiet-core/diagnostics-otel`
-- Install route: npm; ClawHub: `clawhub:@quiet-core/diagnostics-otel`
+- Install route: included in QuietCore; npm; ClawHub: `clawhub:@quiet-core/diagnostics-otel`
 
 ## Surface
 

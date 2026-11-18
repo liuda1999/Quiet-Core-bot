@@ -11,6 +11,7 @@ import {
   disableShrinkwrappedOverrideConflictSources,
   exactOverrideRulesFromOverrides,
   exactVersionFromOverrideSpec,
+  mergeOverrides,
   normalizeNpmVersionDrift,
   packageDependencyInputsChanged,
   pnpmLockOverrideVersionForVersions,
@@ -105,6 +106,38 @@ describe("generate-npm-shrinkwrap", () => {
     expect(pnpmLockOverrideVersionForVersions(new Set(["3.972.38", "3.972.39"]))).toBe("3.972.39");
     expect(pnpmLockOverrideVersionForVersions(new Set(["3.972.39", "3.973.0"]))).toBeNull();
     expect(pnpmLockOverrideVersionForVersions(new Set(["3.972.39", "4.0.0"]))).toBeNull();
+  });
+
+  it("prefers the pnpm lock when a scoped override root only differs by hoisting", () => {
+    const merged = mergeOverrides(
+      { ipull: { ".": "6.0.1", "string-width": "5.1.2" } },
+      { ipull: { ".": "7.2.0" } },
+      {},
+    );
+
+    expect(merged).toMatchObject({ ipull: { ".": "7.2.0", "string-width": "5.1.2" } });
+  });
+
+  it("still rejects scoped override roots that are not exact lock versions", () => {
+    expect(() =>
+      mergeOverrides({ ipull: { ".": "^6.0.1" } }, { ipull: { ".": "7.2.0" } }, {}),
+    ).toThrow(/conflicts with pnpm lock policy/u);
+  });
+
+  it("still rejects top-level override version drift", () => {
+    expect(() => mergeOverrides({ "fast-uri": "3.1.8" }, { "fast-uri": "3.1.9" }, {})).toThrow(
+      /conflicts with pnpm lock policy/u,
+    );
+  });
+
+  it("still rejects nested non-root override drift", () => {
+    expect(() =>
+      mergeOverrides(
+        { ipull: { "string-width": "5.1.2" } },
+        { ipull: { "string-width": "6.0.1" } },
+        {},
+      ),
+    ).toThrow(/conflicts with pnpm lock policy/u);
   });
 
   it("parses nested scoped package paths", () => {

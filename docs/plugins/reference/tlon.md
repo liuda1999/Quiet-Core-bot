@@ -12,7 +12,7 @@ QuietCore Tlon/Urbit channel plugin for chat workflows.
 ## Distribution
 
 - Package: `@quiet-core/tlon`
-- Install route: npm; ClawHub
+- Install route: included in QuietCore; npm; ClawHub
 
 ## Surface
 

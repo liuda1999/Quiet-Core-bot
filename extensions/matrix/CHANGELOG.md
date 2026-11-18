@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.2
+
+### Changes
+
+- Version alignment with core QuietCore release numbers.
+
+## 0.2.1
+
+### Changes
+
+- Version alignment with core QuietCore release numbers.
+
 ## 0.1.3
 
 ### Changes

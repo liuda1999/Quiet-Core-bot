@@ -12,7 +12,7 @@ QuietCore LanceDB-backed long-term memory plugin with auto-recall, auto-capture,
 ## Distribution
 
 - Package: `@quiet-core/memory-lancedb`
-- Install route: npm; ClawHub
+- Install route: included in QuietCore; npm; ClawHub
 
 ## Surface
 

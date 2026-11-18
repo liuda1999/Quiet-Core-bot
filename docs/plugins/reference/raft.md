@@ -12,7 +12,7 @@ QuietCore Raft channel plugin for secure CLI wake bridges.
 ## Distribution
 
 - Package: `@quiet-core/raft`
-- Install route: npm; ClawHub
+- Install route: included in QuietCore; npm; ClawHub
 
 ## Surface
 

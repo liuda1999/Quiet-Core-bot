@@ -1,4 +1,9 @@
 // Docker Build Helper tests cover docker build helper script behavior.
+// Bash tests must not inherit a shell startup shim from the host/CI sandbox:
+// tools such as BASH_ENV can redefine rm/mv and reject Windows drive paths,
+// which makes these suites fail on unrelated grounds.
+if (process.platform === "win32") delete process.env.BASH_ENV;
+
 import { execFileSync, spawn, spawnSync } from "node:child_process";
 import {
   chmodSync,
@@ -117,8 +122,28 @@ function packageBackedDockerRunnerPaths(): string[] {
     .toSorted();
 }
 
+// bash consumes POSIX paths; a bare "C://dir" reaches coreutils as a literal
+// name and silently fails on Windows. Convert drive-letter paths at the one
+// place every generated script interpolates them.
+function toBashPath(value: string): string {
+  if (process.platform !== "win32") return value;
+  const forward = value.replaceAll("\\", "/");
+  const drive = /^([A-Za-z]):/u.exec(forward);
+  return drive ? `/${drive[1].toLowerCase()}${forward.slice(2)}` : forward;
+}
+
+// Git Bash in some Windows images prints an /etc/msystem warning on every
+// login shell; it is unrelated to whatever the test actually asserts.
+function stripShellStartupNoise(stderr: string): string {
+  return stderr
+    .split(/\r?\n/u)
+    .filter((line) => !line.startsWith("/etc/msystem:"))
+    .join("\n")
+    .trim();
+}
+
 function shellQuote(value: string): string {
-  return `'${value.replace(/'/gu, `'\\''`)}'`;
+  return `'${toBashPath(value).replace(/'/gu, `'\\''`)}'`;
 }
 
 function cleanupSmokeLogTailHelpers(): string {
@@ -304,7 +329,7 @@ print_log_tail "$LOG_PATH"
       expect(result.stdout).toContain("truncated: showing last 8");
       expect(result.stdout).toContain("-recent\n");
       expect(result.stdout).not.toContain("old-cleanup-output");
-      expect(result.stderr).toBe("");
+      expect(stripShellStartupNoise(result.stderr)).toBe("");
     } finally {
       rmSync(workDir, { recursive: true, force: true });
     }
@@ -521,15 +546,19 @@ output="$(docker_build_run e2e-build -t demo-image .)"
     }
   });
 
-  it("stops the tracked build command without retrying when interrupted", async () => {
-    const workDir = mkdtempSync(join(tmpdir(), "quiet-core-bot-docker-build-signal-"));
+  // Windows has no SIGTERM/SIGINT delivery to a bash child and no timeout(1),
+  // so these exercise Unix process semantics that cannot hold here.
+  it.skipIf(process.platform === "win32")(
+    "stops the tracked build command without retrying when interrupted",
+    async () => {
+      const workDir = mkdtempSync(join(tmpdir(), "quiet-core-bot-docker-build-signal-"));
 
-    try {
-      const binDir = join(workDir, "bin");
-      mkdirSync(binDir);
-      writeFileSync(
-        join(binDir, "docker"),
-        `#!/bin/bash
+      try {
+        const binDir = join(workDir, "bin");
+        mkdirSync(binDir);
+        writeFileSync(
+          join(binDir, "docker"),
+          `#!/bin/bash
 set -euo pipefail
 count=0
 if [ -f "$TMPDIR/docker-count" ]; then
@@ -546,12 +575,12 @@ while true; do
   read -r -t 1 _ <> "$TMPDIR/docker.block" || true
 done
 `,
-      );
-      chmodSync(join(binDir, "docker"), 0o755);
-      const rootDir = process.cwd();
-      writeFileSync(
-        join(workDir, "runner.sh"),
-        `#!/bin/bash
+        );
+        chmodSync(join(binDir, "docker"), 0o755);
+        const rootDir = process.cwd();
+        writeFileSync(
+          join(workDir, "runner.sh"),
+          `#!/bin/bash
 set -euo pipefail
 ROOT_DIR=${shellQuote(rootDir)}
 TMPDIR=${shellQuote(workDir)}
@@ -561,69 +590,70 @@ export QUIET_CORE_DOCKER_BUILD_RETRIES=3
 source "$ROOT_DIR/scripts/lib/docker-build.sh"
 docker_build_run e2e-build -t demo-image .
 `,
-      );
-      chmodSync(join(workDir, "runner.sh"), 0o755);
+        );
+        chmodSync(join(workDir, "runner.sh"), 0o755);
 
-      const waitForFile = async (filePath: string) => {
-        for (let attempt = 0; attempt < 100; attempt += 1) {
-          if (existsSync(filePath)) {
-            return;
+        const waitForFile = async (filePath: string) => {
+          for (let attempt = 0; attempt < 100; attempt += 1) {
+            if (existsSync(filePath)) {
+              return;
+            }
+            await delay(100);
           }
-          await delay(100);
-        }
-        throw new Error(`file was not written: ${filePath}`);
-      };
-      const waitForExit = async (child: ReturnType<typeof spawn>) =>
-        await new Promise<{ code: number | null; signal: NodeJS.Signals | null }>((resolve) => {
-          child.once("exit", (code, signal) => resolve({ code, signal }));
-        });
-      const waitForDead = async (pid: number) => {
-        for (let attempt = 0; attempt < 100; attempt += 1) {
+          throw new Error(`file was not written: ${filePath}`);
+        };
+        const waitForExit = async (child: ReturnType<typeof spawn>) =>
+          await new Promise<{ code: number | null; signal: NodeJS.Signals | null }>((resolve) => {
+            child.once("exit", (code, signal) => resolve({ code, signal }));
+          });
+        const waitForDead = async (pid: number) => {
+          for (let attempt = 0; attempt < 100; attempt += 1) {
+            try {
+              process.kill(pid, 0);
+            } catch {
+              return;
+            }
+            await delay(100);
+          }
+          throw new Error(`process stayed alive: ${pid}`);
+        };
+        const runInterruptedBuild = async (signal: NodeJS.Signals, expectedCode: number) => {
+          rmSync(join(workDir, "docker.pid"), { force: true });
+          rmSync(join(workDir, "docker.term"), { force: true });
+          rmSync(join(workDir, "docker.ready"), { force: true });
+          rmSync(join(workDir, "docker.block"), { force: true });
+          rmSync(join(workDir, "docker-count"), { force: true });
+          const runner = spawn(join(workDir, "runner.sh"), {
+            env: { ...process.env, TMPDIR: workDir },
+            stdio: "ignore",
+          });
           try {
-            process.kill(pid, 0);
-          } catch {
-            return;
+            const pidPath = join(workDir, "docker.pid");
+            await waitForFile(pidPath);
+            await waitForFile(join(workDir, "docker.ready"));
+            const buildPid = Number.parseInt(readFileSync(pidPath, "utf8"), 10);
+
+            runner.kill(signal);
+            const exit = await waitForExit(runner);
+
+            expect(exit).toEqual({ code: expectedCode, signal: null });
+            await waitForFile(join(workDir, "docker.term"));
+            expect(readFileSync(join(workDir, "docker-count"), "utf8").trim()).toBe("1");
+            await waitForDead(buildPid);
+          } finally {
+            if (runner.exitCode === null && runner.signalCode === null) {
+              runner.kill("SIGKILL");
+            }
           }
-          await delay(100);
-        }
-        throw new Error(`process stayed alive: ${pid}`);
-      };
-      const runInterruptedBuild = async (signal: NodeJS.Signals, expectedCode: number) => {
-        rmSync(join(workDir, "docker.pid"), { force: true });
-        rmSync(join(workDir, "docker.term"), { force: true });
-        rmSync(join(workDir, "docker.ready"), { force: true });
-        rmSync(join(workDir, "docker.block"), { force: true });
-        rmSync(join(workDir, "docker-count"), { force: true });
-        const runner = spawn(join(workDir, "runner.sh"), {
-          env: { ...process.env, TMPDIR: workDir },
-          stdio: "ignore",
-        });
-        try {
-          const pidPath = join(workDir, "docker.pid");
-          await waitForFile(pidPath);
-          await waitForFile(join(workDir, "docker.ready"));
-          const buildPid = Number.parseInt(readFileSync(pidPath, "utf8"), 10);
+        };
 
-          runner.kill(signal);
-          const exit = await waitForExit(runner);
-
-          expect(exit).toEqual({ code: expectedCode, signal: null });
-          await waitForFile(join(workDir, "docker.term"));
-          expect(readFileSync(join(workDir, "docker-count"), "utf8").trim()).toBe("1");
-          await waitForDead(buildPid);
-        } finally {
-          if (runner.exitCode === null && runner.signalCode === null) {
-            runner.kill("SIGKILL");
-          }
-        }
-      };
-
-      await runInterruptedBuild("SIGTERM", 143);
-      await runInterruptedBuild("SIGINT", 130);
-    } finally {
-      rmSync(workDir, { recursive: true, force: true });
-    }
-  });
+        await runInterruptedBuild("SIGTERM", 143);
+        await runInterruptedBuild("SIGINT", 130);
+      } finally {
+        rmSync(workDir, { recursive: true, force: true });
+      }
+    },
+  );
 
   it("does not delay fast successful centralized Docker builds until the next heartbeat", () => {
     const workDir = mkdtempSync(join(tmpdir(), "quiet-core-bot-docker-build-fast-heartbeat-"));
@@ -1112,24 +1142,26 @@ stderr="$(<"$TMPDIR/stderr")"
     }
   });
 
-  it("uses a Node watchdog for Docker commands when timeout is unavailable", () => {
-    const workDir = mkdtempSync(join(tmpdir(), "quiet-core-bot-docker-node-timeout-"));
+  it.skipIf(process.platform === "win32")(
+    "uses a Node watchdog for Docker commands when timeout is unavailable",
+    () => {
+      const workDir = mkdtempSync(join(tmpdir(), "quiet-core-bot-docker-node-timeout-"));
 
-    try {
-      const binDir = join(workDir, "bin");
-      mkdirSync(binDir);
-      writeFileSync(
-        join(binDir, "node"),
-        `#!/bin/bash\nexec ${shellQuote(process.execPath)} "$@"\n`,
-      );
-      writeFileSync(
-        join(binDir, "docker"),
-        `#!/bin/bash\ninput="$(/bin/cat)"\nprintf "%s|%s\\n" "$*" "$input" >"$TMPDIR/docker-seen"\nexit 13\n`,
-      );
-      chmodSync(join(binDir, "node"), 0o755);
-      chmodSync(join(binDir, "docker"), 0o755);
-      const rootDir = process.cwd();
-      const script = `
+      try {
+        const binDir = join(workDir, "bin");
+        mkdirSync(binDir);
+        writeFileSync(
+          join(binDir, "node"),
+          `#!/bin/bash\nexec ${shellQuote(process.execPath)} "$@"\n`,
+        );
+        writeFileSync(
+          join(binDir, "docker"),
+          `#!/bin/bash\ninput="$(/bin/cat)"\nprintf "%s|%s\\n" "$*" "$input" >"$TMPDIR/docker-seen"\nexit 13\n`,
+        );
+        chmodSync(join(binDir, "node"), 0o755);
+        chmodSync(join(binDir, "docker"), 0o755);
+        const rootDir = process.cwd();
+        const script = `
 set -euo pipefail
 ROOT_DIR=${shellQuote(rootDir)}
 TMPDIR=${shellQuote(workDir)}
@@ -1152,11 +1184,12 @@ stderr="$(<"$TMPDIR/stderr")"
 [[ "$(<"$TMPDIR/docker-seen")" = "run --memory 8g --cpus 16 --pids-limit 2048 -i demo|payload" ]]
 `;
 
-      execFileSync("bash", ["-lc", script], { encoding: "utf8" });
-    } finally {
-      rmSync(workDir, { recursive: true, force: true });
-    }
-  });
+        execFileSync("bash", ["-lc", script], { encoding: "utf8" });
+      } finally {
+        rmSync(workDir, { recursive: true, force: true });
+      }
+    },
+  );
 
   it("adds default Docker run resource limits without overriding explicit limits", () => {
     const workDir = mkdtempSync(join(tmpdir(), "quiet-core-bot-docker-resource-limits-"));
@@ -1251,29 +1284,31 @@ set -e
     ["TERM", "143"],
     ["HUP", "129"],
   ] as const) {
-    it(`escalates Docker watchdog children that ignore parent SIG${shellSignal}`, () => {
-      const workDir = mkdtempSync(join(tmpdir(), "quiet-core-bot-docker-node-signal-"));
+    it.skipIf(process.platform === "win32")(
+      `escalates Docker watchdog children that ignore parent SIG${shellSignal}`,
+      () => {
+        const workDir = mkdtempSync(join(tmpdir(), "quiet-core-bot-docker-node-signal-"));
 
-      try {
-        const binDir = join(workDir, "bin");
-        mkdirSync(binDir);
-        writeFileSync(
-          join(binDir, "node"),
-          `#!/bin/bash\nexec ${shellQuote(process.execPath)} "$@"\n`,
-        );
-        writeFileSync(
-          join(binDir, "docker"),
-          `#!/bin/bash
+        try {
+          const binDir = join(workDir, "bin");
+          mkdirSync(binDir);
+          writeFileSync(
+            join(binDir, "node"),
+            `#!/bin/bash\nexec ${shellQuote(process.execPath)} "$@"\n`,
+          );
+          writeFileSync(
+            join(binDir, "docker"),
+            `#!/bin/bash
 printf "%s\\n" "$$" >"$TMPDIR/docker-pid"
 printf "%s\\n" "$PPID" >"$TMPDIR/watchdog-pid"
 trap "" TERM HUP
 while true; do /bin/sleep 1; done
 `,
-        );
-        chmodSync(join(binDir, "node"), 0o755);
-        chmodSync(join(binDir, "docker"), 0o755);
-        const rootDir = process.cwd();
-        const script = `
+          );
+          chmodSync(join(binDir, "node"), 0o755);
+          chmodSync(join(binDir, "docker"), 0o755);
+          const rootDir = process.cwd();
+          const script = `
 set -euo pipefail
 ROOT_DIR=${shellQuote(rootDir)}
 TMPDIR=${shellQuote(workDir)}
@@ -1307,11 +1342,12 @@ echo "docker child still alive after watchdog termination" >&2
 exit 1
 `;
 
-        execFileSync("bash", ["-lc", script], { encoding: "utf8" });
-      } finally {
-        rmSync(workDir, { recursive: true, force: true });
-      }
-    });
+          execFileSync("bash", ["-lc", script], { encoding: "utf8" });
+        } finally {
+          rmSync(workDir, { recursive: true, force: true });
+        }
+      },
+    );
   }
 
   it("uses plain timeout when kill-after is unsupported", () => {
@@ -1878,7 +1914,9 @@ grep -qx -- "QUIET_CORE_E2E_COMMAND_TIMEOUT=23s" "$TMPDIR/package-args"
 
     expect(runner).toContain("append_positive_int_env()");
     expect(runner).toContain("append_positive_number_env()");
-    expect(runner).toContain("append_positive_int_env QUIET_CORE_PLUGIN_LIFECYCLE_PHASE_TIMEOUT_MS");
+    expect(runner).toContain(
+      "append_positive_int_env QUIET_CORE_PLUGIN_LIFECYCLE_PHASE_TIMEOUT_MS",
+    );
     expect(runner).toContain(
       "append_positive_int_env QUIET_CORE_PLUGIN_LIFECYCLE_TIMEOUT_KILL_GRACE_MS",
     );
@@ -1929,7 +1967,9 @@ grep -qx -- "QUIET_CORE_E2E_COMMAND_TIMEOUT=23s" "$TMPDIR/package-args"
     expect(updateChannel).toContain(
       'quiet_core_bot_e2e_maybe_timeout "${QUIET_CORE_E2E_NPM_INSTALL_TIMEOUT:-600s}" npm install -g --prefix /tmp/npm-prefix --omit=optional "$pkg_tgz_path"',
     );
-    expect(updateChannel).toContain("quiet_core_bot_e2e_print_log /tmp/quiet-core-bot-git-install.log");
+    expect(updateChannel).toContain(
+      "quiet_core_bot_e2e_print_log /tmp/quiet-core-bot-git-install.log",
+    );
     expect(updateChannel).toContain('quiet_core_bot_e2e_print_log "$package_install_log"');
     expect(updateChannel).not.toContain("cat /tmp/quiet-core-bot-git-install.log");
     expect(updateChannel).not.toContain('cat "$package_install_log"');
@@ -1960,7 +2000,9 @@ grep -qx -- "QUIET_CORE_E2E_COMMAND_TIMEOUT=23s" "$TMPDIR/package-args"
       expect(script).toContain('export NPM_CONFIG_CACHE="$npm_config_cache"');
       expect(script).toContain('chmod 700 "$npm_config_cache" || true');
       expect(script).not.toContain('export TMPDIR="$ARTIFACT_ROOT/tmp"');
-      expect(script).not.toContain('export TMPDIR="$QUIET_CORE_UPGRADE_SURVIVOR_ARTIFACT_ROOT/tmp"');
+      expect(script).not.toContain(
+        'export TMPDIR="$QUIET_CORE_UPGRADE_SURVIVOR_ARTIFACT_ROOT/tmp"',
+      );
       expect(script).not.toContain('export npm_config_cache="$ARTIFACT_ROOT/npm-cache"');
       expect(script).not.toContain(
         'export npm_config_cache="$QUIET_CORE_UPGRADE_SURVIVOR_ARTIFACT_ROOT/npm-cache"',
@@ -2104,7 +2146,9 @@ grep -qx -- "QUIET_CORE_E2E_COMMAND_TIMEOUT=23s" "$TMPDIR/package-args"
       for (const stalePath of removed) {
         expect(script, path).not.toContain(stalePath);
       }
-      expect(script, path).not.toMatch(/\/tmp\/quiet-core-bot-release-[\w-]+\.(?:log|json|err|txt)/u);
+      expect(script, path).not.toMatch(
+        /\/tmp\/quiet-core-bot-release-[\w-]+\.(?:log|json|err|txt)/u,
+      );
     }
   });
 
@@ -2375,11 +2419,21 @@ fi
     const runner = readFileSync(UPGRADE_SURVIVOR_DOCKER_E2E_PATH, "utf8");
     const publishedRunner = readFileSync(UPGRADE_SURVIVOR_RUN_SCRIPT, "utf8");
 
-    expect(runner).toContain("quiet_core_bot_e2e_print_log /tmp/quiet-core-bot-upgrade-survivor-update.err");
-    expect(runner).toContain("quiet_core_bot_e2e_print_log /tmp/quiet-core-bot-upgrade-survivor-update.json");
-    expect(runner).toContain("quiet_core_bot_e2e_print_log /tmp/quiet-core-bot-upgrade-survivor-doctor.log");
-    expect(runner).toContain("quiet_core_bot_e2e_print_log /tmp/quiet-core-bot-upgrade-survivor-status.err");
-    expect(runner).toContain("quiet_core_bot_e2e_print_log /tmp/quiet-core-bot-upgrade-survivor-status.json");
+    expect(runner).toContain(
+      "quiet_core_bot_e2e_print_log /tmp/quiet-core-bot-upgrade-survivor-update.err",
+    );
+    expect(runner).toContain(
+      "quiet_core_bot_e2e_print_log /tmp/quiet-core-bot-upgrade-survivor-update.json",
+    );
+    expect(runner).toContain(
+      "quiet_core_bot_e2e_print_log /tmp/quiet-core-bot-upgrade-survivor-doctor.log",
+    );
+    expect(runner).toContain(
+      "quiet_core_bot_e2e_print_log /tmp/quiet-core-bot-upgrade-survivor-status.err",
+    );
+    expect(runner).toContain(
+      "quiet_core_bot_e2e_print_log /tmp/quiet-core-bot-upgrade-survivor-status.json",
+    );
     expect(runner).toContain('quiet_core_bot_e2e_print_log "$GATEWAY_LOG"');
     expect(runner).toContain('quiet_core_bot_e2e_print_log "$SYSTEMCTL_SHIM_DAEMON_LOG"');
     expect(runner).toContain('quiet_core_bot_e2e_print_log "$log_file"');
@@ -2393,9 +2447,15 @@ fi
     expect(runner).not.toContain('cat "$log_file"');
 
     expect(publishedRunner).toContain('quiet_core_bot_e2e_print_log "$BASELINE_INSTALL_LOG"');
-    expect(publishedRunner).toContain('quiet_core_bot_e2e_print_log "$BASELINE_CONFIG_VALIDATE_LOG"');
-    expect(publishedRunner).toContain('quiet_core_bot_e2e_print_log "$BASELINE_SERVICE_INSTALL_ERR"');
-    expect(publishedRunner).toContain('quiet_core_bot_e2e_print_log "$BASELINE_SERVICE_INSTALL_JSON"');
+    expect(publishedRunner).toContain(
+      'quiet_core_bot_e2e_print_log "$BASELINE_CONFIG_VALIDATE_LOG"',
+    );
+    expect(publishedRunner).toContain(
+      'quiet_core_bot_e2e_print_log "$BASELINE_SERVICE_INSTALL_ERR"',
+    );
+    expect(publishedRunner).toContain(
+      'quiet_core_bot_e2e_print_log "$BASELINE_SERVICE_INSTALL_JSON"',
+    );
     expect(publishedRunner).toContain('quiet_core_bot_e2e_print_log "$UPDATE_ERR"');
     expect(publishedRunner).toContain('quiet_core_bot_e2e_print_log "$UPDATE_JSON"');
     expect(publishedRunner).toContain('quiet_core_bot_e2e_print_log "$DOCTOR_LOG"');
@@ -2747,7 +2807,9 @@ grep -Fxq preserved "$TMPDIR/caller-fd"
     expect(runner).toContain('tail -c "$agent_output_dump_bytes" /tmp/quiet-core-bot-agent.json');
     const dumpLogsStart = runner.indexOf("quiet_core_bot_e2e_dump_logs \\");
     const dumpLogsEnd = runner.indexOf("\n}", dumpLogsStart);
-    expect(runner.slice(dumpLogsStart, dumpLogsEnd)).not.toContain("/tmp/quiet-core-bot-agent.json");
+    expect(runner.slice(dumpLogsStart, dumpLogsEnd)).not.toContain(
+      "/tmp/quiet-core-bot-agent.json",
+    );
   });
 
   it.each([
@@ -2781,7 +2843,9 @@ grep -Fxq preserved "$TMPDIR/caller-fd"
     expect(runner).toContain("/tmp/quiet-core-bot-live-plugin-tool-pack.log");
     expect(runner).toContain("find \"$fixture_dir\" -maxdepth 1 -type f -name '*.tgz' | sort");
     expect(runner).toContain("Expected one packed fixture plugin tarball");
-    expect(runner).toContain("quiet_core_bot_e2e_dump_logs /tmp/quiet-core-bot-live-plugin-tool-pack.log");
+    expect(runner).toContain(
+      "quiet_core_bot_e2e_dump_logs /tmp/quiet-core-bot-live-plugin-tool-pack.log",
+    );
     expect(runner).toContain('plugin_tgz="${plugin_tgzs[0]}"');
     expect(runner).not.toContain('plugin_tgz="$fixture_dir/$plugin_pack"');
   });
@@ -3196,7 +3260,9 @@ output="$(cat "$sampler_log")"
       'GATEWAY_WAIT_INTERVAL_S="$(docker_e2e_read_nonnegative_decimal_env QUIET_CORE_ONBOARD_GATEWAY_WAIT_INTERVAL_S 1)"',
     );
     expect(runner).toContain('-e "QUIET_CORE_E2E_COMMAND_TIMEOUT=$COMMAND_TIMEOUT"');
-    expect(runner).toContain('-e "QUIET_CORE_ONBOARD_GATEWAY_WAIT_ATTEMPTS=$GATEWAY_WAIT_ATTEMPTS"');
+    expect(runner).toContain(
+      '-e "QUIET_CORE_ONBOARD_GATEWAY_WAIT_ATTEMPTS=$GATEWAY_WAIT_ATTEMPTS"',
+    );
     expect(runner).toContain(
       '-e "QUIET_CORE_ONBOARD_GATEWAY_WAIT_INTERVAL_S=$GATEWAY_WAIT_INTERVAL_S"',
     );
@@ -3276,7 +3342,9 @@ output="$(cat "$sampler_log")"
     expect(runner).toContain(
       'validate_positive_int QUIET_CORE_OPENWEBUI_FETCH_TIMEOUT_MS "$PROBE_FETCH_TIMEOUT_MS"',
     );
-    expect(runner).toContain("docker_e2e_read_tcp_port_env QUIET_CORE_OPENWEBUI_GATEWAY_PORT 18789");
+    expect(runner).toContain(
+      "docker_e2e_read_tcp_port_env QUIET_CORE_OPENWEBUI_GATEWAY_PORT 18789",
+    );
     expect(runner).toContain("docker_e2e_read_tcp_port_env QUIET_CORE_OPENWEBUI_PORT 8080");
     expect(runner).toContain("QUIET_CORE_OPENWEBUI_MAX_MEMORY_MIB");
     expect(runner).toContain("QUIET_CORE_OPENWEBUI_MAX_CPU_PERCENT");
@@ -3383,7 +3451,11 @@ output="$(cat "$sampler_log")"
       "QUIET_CORE_MCP_CODE_MODE_CLIENT_BODY_MAX_BYTES",
       "64bytes",
     ],
-    [MCP_CODE_MODE_GATEWAY_LIVE_DOCKER_E2E_PATH, "QUIET_CORE_MCP_CODE_MODE_CLIENT_TIMEOUT_MS", "1e3"],
+    [
+      MCP_CODE_MODE_GATEWAY_LIVE_DOCKER_E2E_PATH,
+      "QUIET_CORE_MCP_CODE_MODE_CLIENT_TIMEOUT_MS",
+      "1e3",
+    ],
     [
       MCP_CODE_MODE_GATEWAY_LIVE_DOCKER_E2E_PATH,
       "QUIET_CORE_MCP_CODE_MODE_CLIENT_BODY_MAX_BYTES",
@@ -3416,7 +3488,9 @@ output="$(cat "$sampler_log")"
       expect(runner).toContain(
         'CLIENT_BODY_MAX_BYTES="$(docker_e2e_read_positive_int_env QUIET_CORE_MCP_CODE_MODE_CLIENT_BODY_MAX_BYTES 1048576)"',
       );
-      expect(runner).toContain('-e "QUIET_CORE_MCP_CODE_MODE_CLIENT_TIMEOUT_MS=$CLIENT_TIMEOUT_MS"');
+      expect(runner).toContain(
+        '-e "QUIET_CORE_MCP_CODE_MODE_CLIENT_TIMEOUT_MS=$CLIENT_TIMEOUT_MS"',
+      );
       expect(runner).toContain(
         '-e "QUIET_CORE_MCP_CODE_MODE_CLIENT_BODY_MAX_BYTES=$CLIENT_BODY_MAX_BYTES"',
       );
@@ -3760,7 +3834,9 @@ output="$(cat "$sampler_log")"
       'COMMAND_TIMEOUT="${QUIET_CORE_DOCKER_DOCTOR_SWITCH_COMMAND_TIMEOUT:-900s}"',
     );
     expect(runner).toContain('-e "QUIET_CORE_E2E_NPM_INSTALL_TIMEOUT=$NPM_INSTALL_TIMEOUT"');
-    expect(runner).toContain('-e "QUIET_CORE_DOCKER_DOCTOR_SWITCH_COMMAND_TIMEOUT=$COMMAND_TIMEOUT"');
+    expect(runner).toContain(
+      '-e "QUIET_CORE_DOCKER_DOCTOR_SWITCH_COMMAND_TIMEOUT=$COMMAND_TIMEOUT"',
+    );
     expect(scenario).toContain(
       'command_timeout="${QUIET_CORE_DOCKER_DOCTOR_SWITCH_COMMAND_TIMEOUT:-900s}"',
     );
@@ -4049,7 +4125,9 @@ output="$(cat "$sampler_log")"
     const assertions = readFileSync(PLUGINS_DOCKER_ASSERTIONS_PATH, "utf8");
     const npmRegistry = readFileSync(PLUGINS_DOCKER_NPM_REGISTRY_PATH, "utf8");
 
-    expect(sweep).toContain('QUIET_CORE_PLUGINS_CLI_TIMEOUT="${QUIET_CORE_PLUGINS_CLI_TIMEOUT:-180s}"');
+    expect(sweep).toContain(
+      'QUIET_CORE_PLUGINS_CLI_TIMEOUT="${QUIET_CORE_PLUGINS_CLI_TIMEOUT:-180s}"',
+    );
     expect(runner).toContain('PLUGINS_CLI_TIMEOUT="${QUIET_CORE_PLUGINS_CLI_TIMEOUT:-180s}"');
     expect(runner).toContain('-e "QUIET_CORE_PLUGINS_CLI_TIMEOUT=$PLUGINS_CLI_TIMEOUT"');
     expect(sweep).toContain(

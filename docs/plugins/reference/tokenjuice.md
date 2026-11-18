@@ -12,7 +12,7 @@ Compacts exec and bash tool results with tokenjuice reducers.
 ## Distribution
 
 - Package: `@quiet-core/tokenjuice`
-- Install route: npm; ClawHub: `clawhub:@quiet-core/tokenjuice`
+- Install route: included in QuietCore; npm; ClawHub: `clawhub:@quiet-core/tokenjuice`
 
 ## Surface
 

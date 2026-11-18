@@ -12,7 +12,7 @@ Adds web search provider support.
 ## Distribution
 
 - Package: `@quiet-core/searxng-plugin`
-- Install route: npm; ClawHub: `clawhub:@quiet-core/searxng-plugin`
+- Install route: included in QuietCore; npm; ClawHub: `clawhub:@quiet-core/searxng-plugin`
 
 ## Surface
 

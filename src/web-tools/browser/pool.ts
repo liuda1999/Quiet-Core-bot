@@ -74,6 +74,12 @@ export interface BrowserPoolOptions {
   readonly locale?: string
   /** Default navigation timeout in milliseconds. */
   readonly navigationTimeoutMs?: number
+  /**
+   * Hard cap on `chromium.launch()`. A stale profile lock or a zombie browser
+   * from an earlier run makes the launch promise never settle, which used to
+   * hang the whole search past any caller timeout. Defaults to 45s.
+   */
+  readonly launchTimeoutMs?: number
   /** Extra Chromium launch arguments. */
   readonly args?: readonly string[]
   /**
@@ -191,9 +197,41 @@ export class BrowserPool {
     })()
 
     try {
-      return await this.launching
+      return await this.withLaunchTimeout(this.launching)
     } finally {
       this.launching = undefined
+    }
+  }
+
+  /**
+   * Bounds the launch wait and makes sure a late success is closed instead of
+   * leaking a browser nobody references.
+   */
+  private async withLaunchTimeout(
+    launching: Promise<BrowserHandle>,
+  ): Promise<BrowserHandle> {
+    const limit = this.options.launchTimeoutMs ?? 45_000
+    let timer: ReturnType<typeof setTimeout> | undefined
+    const timeout = new Promise<never>((_, reject) => {
+      timer = setTimeout(() => {
+        reject(
+          new WebError(
+            `browser launch did not finish within ${limit}ms (stale profile lock or hung browser process)`,
+            'WEB_PROVIDER_UNAVAILABLE',
+          ),
+        )
+      }, limit)
+      timer.unref?.()
+    })
+    try {
+      return await Promise.race([launching, timeout])
+    } catch (error: unknown) {
+      // Close whatever eventually launches so the abandoned promise cannot
+      // keep a browser process alive behind the failed search.
+      launching.then(handle => handle.close().catch(() => undefined)).catch(() => undefined)
+      throw error
+    } finally {
+      if (timer !== undefined) clearTimeout(timer)
     }
   }
 

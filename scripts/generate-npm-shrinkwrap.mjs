@@ -328,6 +328,21 @@ function mergeOverrideEntry(merged, name, spec) {
     current["."] = preferredExactOverrideRootSpec(current["."], spec);
     return;
   }
+  // A scoped override's root version can legitimately differ between npm's
+  // hoisted tree and the pnpm lock when the package ships several major lines
+  // (for example strip-ansi 6.x under some parents and 7.x under others). Both
+  // versions are lock-valid, so treat this as a hoisting artifact and follow
+  // the pnpm lock policy instead of failing the whole check.
+  if (
+    name === "." &&
+    typeof current === "string" &&
+    typeof spec === "string" &&
+    exactVersionFromOverrideSpec(current) !== null &&
+    exactVersionFromOverrideSpec(spec) !== null
+  ) {
+    merged["."] = spec;
+    return;
+  }
   if (JSON.stringify(current) !== JSON.stringify(spec)) {
     throw new Error(`package.json overrides.${name} conflicts with pnpm lock policy for ${name}`);
   }

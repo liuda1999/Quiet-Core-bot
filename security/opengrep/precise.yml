@@ -4935,7 +4935,7 @@ rules:
     severity: ERROR
     message: Use connectApnsHttp2Session() from src/infra/push-apns-http2.ts instead of raw http2.connect() so APNs HTTP/2 honors managed proxy policy.
     metadata:
-      advisory-id: OPENCLAW-POLICY-RAW-HTTP2-CONNECT
+      advisory-id: QUIET-CORE-BOT-POLICY-RAW-HTTP2-CONNECT
       advisory-url: https://github.com/liuda1999/Quiet-Core-bot/pull/74905
       cwe:
         - CWE-441

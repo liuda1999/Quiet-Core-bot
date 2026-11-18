@@ -12,7 +12,7 @@ QuietCore Nostr channel plugin for NIP-04 encrypted direct messages.
 ## Distribution
 
 - Package: `@quiet-core/nostr`
-- Install route: npm; ClawHub
+- Install route: included in QuietCore; npm; ClawHub
 
 ## Surface
 

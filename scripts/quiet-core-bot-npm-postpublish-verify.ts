@@ -34,7 +34,10 @@ import {
   packageNameFromSpecifier,
 } from "./lib/plugin-package-dependencies.mjs";
 import { runInstalledWorkspaceBootstrapSmoke } from "./lib/workspace-bootstrap-smoke.mjs";
-import { parseReleaseVersion, resolveNpmCommandInvocation } from "./quiet-core-bot-npm-release-check.ts";
+import {
+  parseReleaseVersion,
+  resolveNpmCommandInvocation,
+} from "./quiet-core-bot-npm-release-check.ts";
 import { buildCmdExeCommandLine, resolveWindowsCmdExePath } from "./windows-cmd-helpers.mjs";
 
 type InstalledPackageJson = {
@@ -448,7 +451,10 @@ export function collectInstalledBundledExtensionManifestErrors(packageRoot: stri
 
 export function normalizeInstalledBinaryVersion(output: string): string {
   const trimmed = output.trim();
-  const versionMatch = /\b\d{4}\.\d{1,2}\.\d{1,2}(?:-\d+|-(?:alpha|beta)\.\d+)?\b/u.exec(trimmed);
+  // Accept both calendar releases (YYYY.M.PATCH, used by plugin packages) and
+  // the semver core versions this repository ships (0.1.7, 0.2.1, ...).
+  const versionMatch =
+    /\b(?:\d{4}\.\d{1,2}\.\d{1,2}|\d+\.\d+\.\d+)(?:-\d+|-(?:alpha|beta)\.\d+)?\b/u.exec(trimmed);
   return versionMatch?.[0] ?? trimmed;
 }
 

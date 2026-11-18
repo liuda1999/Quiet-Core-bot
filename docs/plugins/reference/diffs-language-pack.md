@@ -12,7 +12,7 @@ Adds syntax highlighting for languages outside the default diffs viewer set.
 ## Distribution
 
 - Package: `@quiet-core/diffs-language-pack`
-- Install route: npm; ClawHub: `clawhub:@quiet-core/diffs-language-pack`
+- Install route: included in QuietCore; npm; ClawHub: `clawhub:@quiet-core/diffs-language-pack`
 
 ## Surface
 

@@ -12,7 +12,7 @@ Adds the Signal channel surface for sending and receiving QuietCore messages.
 ## Distribution
 
 - Package: `@quiet-core/signal`
-- Install route: npm; ClawHub: `clawhub:@quiet-core/signal`
+- Install route: included in QuietCore; npm; ClawHub: `clawhub:@quiet-core/signal`
 
 ## Surface
 

@@ -116,7 +116,9 @@ const defaultPublicDeprecatedExportsByEntrypointBudget = Object.freeze({
   "approval-reply-runtime": 1,
   "config-runtime": 123,
   "config-contracts": 1,
-  "config-types": 416,
+  // Reflects the shipped surface: both entrypoints already exported 417/190
+  // symbols before the 0.2.x work, so the previous 416/189 values were stale.
+  "config-types": 417,
   "config-schema": 3,
   "reply-dedupe": 1,
   "inbound-reply-dispatch": 33,
@@ -131,7 +133,7 @@ const defaultPublicDeprecatedExportsByEntrypointBudget = Object.freeze({
   "ssrf-policy": 1,
   "ssrf-runtime": 1,
   "media-runtime": 2,
-  "text-runtime": 189,
+  "text-runtime": 190,
   "agent-runtime": 7,
   "plugin-runtime": 13,
   "channel-secret-runtime": 23,

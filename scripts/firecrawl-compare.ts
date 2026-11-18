@@ -2,7 +2,8 @@
 import { pathToFileURL } from "node:url";
 import { fetchFirecrawlContent } from "../extensions/firecrawl/api.ts";
 import { formatErrorMessage } from "../src/infra/errors.ts";
-import { extractReadableContent } from "../src/web-fetch/content-extractors.runtime.js";
+import { extractMainContent } from "../src/web-tools/filter/extract.js";
+import { renderBody } from "../src/web-tools/tools/html.js";
 import { readBoundedResponseText as readBoundedResponseTextWithLimit } from "./lib/bounded-response.ts";
 
 const DEFAULT_URLS = [
@@ -104,15 +105,12 @@ async function run() {
       } else if (!res.contentType.includes("text/html")) {
         localStatus = `non-html (${res.contentType})`;
       } else {
-        const readable = await extractReadableContent({
-          html: res.body,
-          url: res.finalUrl,
-          extractMode: "markdown",
-        });
-        if (readable?.text) {
+        const extracted = extractMainContent(res.body, { mode: "gentle" });
+        const rendered = renderBody({ kind: "html", content: extracted.html || res.body }, 200_000);
+        if (rendered.text) {
           localStatus = "readability";
-          localTitle = readable.title ?? "";
-          localText = readable.text;
+          localTitle = res.body.match(/<title[^>]*>([\s\S]*?)<\/title>/iu)?.[1]?.trim() ?? "";
+          localText = rendered.text;
         } else {
           localStatus = "readability-empty";
         }

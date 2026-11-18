@@ -12,7 +12,7 @@ Adds the Mattermost channel surface for sending and receiving QuietCore messages
 ## Distribution
 
 - Package: `@quiet-core/mattermost`
-- Install route: npm; ClawHub: `clawhub:@quiet-core/mattermost`
+- Install route: included in QuietCore; npm; ClawHub: `clawhub:@quiet-core/mattermost`
 
 ## Surface
 

@@ -12,7 +12,7 @@ QuietCore diagnostics Prometheus exporter for runtime metrics.
 ## Distribution
 
 - Package: `@quiet-core/diagnostics-prometheus`
-- Install route: npm; ClawHub: `clawhub:@quiet-core/diagnostics-prometheus`
+- Install route: included in QuietCore; npm; ClawHub: `clawhub:@quiet-core/diagnostics-prometheus`
 
 ## Surface
 

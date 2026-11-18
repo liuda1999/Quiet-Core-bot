@@ -51,7 +51,9 @@ Each entry lists the package, distribution route, and description.
 
 ## Core npm package
 
-25 plugins
+45 plugins
+
+- **[acpx](/plugins/reference/acpx)** (`@quiet-core/acpx`) - included in QuietCore; npm; ClawHub. QuietCore ACP runtime backend with plugin-owned session and transport management.
 
 - **[admin-http-rpc](/plugins/reference/admin-http-rpc)** (`@quiet-core/admin-http-rpc`) - included in QuietCore. QuietCore admin HTTP RPC endpoint.
 
@@ -61,27 +63,53 @@ Each entry lists the package, distribution route, and description.
 
 - **[canvas](/plugins/reference/canvas)** (`@quiet-core/canvas-plugin`) - included in QuietCore. Experimental Canvas control and A2UI rendering surfaces for paired nodes.
 
+- **[clickclack](/plugins/reference/clickclack)** (`@quiet-core/clickclack`) - included in QuietCore; npm; ClawHub: `clawhub:@quiet-core/clickclack`. Adds the Clickclack channel surface for sending and receiving QuietCore messages.
+
 - **[comfy](/plugins/reference/comfy)** (`@quiet-core/comfy-provider`) - included in QuietCore. Adds ComfyUI model provider support to QuietCore.
 
 - **[copilot-proxy](/plugins/reference/copilot-proxy)** (`@quiet-core/copilot-proxy`) - included in QuietCore. Adds Copilot Proxy model provider support to QuietCore.
+
+- **[diagnostics-otel](/plugins/reference/diagnostics-otel)** (`@quiet-core/diagnostics-otel`) - included in QuietCore; npm; ClawHub: `clawhub:@quiet-core/diagnostics-otel`. QuietCore diagnostics OpenTelemetry exporter for metrics, traces, and logs.
+
+- **[diagnostics-prometheus](/plugins/reference/diagnostics-prometheus)** (`@quiet-core/diagnostics-prometheus`) - included in QuietCore; npm; ClawHub: `clawhub:@quiet-core/diagnostics-prometheus`. QuietCore diagnostics Prometheus exporter for runtime metrics.
+
+- **[diffs](/plugins/reference/diffs)** (`@quiet-core/diffs`) - included in QuietCore; npm; ClawHub. QuietCore read-only diff viewer plugin and file renderer for agents.
+
+- **[diffs-language-pack](/plugins/reference/diffs-language-pack)** (`@quiet-core/diffs-language-pack`) - included in QuietCore; npm; ClawHub: `clawhub:@quiet-core/diffs-language-pack`. Adds syntax highlighting for languages outside the default diffs viewer set.
 
 - **[document-extract](/plugins/reference/document-extract)** (`@quiet-core/document-extract-plugin`) - included in QuietCore. Extract text and fallback page images from local document attachments.
 
 - **[file-transfer](/plugins/reference/file-transfer)** (`@quiet-core/file-transfer`) - included in QuietCore. Fetch, list, and write files on paired nodes via dedicated node commands. Bypasses bash stdout truncation by using base64 over node.invoke for binaries up to 16 MB.
 
+- **[firecrawl](/plugins/reference/firecrawl)** (`@quiet-core/firecrawl-plugin`) - included in QuietCore; npm; ClawHub: `clawhub:@quiet-core/firecrawl-plugin`. Adds agent-callable tools. Adds web fetch provider support. Adds web search provider support.
+
+- **[irc](/plugins/reference/irc)** (`@quiet-core/irc`) - included in QuietCore; npm; ClawHub: `clawhub:@quiet-core/irc`. Adds the IRC channel surface for sending and receiving QuietCore messages.
+
 - **[litellm](/plugins/reference/litellm)** (`@quiet-core/litellm-provider`) - included in QuietCore. Adds LiteLLM model provider support to QuietCore.
+
+- **[llama-cpp](/plugins/reference/llama-cpp)** (`@quiet-core/llama-cpp-provider`) - included in QuietCore; npm; ClawHub. Local GGUF embeddings through node-llama-cpp.
 
 - **[llm-task](/plugins/reference/llm-task)** (`@quiet-core/llm-task`) - included in QuietCore. Generic JSON-only LLM tool for structured tasks callable from workflows.
 
 - **[lmstudio](/plugins/reference/lmstudio)** (`@quiet-core/lmstudio-provider`) - included in QuietCore. Adds LM Studio model provider support to QuietCore.
 
+- **[lobster](/plugins/reference/lobster)** (`@quiet-core/lobster`) - included in QuietCore; npm; ClawHub. Lobster workflow tool plugin for typed pipelines and resumable approvals.
+
+- **[mattermost](/plugins/reference/mattermost)** (`@quiet-core/mattermost`) - included in QuietCore; npm; ClawHub: `clawhub:@quiet-core/mattermost`. Adds the Mattermost channel surface for sending and receiving QuietCore messages.
+
 - **[memory-core](/plugins/reference/memory-core)** (`@quiet-core/memory-core`) - included in QuietCore. Adds agent-callable tools.
+
+- **[memory-lancedb](/plugins/reference/memory-lancedb)** (`@quiet-core/memory-lancedb`) - included in QuietCore; npm; ClawHub. QuietCore LanceDB-backed long-term memory plugin with auto-recall, auto-capture, and vector search.
 
 - **[memory-wiki](/plugins/reference/memory-wiki)** (`@quiet-core/memory-wiki`) - included in QuietCore. Persistent wiki compiler and Obsidian-friendly knowledge vault for QuietCore.
 
 - **[migrate-claude](/plugins/reference/migrate-claude)** (`@quiet-core/migrate-claude`) - included in QuietCore. Imports Claude Code and Claude Desktop instructions, MCP servers, skills, and safe configuration into QuietCore.
 
 - **[migrate-hermes](/plugins/reference/migrate-hermes)** (`@quiet-core/migrate-hermes`) - included in QuietCore. Imports Hermes configuration, memories, skills, and supported credentials into QuietCore.
+
+- **[nextcloud-talk](/plugins/reference/nextcloud-talk)** (`@quiet-core/nextcloud-talk`) - included in QuietCore; npm; ClawHub. QuietCore Nextcloud Talk channel plugin for conversations.
+
+- **[nostr](/plugins/reference/nostr)** (`@quiet-core/nostr`) - included in QuietCore; npm; ClawHub. QuietCore Nostr channel plugin for NIP-04 encrypted direct messages.
 
 - **[oc-path](/plugins/reference/oc-path)** (`@quiet-core/oc-path`) - included in QuietCore. Adds the quiet-core-bot path CLI for oc:// workspace file addressing.
 
@@ -91,7 +119,19 @@ Each entry lists the package, distribution route, and description.
 
 - **[policy](/plugins/reference/policy)** (`@quiet-core/policy`) - included in QuietCore. Adds policy-backed doctor checks for workspace conformance.
 
+- **[raft](/plugins/reference/raft)** (`@quiet-core/raft`) - included in QuietCore; npm; ClawHub. QuietCore Raft channel plugin for secure CLI wake bridges.
+
+- **[searxng](/plugins/reference/searxng)** (`@quiet-core/searxng-plugin`) - included in QuietCore; npm; ClawHub: `clawhub:@quiet-core/searxng-plugin`. Adds web search provider support.
+
 - **[sglang](/plugins/reference/sglang)** (`@quiet-core/sglang-provider`) - included in QuietCore. Adds SGLang model provider support to QuietCore.
+
+- **[signal](/plugins/reference/signal)** (`@quiet-core/signal`) - included in QuietCore; npm; ClawHub: `clawhub:@quiet-core/signal`. Adds the Signal channel surface for sending and receiving QuietCore messages.
+
+- **[synology-chat](/plugins/reference/synology-chat)** (`@quiet-core/synology-chat`) - included in QuietCore; npm; ClawHub. Synology Chat channel plugin for QuietCore channels and direct messages.
+
+- **[tlon](/plugins/reference/tlon)** (`@quiet-core/tlon`) - included in QuietCore; npm; ClawHub. QuietCore Tlon/Urbit channel plugin for chat workflows.
+
+- **[tokenjuice](/plugins/reference/tokenjuice)** (`@quiet-core/tokenjuice`) - included in QuietCore; npm; ClawHub: `clawhub:@quiet-core/tokenjuice`. Compacts exec and bash tool results with tokenjuice reducers.
 
 - **[tts-local-cli](/plugins/reference/tts-local-cli)** (`@quiet-core/tts-local-cli`) - included in QuietCore. Adds text-to-speech provider support.
 
@@ -105,49 +145,9 @@ Each entry lists the package, distribution route, and description.
 
 ## Official external packages
 
-21 plugins
-
-- **[acpx](/plugins/reference/acpx)** (`@quiet-core/acpx`) - npm; ClawHub. QuietCore ACP runtime backend with plugin-owned session and transport management.
-
-- **[clickclack](/plugins/reference/clickclack)** (`@quiet-core/clickclack`) - npm; ClawHub: `clawhub:@quiet-core/clickclack`. Adds the Clickclack channel surface for sending and receiving QuietCore messages.
-
-- **[diagnostics-otel](/plugins/reference/diagnostics-otel)** (`@quiet-core/diagnostics-otel`) - npm; ClawHub: `clawhub:@quiet-core/diagnostics-otel`. QuietCore diagnostics OpenTelemetry exporter for metrics, traces, and logs.
-
-- **[diagnostics-prometheus](/plugins/reference/diagnostics-prometheus)** (`@quiet-core/diagnostics-prometheus`) - npm; ClawHub: `clawhub:@quiet-core/diagnostics-prometheus`. QuietCore diagnostics Prometheus exporter for runtime metrics.
-
-- **[diffs](/plugins/reference/diffs)** (`@quiet-core/diffs`) - npm; ClawHub. QuietCore read-only diff viewer plugin and file renderer for agents.
-
-- **[diffs-language-pack](/plugins/reference/diffs-language-pack)** (`@quiet-core/diffs-language-pack`) - npm; ClawHub: `clawhub:@quiet-core/diffs-language-pack`. Adds syntax highlighting for languages outside the default diffs viewer set.
-
-- **[firecrawl](/plugins/reference/firecrawl)** (`@quiet-core/firecrawl-plugin`) - npm; ClawHub: `clawhub:@quiet-core/firecrawl-plugin`. Adds agent-callable tools. Adds web fetch provider support. Adds web search provider support.
-
-- **[irc](/plugins/reference/irc)** (`@quiet-core/irc`) - npm; ClawHub: `clawhub:@quiet-core/irc`. Adds the IRC channel surface for sending and receiving QuietCore messages.
-
-- **[llama-cpp](/plugins/reference/llama-cpp)** (`@quiet-core/llama-cpp-provider`) - npm; ClawHub. Local GGUF embeddings through node-llama-cpp.
-
-- **[lobster](/plugins/reference/lobster)** (`@quiet-core/lobster`) - npm; ClawHub. Lobster workflow tool plugin for typed pipelines and resumable approvals.
+1 plugins
 
 - **[matrix](/plugins/reference/matrix)** (`@quiet-core/matrix`) - ClawHub: `clawhub:@quiet-core/matrix`; npm. QuietCore Matrix channel plugin for rooms and direct messages.
-
-- **[mattermost](/plugins/reference/mattermost)** (`@quiet-core/mattermost`) - npm; ClawHub: `clawhub:@quiet-core/mattermost`. Adds the Mattermost channel surface for sending and receiving QuietCore messages.
-
-- **[memory-lancedb](/plugins/reference/memory-lancedb)** (`@quiet-core/memory-lancedb`) - npm; ClawHub. QuietCore LanceDB-backed long-term memory plugin with auto-recall, auto-capture, and vector search.
-
-- **[nextcloud-talk](/plugins/reference/nextcloud-talk)** (`@quiet-core/nextcloud-talk`) - npm; ClawHub. QuietCore Nextcloud Talk channel plugin for conversations.
-
-- **[nostr](/plugins/reference/nostr)** (`@quiet-core/nostr`) - npm; ClawHub. QuietCore Nostr channel plugin for NIP-04 encrypted direct messages.
-
-- **[raft](/plugins/reference/raft)** (`@quiet-core/raft`) - npm; ClawHub. QuietCore Raft channel plugin for secure CLI wake bridges.
-
-- **[searxng](/plugins/reference/searxng)** (`@quiet-core/searxng-plugin`) - npm; ClawHub: `clawhub:@quiet-core/searxng-plugin`. Adds web search provider support.
-
-- **[signal](/plugins/reference/signal)** (`@quiet-core/signal`) - npm; ClawHub: `clawhub:@quiet-core/signal`. Adds the Signal channel surface for sending and receiving QuietCore messages.
-
-- **[synology-chat](/plugins/reference/synology-chat)** (`@quiet-core/synology-chat`) - npm; ClawHub. Synology Chat channel plugin for QuietCore channels and direct messages.
-
-- **[tlon](/plugins/reference/tlon)** (`@quiet-core/tlon`) - npm; ClawHub. QuietCore Tlon/Urbit channel plugin for chat workflows.
-
-- **[tokenjuice](/plugins/reference/tokenjuice)** (`@quiet-core/tokenjuice`) - npm; ClawHub: `clawhub:@quiet-core/tokenjuice`. Compacts exec and bash tool results with tokenjuice reducers.
 
 ## Source checkout only
 

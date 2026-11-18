@@ -12,7 +12,7 @@ QuietCore ACP runtime backend with plugin-owned session and transport management
 ## Distribution
 
 - Package: `@quiet-core/acpx`
-- Install route: npm; ClawHub
+- Install route: included in QuietCore; npm; ClawHub
 
 ## Surface
 

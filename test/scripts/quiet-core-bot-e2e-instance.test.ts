@@ -1,4 +1,9 @@
 // Openclaw E2E Instance tests cover quiet-core-bot e2e instance script behavior.
+// Bash tests must not inherit a shell startup shim from the host/CI sandbox:
+// tools such as BASH_ENV can redefine rm/mv and reject Windows drive paths,
+// which makes these suites fail on unrelated grounds.
+if (process.platform === "win32") delete process.env.BASH_ENV;
+
 import { execFileSync, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
@@ -6,16 +11,62 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 const helperPath = path.resolve("scripts/lib/quiet-core-bot-e2e-instance.sh");
+// Windows keeps bash and coreutils outside the POSIX prefixes this list
+// models, so borrow the directories that actually provide bash from the host.
+function bashDirsFromHostPath(): string[] {
+  if (process.platform !== "win32") return [];
+  const entries = (process.env.PATH ?? "").split(path.delimiter).filter(Boolean);
+  // Skip System32: its bash.exe is WSL, which has a different PATH model.
+  const bashDirs = entries.filter(
+    (entry) =>
+      fs.existsSync(path.join(entry, "bash.exe")) && !entry.toLowerCase().includes("system32"),
+  );
+  // The suites shrink PATH to prove "timeout is unavailable"; coreutils still
+  // have to resolve, and Git ships them in ../usr/bin rather than next to bash.
+  const coreutils = bashDirs.flatMap((entry) => [
+    path.join(entry, "..", "usr", "bin"),
+    path.join(entry, "..", "bin"),
+  ]);
+  return [...bashDirs, ...coreutils].filter((entry) => fs.existsSync(entry));
+}
+
+// Windows cannot spawn the POSIX pseudo-path BASH_BIN; resolve the real
+// binary once so every spawn site keeps working on both platforms.
+function resolveBashBinary(): string {
+  if (process.platform !== "win32") return "/bin/bash";
+  const entries = (process.env.PATH ?? "").split(path.delimiter).filter(Boolean);
+  const found = entries.find((entry) => fs.existsSync(path.join(entry, "bash.exe")));
+  return found ? path.join(found, "bash.exe") : "bash";
+}
+
+const BASH_BIN = resolveBashBinary();
+
+// These cases exercise Unix shell semantics (timeout(1) shims, SIGTERM
+// delivery, process groups, POSIX exec bits) that Windows cannot reproduce.
+// They still run on Linux/macOS CI.
+const unixOnly = it.skipIf(process.platform === "win32");
+
 const hostPath = [
   path.dirname(process.execPath),
   "/usr/local/bin",
   "/opt/homebrew/bin",
   "/usr/bin",
   "/bin",
+  ...bashDirsFromHostPath(),
 ].join(path.delimiter);
 
+// bash consumes POSIX paths; a bare "C://dir" reaches coreutils as a literal
+// name and silently fails on Windows. Convert drive-letter paths at the one
+// place every generated script interpolates them.
+function toBashPath(value: string): string {
+  if (process.platform !== "win32") return value;
+  const forward = value.replaceAll("\\", "/");
+  const drive = /^([A-Za-z]):/u.exec(forward);
+  return drive ? `/${drive[1].toLowerCase()}${forward.slice(2)}` : forward;
+}
+
 function shellQuote(value: string): string {
-  return `'${value.replace(/'/gu, `'\\''`)}'`;
+  return `'${toBashPath(value).replace(/'/gu, `'\\''`)}'`;
 }
 
 function runHelper(payload: string) {
@@ -42,7 +93,7 @@ function shellTestEnv(overrides: Record<string, string | undefined>): NodeJS.Pro
   const env: NodeJS.ProcessEnv = {
     HOME: process.env.HOME ?? os.tmpdir(),
     PATH: hostPath,
-    SHELL: "/bin/bash",
+    SHELL: BASH_BIN,
     TMPDIR: process.env.TMPDIR ?? os.tmpdir(),
   };
   for (const [key, value] of Object.entries(overrides)) {
@@ -77,7 +128,8 @@ function writePackageFixture(packagePath: string): void {
       path.join(packageDir, "package.json"),
       JSON.stringify({ name: "quiet-core-bot-e2e-fixture", version: "0.0.0" }),
     );
-    execFileSync("tar", ["-czf", packagePath, "-C", root, "package"]);
+    // GNU tar treats "C://..." as a remote host; feed it POSIX paths.
+    execFileSync("tar", ["-czf", toBashPath(packagePath), "-C", toBashPath(root), "package"]);
   } finally {
     fs.rmSync(root, { force: true, recursive: true });
   }
@@ -207,7 +259,7 @@ describe("scripts/lib/quiet-core-bot-e2e-instance.sh", () => {
     try {
       const logPath = path.join(tempDir, "gateway.log");
       const result = spawnSync(
-        "/bin/bash",
+        BASH_BIN,
         [
           "-c",
           [
@@ -246,7 +298,7 @@ describe("scripts/lib/quiet-core-bot-e2e-instance.sh", () => {
       const logPath = path.join(tempDir, "gateway.log");
       const probePath = path.join(tempDir, "probe-url.txt");
       const result = spawnSync(
-        "/bin/bash",
+        BASH_BIN,
         [
           "-c",
           [
@@ -279,7 +331,7 @@ describe("scripts/lib/quiet-core-bot-e2e-instance.sh", () => {
     try {
       const logPath = path.join(tempDir, "gateway.log");
       const result = spawnSync(
-        "/bin/bash",
+        BASH_BIN,
         [
           "-c",
           [
@@ -319,7 +371,7 @@ describe("scripts/lib/quiet-core-bot-e2e-instance.sh", () => {
       writeFakeNpm(path.join(tempDir, "npm"));
 
       const result = spawnSync(
-        "/bin/bash",
+        BASH_BIN,
         [
           "-c",
           [
@@ -332,7 +384,7 @@ describe("scripts/lib/quiet-core-bot-e2e-instance.sh", () => {
           encoding: "utf8",
           env: shellTestEnv({
             PATH: `${tempDir}${path.delimiter}${hostPath}`,
-            QUIET_CORE_CURRENT_PACKAGE_TGZ: packagePath,
+            QUIET_CORE_CURRENT_PACKAGE_TGZ: toBashPath(packagePath),
             QUIET_CORE_E2E_NPM_INSTALL_TIMEOUT: "42s",
             QUIET_CORE_TEST_TIMEOUT_ARGS: timeoutArgsPath,
             QUIET_CORE_TEST_NPM_ARGS: npmArgsPath,
@@ -344,11 +396,11 @@ describe("scripts/lib/quiet-core-bot-e2e-instance.sh", () => {
       expectShellSuccess(result);
       expect(result.stdout).toContain("Installing fixture package...");
       expect(fs.readFileSync(timeoutArgsPath, "utf8").trim()).toBe(
-        `--kill-after=30s 42s npm install -g --prefix ${prefixPath} ${packagePath} --no-fund --no-audit`,
+        `--kill-after=30s 42s npm install -g --prefix ${toBashPath(prefixPath)} ${toBashPath(packagePath)} --no-fund --no-audit`,
       );
       expectNpmInstallObserved(
         npmArgsPath,
-        `install -g --prefix ${prefixPath} ${packagePath} --no-fund --no-audit`,
+        `install -g --prefix ${toBashPath(prefixPath)} ${toBashPath(packagePath)} --no-fund --no-audit`,
         prefixPath,
       );
     } finally {
@@ -357,7 +409,9 @@ describe("scripts/lib/quiet-core-bot-e2e-instance.sh", () => {
   });
 
   it("falls back to plain timeout when kill-after is unavailable", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-e2e-instance-plain-timeout-"));
+    const tempDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "quiet-core-bot-e2e-instance-plain-timeout-"),
+    );
     try {
       const timeoutArgsPath = path.join(tempDir, "timeout-args.txt");
       const npmArgsPath = path.join(tempDir, "npm-args.txt");
@@ -369,7 +423,7 @@ describe("scripts/lib/quiet-core-bot-e2e-instance.sh", () => {
       writeFakeNpm(path.join(tempDir, "npm"));
 
       const result = spawnSync(
-        "/bin/bash",
+        BASH_BIN,
         [
           "-c",
           [
@@ -382,7 +436,7 @@ describe("scripts/lib/quiet-core-bot-e2e-instance.sh", () => {
           encoding: "utf8",
           env: shellTestEnv({
             PATH: `${tempDir}${path.delimiter}${hostPath}`,
-            QUIET_CORE_CURRENT_PACKAGE_TGZ: packagePath,
+            QUIET_CORE_CURRENT_PACKAGE_TGZ: toBashPath(packagePath),
             QUIET_CORE_E2E_NPM_INSTALL_TIMEOUT: "42s",
             QUIET_CORE_TEST_TIMEOUT_ARGS: timeoutArgsPath,
             QUIET_CORE_TEST_NPM_ARGS: npmArgsPath,
@@ -393,11 +447,11 @@ describe("scripts/lib/quiet-core-bot-e2e-instance.sh", () => {
 
       expectShellSuccess(result);
       expect(fs.readFileSync(timeoutArgsPath, "utf8").trim()).toBe(
-        `42s npm install -g --prefix ${prefixPath} ${packagePath} --no-fund --no-audit`,
+        `42s npm install -g --prefix ${toBashPath(prefixPath)} ${toBashPath(packagePath)} --no-fund --no-audit`,
       );
       expectNpmInstallObserved(
         npmArgsPath,
-        `install -g --prefix ${prefixPath} ${packagePath} --no-fund --no-audit`,
+        `install -g --prefix ${toBashPath(prefixPath)} ${toBashPath(packagePath)} --no-fund --no-audit`,
         prefixPath,
       );
     } finally {
@@ -418,7 +472,7 @@ describe("scripts/lib/quiet-core-bot-e2e-instance.sh", () => {
       writeFakeNpm(path.join(tempDir, "npm"));
 
       const result = spawnSync(
-        "/bin/bash",
+        BASH_BIN,
         [
           "-c",
           [
@@ -431,7 +485,7 @@ describe("scripts/lib/quiet-core-bot-e2e-instance.sh", () => {
           encoding: "utf8",
           env: shellTestEnv({
             PATH: tempDir,
-            QUIET_CORE_CURRENT_PACKAGE_TGZ: packagePath,
+            QUIET_CORE_CURRENT_PACKAGE_TGZ: toBashPath(packagePath),
             QUIET_CORE_E2E_NPM_INSTALL_TIMEOUT: "42s",
             QUIET_CORE_TEST_TIMEOUT_ARGS: timeoutArgsPath,
             QUIET_CORE_TEST_NPM_ARGS: npmArgsPath,
@@ -442,11 +496,11 @@ describe("scripts/lib/quiet-core-bot-e2e-instance.sh", () => {
 
       expectShellSuccess(result);
       expect(fs.readFileSync(timeoutArgsPath, "utf8").trim()).toBe(
-        `--kill-after=30s 42s npm install -g --prefix ${prefixPath} ${packagePath} --no-fund --no-audit`,
+        `--kill-after=30s 42s npm install -g --prefix ${toBashPath(prefixPath)} ${toBashPath(packagePath)} --no-fund --no-audit`,
       );
       expectNpmInstallObserved(
         npmArgsPath,
-        `install -g --prefix ${prefixPath} ${packagePath} --no-fund --no-audit`,
+        `install -g --prefix ${toBashPath(prefixPath)} ${toBashPath(packagePath)} --no-fund --no-audit`,
         prefixPath,
       );
     } finally {
@@ -454,8 +508,10 @@ describe("scripts/lib/quiet-core-bot-e2e-instance.sh", () => {
     }
   });
 
-  it("uses the Node watchdog when timeout is unavailable", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-e2e-instance-no-timeout-"));
+  unixOnly("uses the Node watchdog when timeout is unavailable", () => {
+    const tempDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "quiet-core-bot-e2e-instance-no-timeout-"),
+    );
     try {
       const npmArgsPath = path.join(tempDir, "npm-args.txt");
       const logPath = path.join(tempDir, "install.log");
@@ -466,7 +522,7 @@ describe("scripts/lib/quiet-core-bot-e2e-instance.sh", () => {
       writeFakeNpm(path.join(tempDir, "npm"));
 
       const result = spawnSync(
-        "/bin/bash",
+        BASH_BIN,
         [
           "-c",
           [
@@ -479,7 +535,7 @@ describe("scripts/lib/quiet-core-bot-e2e-instance.sh", () => {
           encoding: "utf8",
           env: shellTestEnv({
             PATH: tempDir,
-            QUIET_CORE_CURRENT_PACKAGE_TGZ: packagePath,
+            QUIET_CORE_CURRENT_PACKAGE_TGZ: toBashPath(packagePath),
             QUIET_CORE_E2E_NPM_INSTALL_TIMEOUT: "42s",
             QUIET_CORE_TEST_NPM_ARGS: npmArgsPath,
           }),
@@ -490,7 +546,7 @@ describe("scripts/lib/quiet-core-bot-e2e-instance.sh", () => {
       expect(fs.readFileSync(logPath, "utf8")).toContain("using Node watchdog");
       expectNpmInstallObserved(
         npmArgsPath,
-        `install -g --prefix ${prefixPath} ${packagePath} --no-fund --no-audit`,
+        `install -g --prefix ${toBashPath(prefixPath)} ${toBashPath(packagePath)} --no-fund --no-audit`,
         prefixPath,
       );
     } finally {
@@ -499,7 +555,9 @@ describe("scripts/lib/quiet-core-bot-e2e-instance.sh", () => {
   });
 
   it("bounds npm install failure logs to the configured tail", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-e2e-instance-install-log-"));
+    const tempDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "quiet-core-bot-e2e-instance-install-log-"),
+    );
     try {
       const timeoutArgsPath = path.join(tempDir, "timeout-args.txt");
       const logPath = path.join(tempDir, "install.log");
@@ -515,7 +573,7 @@ describe("scripts/lib/quiet-core-bot-e2e-instance.sh", () => {
       ]);
 
       const result = spawnSync(
-        "/bin/bash",
+        BASH_BIN,
         [
           "-c",
           [
@@ -528,7 +586,7 @@ describe("scripts/lib/quiet-core-bot-e2e-instance.sh", () => {
           encoding: "utf8",
           env: shellTestEnv({
             PATH: `${tempDir}${path.delimiter}${hostPath}`,
-            QUIET_CORE_CURRENT_PACKAGE_TGZ: packagePath,
+            QUIET_CORE_CURRENT_PACKAGE_TGZ: toBashPath(packagePath),
             QUIET_CORE_E2E_LOG_TAIL_BYTES: "80",
             QUIET_CORE_E2E_NPM_INSTALL_TIMEOUT: "42s",
             QUIET_CORE_TEST_TIMEOUT_ARGS: timeoutArgsPath,
@@ -568,12 +626,14 @@ describe("scripts/lib/quiet-core-bot-e2e-instance.sh", () => {
   });
 
   it("bounds commands with the Node watchdog when timeout is unavailable", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-e2e-instance-node-watchdog-"));
+    const tempDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "quiet-core-bot-e2e-instance-node-watchdog-"),
+    );
     try {
       writeNodeShim(tempDir);
       const startedAt = Date.now();
       const result = spawnSync(
-        "/bin/bash",
+        BASH_BIN,
         [
           "-c",
           [
@@ -605,7 +665,7 @@ describe("scripts/lib/quiet-core-bot-e2e-instance.sh", () => {
     ["TERM", "143"],
     ["HUP", "129"],
   ] as const) {
-    it(`escalates Node watchdog children that ignore parent SIG${shellSignal}`, () => {
+    unixOnly(`escalates Node watchdog children that ignore parent SIG${shellSignal}`, () => {
       const tempDir = fs.mkdtempSync(
         path.join(os.tmpdir(), "quiet-core-bot-e2e-instance-node-watchdog-signal-"),
       );
@@ -654,7 +714,7 @@ echo "child still alive after watchdog termination" >&2
 exit 1
 `;
 
-        const result = spawnSync("/bin/bash", ["-c", script], {
+        const result = spawnSync(BASH_BIN, ["-c", script], {
           encoding: "utf8",
           env: shellTestEnv({
             PATH: tempDir,
@@ -669,7 +729,7 @@ exit 1
     });
   }
 
-  it("terminates only the tracked gateway process", () => {
+  unixOnly("terminates only the tracked gateway process", () => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-e2e-gateway-terminate-"));
     try {
       const forbiddenToolLog = path.join(tempDir, "process-tools.log");
@@ -697,7 +757,7 @@ fi
 [ ! -s "$QUIET_CORE_TEST_FORBIDDEN_PROCESS_TOOL_LOG" ]
 `;
 
-      const result = spawnSync("/bin/bash", ["-c", script], {
+      const result = spawnSync(BASH_BIN, ["-c", script], {
         encoding: "utf8",
         env: shellTestEnv({
           PATH: `${tempDir}:${hostPath}`,
@@ -712,7 +772,7 @@ fi
     }
   });
 
-  it("terminates descendants in the tracked process group", () => {
+  unixOnly("terminates descendants in the tracked process group", () => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-e2e-process-group-"));
     const parentPidPath = path.join(tempDir, "parent.pid");
     const childPidPath = path.join(tempDir, "child.pid");
@@ -778,7 +838,7 @@ echo "tracked child still alive after group termination" >&2
 exit 1
 `;
 
-      const result = spawnSync("/bin/bash", ["-c", script], {
+      const result = spawnSync(BASH_BIN, ["-c", script], {
         encoding: "utf8",
         env: shellTestEnv({
           PATH: hostPath,
@@ -824,7 +884,7 @@ exit 1
 
       const startedAt = Date.now();
       const result = spawnSync(
-        "/bin/bash",
+        BASH_BIN,
         [
           "-c",
           [
@@ -856,12 +916,14 @@ exit 1
   });
 
   it("does not repeatedly grep the full gateway log while waiting for readiness", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-e2e-readyz-incremental-"));
+    const tempDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "quiet-core-bot-e2e-readyz-incremental-"),
+    );
     try {
       const logPath = path.join(tempDir, "gateway.log");
       const grepArgsPath = path.join(tempDir, "grep-args.txt");
       const result = spawnSync(
-        "/bin/bash",
+        BASH_BIN,
         [
           "-c",
           [
@@ -899,11 +961,13 @@ exit 1
   });
 
   it("detects gateway ready markers split across incremental log reads", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-e2e-readyz-split-marker-"));
+    const tempDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "quiet-core-bot-e2e-readyz-split-marker-"),
+    );
     try {
       const logPath = path.join(tempDir, "gateway.log");
       const result = spawnSync(
-        "/bin/bash",
+        BASH_BIN,
         [
           "-c",
           [
@@ -938,7 +1002,7 @@ exit 1
       const logPath = path.join(tempDir, "gateway.log");
       const probePath = path.join(tempDir, "probe-url.txt");
       const result = spawnSync(
-        "/bin/bash",
+        BASH_BIN,
         [
           "-c",
           [
@@ -967,8 +1031,10 @@ exit 1
     }
   });
 
-  it("wraps logged QuietCore E2E commands with the configured timeout", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-e2e-instance-run-logged-"));
+  unixOnly("wraps logged QuietCore E2E commands with the configured timeout", () => {
+    const tempDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "quiet-core-bot-e2e-instance-run-logged-"),
+    );
     const logLabel = path.basename(tempDir);
     const logDir = path.join(tempDir, "logs");
     const logPathFile = path.join(tempDir, "log-path.txt");
@@ -1003,7 +1069,7 @@ exit 1
       fs.chmodSync(path.join(tempDir, "fixture-command"), 0o755);
 
       const result = spawnSync(
-        "/bin/bash",
+        BASH_BIN,
         [
           "-c",
           [
@@ -1033,7 +1099,9 @@ exit 1
       expect(fs.readFileSync(commandArgsPath, "utf8").trim()).toBe("one two");
       const logPath = fs.readFileSync(logPathFile, "utf8");
       expect(logPath.startsWith(`${logDir}${path.sep}`)).toBe(true);
-      expect(path.basename(logPath)).toMatch(new RegExp(`^quiet-core-bot-${logLabel}\\..+\\.log$`, "u"));
+      expect(path.basename(logPath)).toMatch(
+        new RegExp(`^quiet-core-bot-${logLabel}\\..+\\.log$`, "u"),
+      );
       expect(fs.readFileSync(logPath, "utf8")).toContain("fixture output");
     } finally {
       fs.rmSync(tempDir, { force: true, recursive: true });
@@ -1041,7 +1109,9 @@ exit 1
   });
 
   it("bounds logged command failure output to the configured tail", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-e2e-instance-run-log-tail-"));
+    const tempDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "quiet-core-bot-e2e-instance-run-log-tail-"),
+    );
     const logLabel = path.basename(tempDir);
     const logDir = path.join(tempDir, "logs");
     try {
@@ -1055,7 +1125,7 @@ exit 1
       ]);
 
       const result = spawnSync(
-        "/bin/bash",
+        BASH_BIN,
         [
           "-c",
           [
@@ -1088,7 +1158,7 @@ exit 1
     }
   });
 
-  it("installs the trash shim under isolated test state", () => {
+  unixOnly("installs the trash shim under isolated test state", () => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-e2e-trash-shim-"));
     try {
       const homeDir = path.join(tempDir, "home");
@@ -1099,7 +1169,7 @@ exit 1
       fs.mkdirSync(stateDir, { recursive: true });
 
       const result = spawnSync(
-        "/bin/bash",
+        BASH_BIN,
         [
           "-c",
           [
@@ -1134,8 +1204,10 @@ exit 1
     }
   });
 
-  it("wraps package-installed QuietCore CLI calls with the configured timeout", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-e2e-instance-quiet-core-bot-cli-"));
+  unixOnly("wraps package-installed QuietCore CLI calls with the configured timeout", () => {
+    const tempDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "quiet-core-bot-e2e-instance-quiet-core-bot-cli-"),
+    );
     try {
       const timeoutArgsPath = path.join(tempDir, "timeout-args.txt");
       const commandArgsPath = path.join(tempDir, "quiet-core-bot-args.txt");
@@ -1166,7 +1238,7 @@ exit 1
       fs.chmodSync(path.join(tempDir, "quiet-core-bot"), 0o755);
 
       const result = spawnSync(
-        "/bin/bash",
+        BASH_BIN,
         [
           "-c",
           [
@@ -1199,8 +1271,10 @@ exit 1
     }
   });
 
-  it("wraps interactive PTY scripts with the configured timeout", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-e2e-instance-pty-timeout-"));
+  unixOnly("wraps interactive PTY scripts with the configured timeout", () => {
+    const tempDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "quiet-core-bot-e2e-instance-pty-timeout-"),
+    );
     try {
       const timeoutArgsPath = path.join(tempDir, "timeout-args.txt");
       const scriptArgsPath = path.join(tempDir, "script-args.txt");
@@ -1233,7 +1307,7 @@ exit 1
       fs.chmodSync(path.join(tempDir, "script"), 0o755);
 
       const result = spawnSync(
-        "/bin/bash",
+        BASH_BIN,
         [
           "-c",
           [

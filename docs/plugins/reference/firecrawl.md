@@ -12,7 +12,7 @@ Adds agent-callable tools. Adds web fetch provider support. Adds web search prov
 ## Distribution
 
 - Package: `@quiet-core/firecrawl-plugin`
-- Install route: npm; ClawHub: `clawhub:@quiet-core/firecrawl-plugin`
+- Install route: included in QuietCore; npm; ClawHub: `clawhub:@quiet-core/firecrawl-plugin`
 
 ## Surface
 

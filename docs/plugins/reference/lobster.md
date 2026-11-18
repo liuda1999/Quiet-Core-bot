@@ -12,7 +12,7 @@ Lobster workflow tool plugin for typed pipelines and resumable approvals.
 ## Distribution
 
 - Package: `@quiet-core/lobster`
-- Install route: npm; ClawHub
+- Install route: included in QuietCore; npm; ClawHub
 
 ## Surface
 

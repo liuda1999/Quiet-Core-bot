@@ -37,6 +37,9 @@ export const BING_HTML_PROVIDER_ID = 'bing-html'
 export const BING_HTML_ENDPOINT = 'https://cn.bing.com/search'
 
 /** Attribution header sent on every request. */
+import { filterByQueryRelevance } from './relevance.js'
+import { applySiteFilters, biasedQuery, parseSiteQuery } from './site-filter.js'
+
 const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
 
 /** Resolved provider options. */
@@ -56,7 +59,15 @@ export interface BingHtmlSearchProviderOptions {
 /** Result titles: the anchor inside each `<h2>`. */
 const TITLE_ANCHOR = /<h2[^>]*>\s*<a[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>\s*<\/h2>/gi
 /** Result snippets: the paragraph carrying a `b_lineclamp*` class. */
-const SNIPPET_PARAGRAPH = /<p[^>]*class="[^"]*b_lineclamp\d*[^"]*"[^>]*>([\s\S]*?)<\/p>/gi
+const SNIPPET_PARAGRAPH = /<p[^>]*class="[^"]*b_lineclamp\d*[^"]*"[^>]*>([\s\S]*?)<\/p>/i
+/** Organic result list. Ads and the "no results" module live outside it. */
+const RESULTS_LIST = /<ol[^>]*id="b_results"[^>]*>([\s\S]*?)<\/ol>/i
+/** One organic result block. */
+const RESULT_BLOCK = /<li[^>]*class="([^"]*\bb_algo\b[^"]*)"[^>]*>([\s\S]*?)<\/li>/gi
+/** Marker for Bing's "no results" module. */
+const NO_RESULTS_MARKER = /\bclass="[^"]*\bb_no\b/
+/** Marker for a sponsored block nested in the organic list. */
+const AD_MARKER = /\bb_ad\b/
 
 /** Hosts whose links are navigation chrome rather than results. */
 function isResultUrl(url: string): boolean {
@@ -76,37 +87,48 @@ function isResultUrl(url: string): boolean {
  * Nth title. Observed pages carry exactly one of each per result.
  */
 export function parseBingHtml(html: string): WebSearchSource[] {
-  const titles: { url: string; title: string }[] = []
-  for (const match of html.matchAll(TITLE_ANCHOR)) {
-    const href = match[1]
-    const text = match[2]
-    if (href === undefined || text === undefined) continue
-    if (!isResultUrl(href)) continue
-    const title = decodeEntities(text)
-    if (title.length === 0) continue
-    titles.push({ url: href, title })
-  }
+  // Bing answers a query it has nothing for with a "no results" module plus
+  // sponsored/recommended blocks that still use `b_algo` markup. Scoping to
+  // `#b_results`, skipping ads, and treating `b_no` as empty keeps those
+  // blocks from masquerading as organic answers.
+  const scoped = RESULTS_LIST.exec(html)?.[1] ?? html
+  const hasNoResultsModule = NO_RESULTS_MARKER.test(scoped) || NO_RESULTS_MARKER.test(html)
 
-  const snippets: string[] = []
-  for (const match of html.matchAll(SNIPPET_PARAGRAPH)) {
-    const text = match[1]
-    if (text === undefined) continue
-    const snippet = decodeEntities(text)
-    if (snippet.length > 0) snippets.push(snippet)
-  }
-
-  const seen = new Set<string>()
   const sources: WebSearchSource[] = []
-  titles.forEach((entry, index) => {
-    if (seen.has(entry.url)) return
-    seen.add(entry.url)
-    const snippet = snippets[index]
+  const seen = new Set<string>()
+  for (const match of scoped.matchAll(RESULT_BLOCK)) {
+    const classes = match[1] ?? ''
+    const block = match[2]
+    if (block === undefined) continue
+    if (AD_MARKER.test(classes)) continue
+
+    const anchor = TITLE_ANCHOR.exec(block)
+    TITLE_ANCHOR.lastIndex = 0
+    if (anchor === null) continue
+    const href = anchor[1]
+    const rawTitle = anchor[2]
+    if (href === undefined || rawTitle === undefined) continue
+    if (!isResultUrl(href)) continue
+
+    const title = decodeEntities(rawTitle.replace(/<[^>]*>/g, '')).trim()
+    if (title.length === 0) continue
+    if (seen.has(href)) continue
+    seen.add(href)
+
+    const snippetMatch = SNIPPET_PARAGRAPH.exec(block)
+    SNIPPET_PARAGRAPH.lastIndex = 0
+    const snippet = snippetMatch?.[1] === undefined
+      ? ''
+      : decodeEntities(snippetMatch[1].replace(/<[^>]*>/g, '')).trim()
+
     sources.push({
-      url: entry.url,
-      title: entry.title,
-      ...snippet !== undefined && snippet.length > 0 ? { snippet } : {},
+      url: href,
+      title,
+      ...snippet.length > 0 ? { snippet } : {},
     })
-  })
+  }
+
+  if (hasNoResultsModule && sources.length === 0) return []
   return sources
 }
 
@@ -124,8 +146,11 @@ export class BingHtmlSearchProvider implements WebSearchProvider {
     if (signal?.aborted) throw new WebError('web search aborted', 'WEB_ABORTED')
     const query = readSearchQuery(request)
 
+    // Bing scrapes the operator away, so the constraint is enforced locally.
+    const siteQuery = parseSiteQuery(query)
+    const upstreamQuery = biasedQuery(siteQuery.rest, siteQuery.filters)
     const url = new URL(this.options.endpoint ?? BING_HTML_ENDPOINT)
-    url.searchParams.set('q', query)
+    url.searchParams.set('q', upstreamQuery)
     if (this.options.market !== undefined) url.searchParams.set('mkt', this.options.market)
 
     const d = deadline(signal, this.options.timeoutMs ?? 30_000, 'WEB_SEARCH_TIMEOUT')
@@ -151,10 +176,18 @@ export class BingHtmlSearchProvider implements WebSearchProvider {
       }
 
       const html = await response.text()
-      const sources = parseBingHtml(html)
+      const raw = parseBingHtml(html)
+      const scoped = applySiteFilters(raw, siteQuery.filters)
+      // Bing pads queries it cannot match with popular/related blocks; drop
+      // results that share nothing with the query so the chain can advance.
+      const sources = filterByQueryRelevance(siteQuery.rest || query, scoped)
       if (sources.length === 0) {
         throw new WebError(
-          'Bing returned no parsable results (challenge page, rate limited, or markup changed)',
+          raw.length === 0
+            ? 'Bing returned no parsable results (challenge page, rate limited, or markup changed)'
+            : siteQuery.filters.length > 0 && scoped.length === 0
+              ? `Bing returned no results inside ${siteQuery.filters.map((filter) => filter.host).join(', ')} for the remaining terms`
+              : `Bing returned ${raw.length} result(s) unrelated to the query and none matched after filtering`,
           'WEB_PROVIDER_ERROR',
         )
       }

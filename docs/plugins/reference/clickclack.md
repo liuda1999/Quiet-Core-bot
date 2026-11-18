@@ -12,7 +12,7 @@ Adds the Clickclack channel surface for sending and receiving QuietCore messages
 ## Distribution
 
 - Package: `@quiet-core/clickclack`
-- Install route: npm; ClawHub: `clawhub:@quiet-core/clickclack`
+- Install route: included in QuietCore; npm; ClawHub: `clawhub:@quiet-core/clickclack`
 
 ## Surface
 

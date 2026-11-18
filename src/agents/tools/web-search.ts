@@ -50,6 +50,21 @@ function readRecord(value: unknown): Record<string, unknown> {
     : {};
 }
 
+/**
+ * Explains an empty `site:` result set. The constraint is enforced locally
+ * because scraped backends drop the operator, so an empty list is expected
+ * behaviour rather than a broken search.
+ */
+function formatEmptySiteResults(host: string): string {
+  return [
+    `No results matched inside ${host}.`,
+    "",
+    `The site: constraint is enforced locally: only pages on ${host} or its subdomains can be returned.`,
+    "The backend does not honor site: itself, so coverage depends on what it already ranks for the query.",
+    "Remove site: or rephrase the query to widen the search.",
+  ].join("\n");
+}
+
 function normalizeSearchArgs(args: unknown): { queries: string[]; count?: number } {
   const record = readRecord(args);
   const listed = Array.isArray(record.queries)
@@ -130,6 +145,21 @@ export function createWebSearchTool(options?: {
         });
         return textResult(text, result);
       } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
+        // `site:` is enforced locally, so "nothing matched inside that host" is
+        // an answer, not a failure: the model and the user need to see why the
+        // list is empty instead of an error they cannot act on.
+        const siteMiss = /no results inside ([^\s,;)"]+)/u.exec(message);
+        if (siteMiss !== null) {
+          const host = siteMiss[1] ?? "the requested site";
+          return textResult(
+            wrapExternalContent(formatEmptySiteResults(host), {
+              source: "web_search",
+              includeWarning: false,
+            }),
+            { sources: [], truncated: false },
+          );
+        }
         throw translateWebToolError("web_search", error, signal);
       }
     },

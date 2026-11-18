@@ -12,7 +12,7 @@ Synology Chat channel plugin for QuietCore channels and direct messages.
 ## Distribution
 
 - Package: `@quiet-core/synology-chat`
-- Install route: npm; ClawHub
+- Install route: included in QuietCore; npm; ClawHub
 
 ## Surface
 
