@@ -23,6 +23,7 @@ import { ensureAuthProfileStore, resolveAuthProfileOrder } from "../auth-profile
 import type { AuthProfileCredential } from "../auth-profiles/types.js";
 import { DEFAULT_CONTEXT_TOKENS } from "../defaults.js";
 import { resolveAgentHarnessPolicy } from "../harness/policy.js";
+import { probeModelContextWindow, withProbedContextWindow } from "../model-context-window-probe.js";
 import { resolveModelWorkspaceDir } from "../model-discovery-context.js";
 import { modelKey, normalizeStaticProviderModelId } from "../model-ref-shared.js";
 import { findNormalizedProviderValue, normalizeProviderId } from "../model-selection.js";
@@ -44,6 +45,7 @@ import {
   type AuthStorage,
   type ModelRegistry,
 } from "../sessions/index.js";
+import { resolveConfigValue } from "../sessions/resolve-config-value.js";
 import { discoverCachedAgentStores } from "./model-discovery-cache.js";
 import {
   buildInlineProviderModels,
@@ -1622,7 +1624,7 @@ export function resolveModel(
   };
 }
 
-export async function resolveModelAsync(
+async function resolveModelAsyncInner(
   provider: string,
   modelId: string,
   agentDir?: string,
@@ -1935,4 +1937,51 @@ function buildMissingProviderModelRegistrationHint(params: {
     return undefined;
   }
   return `Found agents.defaults.models["${agentModelKey}"], but no matching models.providers["${params.provider}"].models[] entry. Add { "id": "${params.modelId}", "name": "${params.modelId}" } to models.providers["${params.provider}"].models[] to register this provider model. For custom or proxy providers, also set api and baseUrl so requests route to the intended endpoint. See https://github.com/liuda1999/Quiet-Core-bot/blob/main/docs/concepts/model-providers.md.`;
+}
+
+/**
+ * Resolves a model and refreshes its context window from the provider.
+ *
+ * Runs on every resolution (each turn and each model switch), so a stale
+ * `contextWindow` written by an "add model" form cannot cap compaction after
+ * the endpoint moves to a larger window. Probe failures keep the resolved
+ * value; config precedence is handled by `resolveContextWindowInfo`.
+ */
+export async function resolveModelAsync(
+  provider: string,
+  modelId: string,
+  agentDir?: string,
+  cfg?: QuietCoreConfig,
+  options?: Parameters<typeof resolveModelAsyncInner>[4],
+): ReturnType<typeof resolveModelAsyncInner> {
+  const resolved = await resolveModelAsyncInner(provider, modelId, agentDir, cfg, options);
+  const model = resolved.model;
+  if (!model?.baseUrl) {
+    return resolved;
+  }
+  const providerId = model.provider ?? provider;
+  let apiKey: string | undefined;
+  try {
+    apiKey = await resolved.authStorage.getApiKey(providerId);
+  } catch {
+    apiKey = undefined;
+  }
+  // Custom providers keep their key on the provider entry rather than in auth
+  // storage, which is why the probe needs this second source.
+  if (apiKey === undefined) {
+    const configuredKey = cfg?.models?.providers?.[providerId]?.apiKey;
+    if (typeof configuredKey === "string" && configuredKey.trim().length > 0) {
+      apiKey = resolveConfigValue(configuredKey);
+    }
+  }
+  const probed = await probeModelContextWindow({
+    provider: model.provider ?? provider,
+    modelId: model.id ?? modelId,
+    baseUrl: model.baseUrl,
+    ...(apiKey === undefined ? {} : { apiKey }),
+  });
+  if (probed === undefined) {
+    return resolved;
+  }
+  return { ...resolved, model: withProbedContextWindow(model, probed) };
 }

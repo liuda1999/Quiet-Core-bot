@@ -372,7 +372,9 @@ describe("buildAgentSystemPrompt", () => {
       toolNames: ["web_search"],
     });
 
-    expect(prompt).toContain("- web_search: Search the web using the configured provider");
+    expect(prompt).toContain(
+      "- web_search: Search the web with the built-in backend (no API key; merges 1-4 queries)",
+    );
     expect(prompt).not.toContain("Brave API");
   });
 

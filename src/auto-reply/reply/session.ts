@@ -246,12 +246,21 @@ function resolveBoundConversationSessionKey(params: {
 
 /** Initializes or reuses the reply session state for one inbound turn. */
 export async function initSessionState(params: InitSessionStateParams): Promise<SessionInitResult> {
-  return await initSessionStateAttempt(params, false);
+  return await initSessionStateAttempt(params, 0);
 }
+
+/**
+ * A reply-session commit can lose a race against a writer that touched the same
+ * entry between snapshot and commit. The revision now ignores unrelated fields,
+ * but retrying a couple of times with a short backoff keeps a genuine burst of
+ * concurrent writes from surfacing as a hard user-facing error.
+ */
+const REPLY_SESSION_INIT_MAX_ATTEMPTS = 3;
+const REPLY_SESSION_INIT_RETRY_DELAYS_MS = [15, 40] as const;
 
 async function initSessionStateAttempt(
   params: InitSessionStateParams,
-  staleSnapshotRetried: boolean,
+  attempt: number,
 ): Promise<SessionInitResult> {
   const { ctx, cfg, commandAuthorized } = params;
   // Heartbeat, cron-event, and exec-event runs should NEVER trigger session
@@ -857,8 +866,12 @@ async function initSessionStateAttempt(
     storePath,
   });
   if (!committed.ok) {
-    if (!staleSnapshotRetried) {
-      return await initSessionStateAttempt(params, true);
+    if (attempt + 1 < REPLY_SESSION_INIT_MAX_ATTEMPTS) {
+      const delayMs = REPLY_SESSION_INIT_RETRY_DELAYS_MS[attempt] ?? 40;
+      await new Promise<void>((resolve) => {
+        setTimeout(resolve, delayMs);
+      });
+      return await initSessionStateAttempt(params, attempt + 1);
     }
     throw new Error(`reply session initialization conflicted for ${sessionKey}`);
   }

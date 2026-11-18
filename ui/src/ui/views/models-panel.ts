@@ -175,7 +175,9 @@ function buildModelEntry(id: string): Record<string, unknown> {
     name: id,
     reasoning: false,
     input: ["text"],
-    contextWindow: 128000,
+    // Leave contextWindow unset: the gateway probes the provider's /models
+    // endpoint (or falls back to catalog metadata) so a fabricated 128k default
+    // cannot cap compaction for models with a larger real window.
     maxTokens: 4096,
     cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
   };

@@ -196,6 +196,14 @@ import { readTranscriptFileState } from "./transcript-file-state.js";
 import type { EmbeddedAgentCompactResult } from "./types.js";
 import { mapThinkingLevel, normalizeContextTokenBudget } from "./utils.js";
 import { flushPendingToolResultsAfterIdle } from "./wait-for-idle-before-flush.js";
+/** Reads the probe marker without widening the shared runtime model type. */
+function modelContextProbedFlag(model: unknown): boolean | undefined {
+  if (model === null || typeof model !== "object") {
+    return undefined;
+  }
+  const flag = (model as { contextWindowProbed?: unknown }).contextWindowProbed;
+  return flag === true ? true : undefined;
+}
 export type { CompactEmbeddedAgentSessionParams } from "./compact.types.js";
 
 const compactionCheckpointStore = createFileBackedCompactionCheckpointStore();
@@ -807,6 +815,7 @@ async function compactEmbeddedAgentSessionDirectOnce(
       modelId,
       modelContextTokens: readAgentModelContextTokens(runtimeModel),
       modelContextWindow: runtimeModelWithContext.contextWindow,
+      modelContextWindowProbed: modelContextProbedFlag(runtimeModelWithContext),
       defaultTokens: DEFAULT_CONTEXT_TOKENS,
     });
     const resolvedContextTokenBudget =

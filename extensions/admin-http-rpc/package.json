@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/admin-http-rpc",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "private": true,
   "description": "QuietCore admin HTTP RPC endpoint",
   "type": "module",

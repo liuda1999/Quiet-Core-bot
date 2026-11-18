@@ -1,12 +1,12 @@
 {
   "name": "@quiet-core/diagnostics-otel",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
       "name": "@quiet-core/diagnostics-otel",
-      "version": "0.2.2",
+      "version": "0.2.3",
       "dependencies": {
         "@opentelemetry/api": "1.9.1",
         "@opentelemetry/api-logs": "0.219.0",

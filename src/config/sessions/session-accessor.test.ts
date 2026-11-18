@@ -446,6 +446,76 @@ describe("session accessor file-backed seam", () => {
     });
   });
 
+  it("ignores unrelated entry writes that land between snapshot and commit", async () => {
+    // Regression: a streaming turn keeps writing updatedAt/status/token fields.
+    // A second message initializing at the same time used to lose its revision
+    // battle on those writes and fail with "reply session initialization
+    // conflicted" even though the session identity never changed.
+    const sessionKey = "agent:main:main";
+    await upsertSessionEntry(
+      { sessionKey, storePath },
+      {
+        sessionId: "stable-session",
+        sessionFile: path.join(tempDir, "stable-session.jsonl"),
+        updatedAt: 10,
+      },
+    );
+
+    const snapshot = loadReplySessionInitializationSnapshot({ sessionKey, storePath });
+    await upsertSessionEntry({ sessionKey, storePath }, { updatedAt: 20 });
+    await upsertSessionEntry({ sessionKey, storePath }, { status: "idle", updatedAt: 30 });
+    await upsertSessionEntry(
+      { sessionKey, storePath },
+      { totalTokens: 4096, outputTokens: 128, updatedAt: 40 },
+    );
+
+    const committed = await commitReplySessionInitialization({
+      activeSessionKey: sessionKey,
+      agentId: "main",
+      expectedRevision: snapshot.revision,
+      sessionEntry: {
+        ...snapshot.currentEntry,
+        sessionId: "stable-session",
+        updatedAt: 50,
+      },
+      sessionKey,
+      storePath,
+    });
+
+    expect(committed.ok).toBe(true);
+    expect(loadSessionEntry({ sessionKey, storePath })).toMatchObject({
+      sessionId: "stable-session",
+    });
+  });
+
+  it("still rejects a snapshot whose session identity rotated", async () => {
+    const sessionKey = "agent:main:main";
+    await upsertSessionEntry(
+      { sessionKey, storePath },
+      { sessionId: "before-rotation", updatedAt: 10 },
+    );
+    const snapshot = loadReplySessionInitializationSnapshot({ sessionKey, storePath });
+
+    await upsertSessionEntry(
+      { sessionKey, storePath },
+      { sessionId: "after-rotation", sessionFile: path.join(tempDir, "after-rotation.jsonl") },
+    );
+
+    const committed = await commitReplySessionInitialization({
+      activeSessionKey: sessionKey,
+      agentId: "main",
+      expectedRevision: snapshot.revision,
+      sessionEntry: { sessionId: "before-rotation", updatedAt: 20 },
+      sessionKey,
+      storePath,
+    });
+
+    expect(committed).toMatchObject({ ok: false, reason: "stale-snapshot" });
+    expect(loadSessionEntry({ sessionKey, storePath })).toMatchObject({
+      sessionId: "after-rotation",
+    });
+  });
+
   it("can borrow cached entry objects for read-only hot paths", async () => {
     const scope = {
       clone: false,

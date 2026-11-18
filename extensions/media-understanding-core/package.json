@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/media-understanding-core",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "private": true,
   "description": "QuietCore media understanding runtime package",
   "type": "module",

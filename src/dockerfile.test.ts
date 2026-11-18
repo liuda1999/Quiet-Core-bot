@@ -356,7 +356,7 @@ describe("Dockerfile", () => {
     expect(workflow).toContain("DOCKERHUB_REGISTRY: docker.io");
     expect(workflow).toContain("DOCKERHUB_IMAGE_NAME: liuda1999/quiet-core-bot");
     expect(workflow).toContain("Validate Docker Hub publish credentials");
-    expect(workflow).toContain("DOCKERHUB_USERNAME and DOCKERHUB_TOKEN secrets");
+    expect(workflow).toContain("DOCKERHUB_USERNAME and DOCKERHUB_TOKEN are not configured");
     expect(workflow).toContain("Login to GitHub Container Registry");
     expect(workflow).toContain("Login to Docker Hub");
     expect(workflow).toContain('images=("${GHCR_IMAGE}" "${DOCKERHUB_IMAGE}")');
@@ -386,7 +386,9 @@ describe("Dockerfile", () => {
     expect(workflow).toContain("Smoke test arm64 runtime workspace templates");
     expect(workflow).toContain("test -f /app/src/agents/templates/HEARTBEAT.md");
     expect(workflow).toContain('grep -F "Missing workspace template:"');
-    expect(workflow).toContain('test -f "${temp_root}/home/.quiet-core-bot/workspace/HEARTBEAT.md"');
+    expect(workflow).toContain(
+      'test -f "${temp_root}/home/.quiet-core-bot/workspace/HEARTBEAT.md"',
+    );
   });
 
   it("keeps only the runtime-assets prune proof in full release validation", async () => {
@@ -397,7 +399,9 @@ describe("Dockerfile", () => {
     expect(workflow).not.toContain("Build and smoke test final Docker runtime image");
     expect(workflow).not.toContain("test -f /app/src/agents/templates/HEARTBEAT.md");
     expect(workflow).not.toContain('grep -F "Missing workspace template:"');
-    expect(workflow).not.toContain('test -f "${temp_root}/home/.quiet-core-bot/workspace/HEARTBEAT.md"');
+    expect(workflow).not.toContain(
+      'test -f "${temp_root}/home/.quiet-core-bot/workspace/HEARTBEAT.md"',
+    );
     expect(workflow).not.toContain("scripts/docker/runtime-workspace-template-smoke.sh");
   });
 

@@ -418,3 +418,70 @@ describe("context-window-guard", () => {
     ).toBe(`Model context window too small (3000 tokens; source=model). Minimum is 4000.`);
   });
 });
+
+describe("probed context windows", () => {
+  function configuredModel(contextWindow: number) {
+    return {
+      models: {
+        providers: {
+          openrouter: {
+            baseUrl: "http://localhost",
+            apiKey: "x",
+            models: [{ id: "tiny", contextWindow }],
+          },
+        },
+      },
+    } as unknown as QuietCoreConfig;
+  }
+
+  it("prefers a probed window over a stale configured value", () => {
+    const cfg = configuredModel(128_000);
+
+    const info = resolveContextWindowInfo({
+      cfg,
+      provider: "openrouter",
+      modelId: "tiny",
+      modelContextWindow: 1_000_000,
+      modelContextWindowProbed: true,
+      defaultTokens: 200_000,
+    });
+
+    expect(info.tokens).toBe(1_000_000);
+    expect(info.source).toBe("model");
+  });
+
+  it("keeps the configured value when nothing was probed", () => {
+    const cfg = configuredModel(128_000);
+
+    const info = resolveContextWindowInfo({
+      cfg,
+      provider: "openrouter",
+      modelId: "tiny",
+      modelContextWindow: 1_000_000,
+      defaultTokens: 200_000,
+    });
+
+    expect(info.tokens).toBe(128_000);
+    expect(info.source).toBe("modelsConfig");
+  });
+
+  it("still lets agents.defaults.contextTokens cap a probed window", () => {
+    const cfg = configuredModel(128_000) as QuietCoreConfig & {
+      agents?: { defaults?: { contextTokens?: number } };
+    };
+    cfg.agents = { defaults: { contextTokens: 300_000 } };
+
+    const info = resolveContextWindowInfo({
+      cfg,
+      provider: "openrouter",
+      modelId: "tiny",
+      modelContextWindow: 1_000_000,
+      modelContextWindowProbed: true,
+      defaultTokens: 200_000,
+    });
+
+    expect(info.tokens).toBe(300_000);
+    expect(info.referenceTokens).toBe(1_000_000);
+    expect(info.source).toBe("agentContextTokens");
+  });
+});

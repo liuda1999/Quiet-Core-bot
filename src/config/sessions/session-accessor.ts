@@ -972,8 +972,28 @@ function cloneSessionEntries(store: Record<string, SessionEntry>): Record<string
   );
 }
 
+/**
+ * Version stamp for reply-session initialization.
+ *
+ * Deliberately covers only the fields that decide *which session* a reply
+ * belongs to. A streaming turn keeps writing unrelated metadata to the same
+ * entry (updatedAt, status, token accounting, delivery markers), and comparing
+ * the whole entry made every one of those writes look like a concurrent
+ * rotation — a second message sent while the previous reply was still winding
+ * down failed with "reply session initialization conflicted". Rotation is still
+ * detected because sessionId/sessionFile/parent linkage change with it.
+ */
 function createReplySessionInitializationRevision(entry: SessionEntry | undefined): string {
-  return JSON.stringify(entry ?? null);
+  if (!entry) {
+    return "null";
+  }
+  return JSON.stringify({
+    forkedFromParent: entry.forkedFromParent ?? null,
+    parentSessionKey: entry.parentSessionKey ?? null,
+    sessionFile: entry.sessionFile ?? null,
+    sessionId: entry.sessionId ?? null,
+    sessionStartedAt: entry.sessionStartedAt ?? null,
+  });
 }
 
 function resolveInitializedReplySessionEntry(params: {

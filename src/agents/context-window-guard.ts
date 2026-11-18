@@ -57,6 +57,8 @@ export function resolveContextWindowInfo(params: {
   modelId: string;
   modelContextTokens?: number;
   modelContextWindow?: number;
+  /** True when the window came from a live provider probe, not config. */
+  modelContextWindowProbed?: boolean;
   defaultTokens: number;
 }): ContextWindowInfo {
   const fromModelsConfig = (() => {
@@ -82,11 +84,17 @@ export function resolveContextWindowInfo(params: {
     normalizePositiveInt(params.modelContextWindow);
   const defaultTokens =
     normalizePositiveInt(params.defaultTokens) ?? CONTEXT_WINDOW_WARN_BELOW_TOKENS;
-  const baseInfo = fromModelsConfig
-    ? { tokens: fromModelsConfig, source: "modelsConfig" as const }
-    : fromModel
-      ? { tokens: fromModel, source: "model" as const }
-      : { tokens: defaultTokens, source: "default" as const };
+  // A probed window reflects what the endpoint actually serves; a configured
+  // value written by an "add model" form is often a stale template default, so
+  // the probe outranks it. agents.defaults.contextTokens still caps both.
+  const preferProbe = params.modelContextWindowProbed === true && fromModel !== null;
+  const baseInfo = preferProbe
+    ? { tokens: fromModel, source: "model" as const }
+    : fromModelsConfig
+      ? { tokens: fromModelsConfig, source: "modelsConfig" as const }
+      : fromModel
+        ? { tokens: fromModel, source: "model" as const }
+        : { tokens: defaultTokens, source: "default" as const };
 
   const capTokens = normalizePositiveInt(params.cfg?.agents?.defaults?.contextTokens);
   if (capTokens && capTokens < baseInfo.tokens) {

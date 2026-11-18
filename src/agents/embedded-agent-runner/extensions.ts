@@ -36,6 +36,14 @@ type AgentToolResultEvent = {
   isError?: boolean;
 };
 
+/** Reads the probe marker without widening the shared runtime model type. */
+function modelContextProbedFlag(model: unknown): boolean | undefined {
+  if (model === null || typeof model !== "object") {
+    return undefined;
+  }
+  const flag = (model as { contextWindowProbed?: unknown }).contextWindowProbed;
+  return flag === true ? true : undefined;
+}
 function recordFromUnknown(value: unknown): Record<string, unknown> {
   return value && typeof value === "object" && !Array.isArray(value)
     ? (value as Record<string, unknown>)
@@ -119,6 +127,7 @@ function resolveContextWindowTokens(params: {
     modelId: params.modelId,
     modelContextTokens: params.model?.contextTokens,
     modelContextWindow: params.model?.contextWindow,
+    modelContextWindowProbed: modelContextProbedFlag(params.model),
     defaultTokens: DEFAULT_CONTEXT_TOKENS,
   }).tokens;
 }
@@ -181,6 +190,7 @@ export function buildEmbeddedExtensionFactories(params: {
       modelId: params.modelId,
       modelContextTokens: params.model?.contextTokens,
       modelContextWindow: params.model?.contextWindow,
+      modelContextWindowProbed: modelContextProbedFlag(params.model),
       defaultTokens: DEFAULT_CONTEXT_TOKENS,
     });
     setCompactionSafeguardRuntime(params.sessionManager, {

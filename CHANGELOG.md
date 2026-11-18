@@ -2,6 +2,31 @@
 
 Docs: https://github.com/liuda1999/Quiet-Core-bot
 
+## 0.2.3
+
+### 修复
+
+- **第二轮对话报错（`reply session initialization conflicted`）：** 会话初始化的乐观锁此前用整个 session entry 的 JSON 作为版本号，
+  上一回合收尾写入的 `updatedAt` / `status` / token 统计都会被误判为并发轮转，导致第二条消息在初始化阶段直接失败。
+  现在只比较会话身份字段（`sessionId` / `sessionFile` / 父子关系 / `sessionStartedAt`），并将重试从 1 次提升到 3 次（15ms / 40ms 退避）。
+- **新接入 API 仍沿用 128K 上下文：** “添加模型”会写入 `contextWindow: 128000`，而配置优先级高于运行时元数据，真实窗口永远被覆盖。
+  现在每次解析模型（每轮推理与每次切换模型）都会探测供应商 `/models` 返回的 `context_length` / `context_window` / `max_model_len`，
+  探测值优先于配置值；`agents.defaults.contextTokens` 仍可作为显式上限。压缩预留与 keepRecent 阈值随有效窗口联动。
+
+### 变更
+
+- 控制台“添加模型”不再写入固定的 128000，交给探测或目录元数据决定。
+
+### 测试
+
+- 新增会话初始化并发写回归用例：快照后连续写入无关字段仍可提交，身份轮转仍被拒绝。
+- 新增上下文窗口探测 13 例：载荷解析、缓存/负缓存、模型切换、探测优先级、压缩阈值随窗口缩放。
+- 修正两处陈旧断言（web_search 提示词文案、Docker Hub 校验文案）。
+
+### 已跳过
+
+- `npm shrinkwrap guard` 在 `extensions/llama-cpp` 报 `overrides.ansi-regex` 冲突；暂存全部源码改动后仍复现，判定为既有工具链问题，本版未处理。
+
 ## 0.2.2
 
 ### 修复

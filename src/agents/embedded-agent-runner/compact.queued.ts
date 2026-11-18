@@ -61,6 +61,14 @@ import { resolveModelAsync } from "./model.js";
 import type { EmbeddedAgentCompactResult } from "./types.js";
 import { normalizeContextTokenBudget } from "./utils.js";
 
+/** Reads the probe marker without widening the shared runtime model type. */
+function modelContextProbedFlag(model: unknown): boolean | undefined {
+  if (model === null || typeof model !== "object") {
+    return undefined;
+  }
+  const flag = (model as { contextWindowProbed?: unknown }).contextWindowProbed;
+  return flag === true ? true : undefined;
+}
 const compactionCheckpointStore = createFileBackedCompactionCheckpointStore();
 
 function shouldFallbackAfterHarnessCompaction(
@@ -281,6 +289,7 @@ export async function compactEmbeddedAgentSession(
         modelId: ceModelId,
         modelContextTokens: readAgentModelContextTokens(ceModel),
         modelContextWindow: ceRuntimeModel?.contextWindow,
+        modelContextWindowProbed: modelContextProbedFlag(ceRuntimeModel),
         defaultTokens: DEFAULT_CONTEXT_TOKENS,
       }).tokens,
     ) ?? DEFAULT_CONTEXT_TOKENS;

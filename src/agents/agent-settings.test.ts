@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import { MIN_PROMPT_BUDGET_RATIO, MIN_PROMPT_BUDGET_TOKENS } from "./agent-compaction-constants.js";
 import {
   applyAgentAutoCompactionGuard,
+  resolveCompactionReserveTokensFloorForContext,
   applyAgentCompactionSettingsFromConfig,
   DEFAULT_AGENT_COMPACTION_RESERVE_TOKENS_FLOOR,
   isSilentOverflowProneModel,
@@ -605,5 +606,32 @@ describe("applyAgentAutoCompactionGuard", () => {
     });
 
     expect(result).toEqual({ supported: false, disabled: false });
+  });
+});
+
+describe("compaction thresholds follow the effective window", () => {
+  it("scales the enforced reserve floor with the probed window", () => {
+    const floor128k = resolveCompactionReserveTokensFloorForContext({
+      contextTokenBudget: 128_000,
+    });
+    const floor1m = resolveCompactionReserveTokensFloorForContext({
+      contextTokenBudget: 1_000_000,
+    });
+
+    // 大窗口下保留默认 floor，不再被小窗口公式压缩
+    expect(floor128k).toBeGreaterThan(0);
+    expect(floor1m).toBe(DEFAULT_AGENT_COMPACTION_RESERVE_TOKENS_FLOOR);
+    expect(floor1m).toBeLessThanOrEqual(1_000_000);
+  });
+
+  it("never lets the reserve floor eat the whole small window", () => {
+    const budget = 16_384;
+    const floor = resolveCompactionReserveTokensFloorForContext({ contextTokenBudget: budget });
+    const minPromptBudget = Math.min(
+      MIN_PROMPT_BUDGET_TOKENS,
+      Math.max(1, Math.floor(budget * MIN_PROMPT_BUDGET_RATIO)),
+    );
+
+    expect(floor + minPromptBudget).toBeLessThanOrEqual(budget);
   });
 });
