@@ -20,6 +20,12 @@ Docs: https://github.com/liuda1999/Quiet-Core-bot
 
 - 核心与 52 个内置插件版本统一为 0.2.2。
 
+### 已知差异
+
+- npm 上 `quiet-core-bot@0.2.2` 包内附带的 README 是本条修复前的版本（内置搜索说明里仍写 `` `<host>` `` 占位符）。
+  该占位符会触发 markdownlint `MD033`，已在提交 `4a28f915` 修正仓库内 README；
+  为避免仅同步文档而多发一个版本，包内 README 待下一个版本自然同步。功能与代码不受影响。
+
 ## 0.2.1
 
 ### 修复
